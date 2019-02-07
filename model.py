@@ -18,7 +18,7 @@ class Model:
         self.gradient_clip = 1
         self.margin = 0.05
         self.max_vocab_size = 50000
-        self.seq_length = 50
+        self.seq_length = 30
         self.rnn_units = 16
         self.dense_units = 16
         self.batch_size = 128
@@ -70,34 +70,32 @@ class Model:
             init_op = tf.variables_initializer(self._sess.graph.get_collection(tf.GraphKeys.GLOBAL_VARIABLES))
             self._sess.run(init_op)
 
-
             javadoc_tensors_neg = np.copy(self.javadoc_tensors)
             np.random.shuffle(javadoc_tensors_neg)
             for epoch in range(self.num_epochs):
                 total_loss = 0.0
-                for index in range(0, self.data_count, self.batch_size):
-                    end = index + self.batch_size
 
-                    name_batch = self.name_tensors[index:end]
-                    api_batch = self.api_tensors[index:end]
-                    token_batch = self.token_tensors[index:end]
-                    javadoc_pos_batch = self.javadoc_tensors[index:end]
-                    javadoc_neg_batch = javadoc_tensors_neg[index:end]
+                batches = self._make_mini_batches(self.name_tensors, self.api_tensors,
+                                                  self.token_tensors, self.javadoc_tensors)
+                (name_batches, api_batches, token_batches, javadoc_batches) = batches
+
+                for i in range(0, len(name_batches)):
+                    javadoc_neg = np.copy(javadoc_batches[i])
+                    np.random.shuffle(javadoc_neg)
 
                     feed_dict = {
-                        self.name_placeholder: name_batch,
-                        self.api_placeholder: api_batch,
-                        self.token_placeholder: token_batch,
-                        self.javadoc_pos_placeholder: javadoc_pos_batch,
-                        self.javadoc_neg_placeholder: javadoc_neg_batch
+                        self.name_placeholder: name_batches[i],
+                        self.api_placeholder: api_batches[i],
+                        self.token_placeholder: token_batches[i],
+                        self.javadoc_pos_placeholder: javadoc_batches[i],
+                        self.javadoc_neg_placeholder: javadoc_neg
                     }
 
                     ops = [self.loss_op, self.optimizer_op]
                     op_result = self._sess.run(ops, feed_dict=feed_dict)
                     total_loss += op_result[0]
 
-                    batch_num = index // self.batch_size
-                    print("Loss in epoch {0}, batch: {1}: {2}".format(epoch, batch_num, op_result[0]))
+                    print("Loss in epoch {0}, batch: {1}: {2}".format(epoch, i, op_result[0]))
 
                 print("Total Loss in epoch {0}: {1}".format(epoch, total_loss))
 
@@ -182,6 +180,26 @@ class Model:
                                          strides=(1,),
                                          name=name)
         return tf.squeeze(pooled, axis=1)
+
+    def _make_mini_batches(self, names, apis, tokens, javadocs):
+        combined = list(zip(names, apis, tokens, javadocs))
+        np.random.shuffle(combined)
+
+        names, apis, tokens, javadocs = zip(*combined)
+
+        name_batches = []
+        api_batches = []
+        token_batches = []
+        javadoc_batches = []
+
+        for index in range(0, self.data_count, self.batch_size):
+            limit = index + self.batch_size
+            name_batches.append(np.array(names[index:limit]))
+            api_batches.append(np.array(apis[index:limit]))
+            token_batches.append(np.array(tokens[index:limit]))
+            javadoc_batches.append(np.array(javadocs[index:limit]))
+
+        return name_batches, api_batches, token_batches, javadoc_batches
 
     def _tensorize_data(self, method_names, method_api_calls, method_tokens, javadoc):
 
