@@ -15,12 +15,14 @@ class Model:
         self.train_frac = 0.8
         self.valid_frac = 0.2
         self.step_size = 0.01
+        self.gradient_clip = 1
         self.margin = 0.05
         self.max_vocab_size = 50000
         self.seq_length = 50
         self.rnn_units = 16
         self.dense_units = 16
         self.batch_size = 128
+        self.num_epochs = 2
 
         self.scope = "deep-cs"
 
@@ -58,6 +60,7 @@ class Model:
             self.optimizer = tf.train.AdamOptimizer(learning_rate=self.step_size)
 
             self._make_model()
+            self._make_training_step()
     
 
     def train(self):
@@ -70,29 +73,33 @@ class Model:
 
             javadoc_tensors_neg = np.copy(self.javadoc_tensors)
             np.random.shuffle(javadoc_tensors_neg)
+            for epoch in range(self.num_epochs):
+                total_loss = 0.0
+                for index in range(0, self.data_count, self.batch_size):
+                    end = index + self.batch_size
 
-            for index in range(0, self.data_count, self.batch_size):
-                end = index + self.batch_size
+                    name_batch = self.name_tensors[index:end]
+                    api_batch = self.api_tensors[index:end]
+                    token_batch = self.token_tensors[index:end]
+                    javadoc_pos_batch = self.javadoc_tensors[index:end]
+                    javadoc_neg_batch = javadoc_tensors_neg[index:end]
 
-                name_batch = self.name_tensors[index:end]
-                api_batch = self.api_tensors[index:end]
-                token_batch = self.token_tensors[index:end]
-                javadoc_pos_batch = self.javadoc_tensors[index:end]
-                javadoc_neg_batch = javadoc_tensors_neg[index:end]
+                    feed_dict = {
+                        self.name_placeholder: name_batch,
+                        self.api_placeholder: api_batch,
+                        self.token_placeholder: token_batch,
+                        self.javadoc_pos_placeholder: javadoc_pos_batch,
+                        self.javadoc_neg_placeholder: javadoc_neg_batch
+                    }
 
-                feed_dict = {
-                    self.name_placeholder: name_batch,
-                    self.api_placeholder: api_batch,
-                    self.token_placeholder: token_batch,
-                    self.javadoc_pos_placeholder: javadoc_pos_batch,
-                    self.javadoc_neg_placeholder: javadoc_neg_batch
-                }
+                    ops = [self.loss_op, self.optimizer_op]
+                    op_result = self._sess.run(ops, feed_dict=feed_dict)
+                    total_loss += op_result[0]
 
-                op_result = self._sess.run(self.loss_op, feed_dict=feed_dict)
-                print(op_result)
-                break
+                    batch_num = index // self.batch_size
+                    print("Loss in epoch {0}, batch: {1}: {2}".format(epoch, batch_num, op_result[0]))
 
-
+                print("Total Loss in epoch {0}: {1}".format(epoch, total_loss))
 
     def _make_model(self):
 
@@ -138,6 +145,17 @@ class Model:
                     tf.losses.cosine_distance(labels=jd_pos_pooled, predictions=code_emb, axis=1) + \
                     tf.losses.cosine_distance(labels=jd_neg_pooled, predictions=code_emb, axis=1)
                 )
+
+    def _make_training_step(self):
+        trainable_vars = self._sess.graph.get_collection(tf.GraphKeys.TRAINABLE_VARIABLES)
+        gradients = tf.gradients(self.loss_op, trainable_vars)
+        clipped_grad, _ = tf.clip_by_global_norm(gradients, self.gradient_clip)
+        pruned_gradients = []
+        for grad, var in zip(clipped_grad, trainable_vars):
+            if grad != None:
+                pruned_gradients.append((grad, var))
+
+        self.optimizer_op = self.optimizer.apply_gradients(pruned_gradients)
 
 
     def _make_rnn_embedding(self, placeholder, name):
