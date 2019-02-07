@@ -10,11 +10,11 @@ from dpu_utils.mlutils import Vocabulary
 from parser import JAVADOC_FILE_NAME, METHOD_NAME_FILE_NAME
 from parser import METHOD_API_FILE_NAME, METHOD_TOKENS_FILE_NAME
 from parameters import Parameters
+from dataset import Dataset, Batch
 
 LINE = "-" * 50
 
 class Model:
-
 
     def __init__(self, train_dir="data", save_dir="trained_models/"):
         # Intialize some hyperparameters
@@ -29,7 +29,8 @@ class Model:
             rnn_units = 16,
             dense_units = 16,
             batch_size = 128,
-            num_epochs = 2
+            num_epochs = 2,
+            optimizer="adam"
         )
 
         if save_dir[-1] != "/":
@@ -38,46 +39,31 @@ class Model:
         self.save_dir = save_dir
         self.scope = "deep-cs"
 
-        self.method_names = self._load_data_file(train_dir + "/" + METHOD_NAME_FILE_NAME)
-        self.method_api_calls = self._load_data_file(train_dir + "/" + METHOD_API_FILE_NAME)
-        self.method_tokens = self._load_data_file(train_dir + "/" + METHOD_TOKENS_FILE_NAME)
-        self.javadoc = self._load_data_file(train_dir + "/" + JAVADOC_FILE_NAME)
-
-        assert len(self.method_names) == len(self.method_api_calls)
-        assert len(self.method_tokens) == len(self.javadoc)
-        assert len(self.method_names) == len(self.javadoc)
-
-        self.data_count = len(self.method_names)
-
-        all_tokens = self._flatten([self.method_names, self.method_tokens,\
-                                    self.method_api_calls, self.javadoc])
-        self.vocabulary = Vocabulary.create_vocabulary(all_tokens,
-                                                       self.params.max_vocab_size,
-                                                       add_pad=True)
-
-        # Vectorize strings using the vocabulary
-        tensors = self._tensorize_data(self.method_names, self.method_api_calls,
-                                       self.method_tokens, self.javadoc)
-        self.name_tensors, self.api_tensors, self.token_tensors, self.javadoc_tensors = tensors
+        self.dataset = Dataset(data_dir=train_dir,
+                               seq_length=self.params.seq_length,
+                               max_vocab_size=self.params.max_vocab_size)
 
         self._sess = tf.Session(graph=tf.Graph())
 
         with self._sess.graph.as_default():
             self.name_placeholder = tf.placeholder(dtype=tf.int32,
                                                    shape=[None, self.params.seq_length],
-                                                   name='name')
+                                                   name="name")
             self.api_placeholder = tf.placeholder(dtype=tf.int32,
                                                   shape=[None, self.params.seq_length],
-                                                  name='api')
+                                                  name="api")
             self.token_placeholder = tf.placeholder(dtype=tf.int32,
                                                     shape=[None, self.params.seq_length],
-                                                    name='token')
+                                                    name="token")
             self.javadoc_pos_placeholder = tf.placeholder(dtype=tf.int32,
                                                           shape=[None, self.params.seq_length],
-                                                          name='javadoc-pos')
+                                                          name="javadoc-pos")
             self.javadoc_neg_placeholder = tf.placeholder(dtype=tf.int32,
                                                           shape=[None, self.params.seq_length],
-                                                          name='javadoc-neg')
+                                                          name="javadoc-neg")
+            self.name_len_placeholder = tf.placeholder(dtype=tf.int32,
+                                                       shape=[None],
+                                                       name="name-len")
 
             self.optimizer = tf.train.AdamOptimizer(learning_rate=self.params.step_size)
 
@@ -95,44 +81,48 @@ class Model:
             # Some large value
             best_valid_loss = 10000
 
-            for epoch in range(self.params.num_epochs):
-                total_loss = 0.0
+            train_name = datetime.now().strftime("%Y-%m-%d-%H-%M-%S")
+            csv_name = train_name + "-data.csv"
 
-                batches = self._make_mini_batches(self.name_tensors, self.api_tensors,
-                                                  self.token_tensors, self.javadoc_tensors)
-                (name_batches, api_batches, token_batches, javadoc_batches) = batches
+            for epoch in range(self.params.num_epochs):
+                losses = []
+
+                batches = self.dataset.make_mini_batches(self.params.batch_size)
 
                 print(LINE)
                 print("Epoch: {0}".format(epoch))
                 print(LINE)
 
-                num_batches = len(name_batches)
+                num_batches = batches.num_batches
                 for i in range(0, num_batches - 1):
-                    javadoc_neg = self._generate_neg_javadoc(javadoc_batches[i])
+                    javadoc_neg = self._generate_neg_javadoc(batches.javadoc_batches[i])
 
                     feed_dict = {
-                        self.name_placeholder: name_batches[i],
-                        self.api_placeholder: api_batches[i],
-                        self.token_placeholder: token_batches[i],
-                        self.javadoc_pos_placeholder: javadoc_batches[i],
-                        self.javadoc_neg_placeholder: javadoc_neg
+                        self.name_placeholder: batches.name_batches[i],
+                        self.api_placeholder: batches.api_batches[i],
+                        self.token_placeholder: batches.token_batches[i],
+                        self.javadoc_pos_placeholder: batches.javadoc_batches[i],
+                        self.javadoc_neg_placeholder: javadoc_neg,
+                        self.name_len_placeholder: batches.name_len_placeholder[i]
                     }
 
                     ops = [self.loss_op, self.optimizer_op]
                     op_result = self._sess.run(ops, feed_dict=feed_dict)
-                    total_loss += op_result[0]
+                    losses.append(op_result[0])
 
                     print("Training batch {0}/{1}: {2}".format(i, num_batches-2, op_result[0]))
 
-                javadoc_neg = self._generate_neg_javadoc(javadoc_batches[num_batches-1])
+                javadoc_neg = self._generate_neg_javadoc(batches.javadoc_batches[num_batches-1])
                 feed_dict = {
-                    self.name_placeholder: name_batches[num_batches-1],
-                    self.api_placeholder: api_batches[num_batches-1],
-                    self.token_placeholder: token_batches[num_batches-1],
-                    self.javadoc_pos_placeholder: javadoc_batches[num_batches-1],
-                    self.javadoc_neg_placeholder: javadoc_neg
+                    self.name_placeholder: batches.name_batches[num_batches-1],
+                    self.api_placeholder: batches.api_batches[num_batches-1],
+                    self.token_placeholder: batches.token_batches[num_batches-1],
+                    self.javadoc_pos_placeholder: batches.javadoc_batches[num_batches-1],
+                    self.javadoc_neg_placeholder: javadoc_neg,
+                    self.name_len_placeholder: batches.name_len_placeholder[num_batches-1]
                 }
                 valid_loss = self._sess.run(self.loss_op, feed_dict=feed_dict)
+                total_loss = np.sum(losses)
 
                 print(LINE)
                 print("Total training loss in epoch {0}: {1}".format(epoch, total_loss))
@@ -140,7 +130,7 @@ class Model:
 
                 if (valid_loss < best_valid_loss):
                     best_valid_loss = valid_loss
-                    name = datetime.now().strftime("%Y-%m-%d-%H-%M-%S") + "-" + str(epoch)
+                    name = train_name + "-" + str(epoch)
                     path = self.save_dir + name + "_best.pkl.gz"
                     print("Saving model: " + name)
                     self.save(path, name)
@@ -179,7 +169,7 @@ class Model:
 
             # Method Token embedding
             on_hot_tokens = tf.one_hot(self.token_placeholder,
-                                       depth=len(self.vocabulary),
+                                       depth=len(self.dataset.vocabulary),
                                        on_value=1.0,
                                        off_value=0.0,
                                        dtype=tf.float32)
@@ -223,7 +213,7 @@ class Model:
 
     def _make_rnn_embedding(self, placeholder, name):
         one_hot = tf.one_hot(placeholder,
-                             depth=len(self.vocabulary),
+                             depth=len(self.dataset.vocabulary),
                              on_value=1.0,
                              off_value=0.0,
                              dtype=tf.float32)
@@ -246,58 +236,6 @@ class Model:
                                          name=name)
         return tf.squeeze(pooled, axis=1)
 
-    def _make_mini_batches(self, names, apis, tokens, javadocs):
-        combined = list(zip(names, apis, tokens, javadocs))
-        np.random.shuffle(combined)
-
-        names, apis, tokens, javadocs = zip(*combined)
-
-        name_batches = []
-        api_batches = []
-        token_batches = []
-        javadoc_batches = []
-
-        for index in range(0, self.data_count, self.params.batch_size):
-            limit = index + self.params.batch_size
-            name_batches.append(np.array(names[index:limit]))
-            api_batches.append(np.array(apis[index:limit]))
-            token_batches.append(np.array(tokens[index:limit]))
-            javadoc_batches.append(np.array(javadocs[index:limit]))
-
-        return name_batches, api_batches, token_batches, javadoc_batches
-
-    def _tensorize_data(self, method_names, method_api_calls, method_tokens, javadoc):
-
-        def pad(text):
-            if len(text) > self.params.seq_length:
-                return text[:self.params.seq_length]
-            return np.pad(text,
-                          (0, self.params.seq_length - len(text)),
-                          'constant',
-                          constant_values=0)
-
-        name_tensors = []
-        api_tensors = []
-        token_tensors = []
-        javadoc_tensors = []
-
-        for i in range(0, self.data_count):
-            padded_names = pad(self.vocabulary.get_id_or_unk_multiple(method_names[i]))
-            name_tensors.append(padded_names)
-
-            padded_api = pad(self.vocabulary.get_id_or_unk_multiple(method_api_calls[i]))
-            api_tensors.append(padded_api)
-
-            padded_tokens = pad(self.vocabulary.get_id_or_unk_multiple(method_tokens[i]))
-            token_tensors.append(padded_tokens)
-
-            padded_javadoc = pad(self.vocabulary.get_id_or_unk_multiple(javadoc[i]))
-            javadoc_tensors.append(padded_javadoc)
-
-        return np.array(name_tensors), np.array(api_tensors), \
-               np.array(token_tensors), np.array(javadoc_tensors)
-
-
     def _generate_neg_javadoc(self, javadoc):
         neg_javadoc = []
         for i, jd in enumerate(javadoc):
@@ -310,21 +248,6 @@ class Model:
 
         return neg_javadoc
 
-
-    def _load_data_file(_, file_name):
-        dataset = []
-        with open(file_name, 'r') as file:
-            for line in file:
-                line = line.strip()
-                dataset.append(line.split())
-        return dataset
-
-    def _flatten(_, lists):
-        flattened = []
-        for token_list in lists:
-            for lst in token_list:
-                flattened += lst
-        return flattened
 
     def _lst_equal(_, lst1, lst2):
         if len(lst1) != len(lst2):
