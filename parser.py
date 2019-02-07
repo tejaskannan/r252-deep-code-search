@@ -103,7 +103,7 @@ class Parser:
 
     def clean_javadoc(self, javadoc):
         javadoc_contents = javadoc.replace("/", "").replace("*", "") \
-                                  .replace("{", "").replace("}", "")
+                                  .replace("{", "").replace("}", "").lower()
         cleaned_javadoc = self.text_filter.apply_to_javadoc(javadoc_contents)
         return " ".join(cleaned_javadoc)
 
