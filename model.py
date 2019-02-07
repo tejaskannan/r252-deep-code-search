@@ -108,8 +108,7 @@ class Model:
 
                 num_batches = len(name_batches)
                 for i in range(0, num_batches - 1):
-                    javadoc_neg = np.copy(javadoc_batches[i])
-                    np.random.shuffle(javadoc_neg)
+                    javadoc_neg = self._generate_neg_javadoc(javadoc_batches[i])
 
                     feed_dict = {
                         self.name_placeholder: name_batches[i],
@@ -125,9 +124,7 @@ class Model:
 
                     print("Training batch {0}/{1}: {2}".format(i, num_batches-2, op_result[0]))
 
-                javadoc_neg = np.copy(javadoc_batches[num_batches-1])
-                np.random.shuffle(javadoc_neg)
-
+                javadoc_neg = self._generate_neg_javadoc(javadoc_batches[num_batches-1])
                 feed_dict = {
                     self.name_placeholder: name_batches[num_batches-1],
                     self.api_placeholder: api_batches[num_batches-1],
@@ -301,7 +298,20 @@ class Model:
                np.array(token_tensors), np.array(javadoc_tensors)
 
 
-    def _load_data_file(self, file_name):
+    def _generate_neg_javadoc(self, javadoc):
+        neg_javadoc = []
+        for i, jd in enumerate(javadoc):
+            rand_index = np.random.randint(0, len(javadoc))
+            while self._lst_equal(javadoc[i], javadoc[rand_index]):
+                rand_index = np.random.randint(0, len(javadoc))
+            neg_javadoc.append(javadoc[rand_index])
+
+        assert len(neg_javadoc) == len(javadoc)
+
+        return neg_javadoc
+
+
+    def _load_data_file(_, file_name):
         dataset = []
         with open(file_name, 'r') as file:
             for line in file:
@@ -309,9 +319,17 @@ class Model:
                 dataset.append(line.split())
         return dataset
 
-    def _flatten(self, lists):
+    def _flatten(_, lists):
         flattened = []
         for token_list in lists:
             for lst in token_list:
                 flattened += lst
         return flattened
+
+    def _lst_equal(_, lst1, lst2):
+        if len(lst1) != len(lst2):
+            return False
+        for i in range(0, len(lst1)):
+            if (lst1[i] != lst2[i]):
+                return False
+        return True
