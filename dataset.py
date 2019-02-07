@@ -59,10 +59,10 @@ class Dataset:
             token_batches.append(np.array(tokens[index:limit]))
             javadoc_batches.append(np.array(javadocs[index:limit]))
 
-            name_length_batches.append(np.array(name_lengths[index:limit]))
-            api_length_batches.append(np.array(api_lengths[index:limit]))
-            token_length_batches.append(np.array(token_lengths[index:limit]))
-            javadoc_length_batches.append(np.array(javadoc_batches[index:limit]))
+            name_length_batches.append(name_lengths[index:limit])
+            api_length_batches.append(api_lengths[index:limit])
+            token_length_batches.append(token_lengths[index:limit])
+            javadoc_length_batches.append(javadoc_lengths[index:limit])
 
         return Batch(name_batches, api_batches, token_batches, javadoc_batches, \
                      name_length_batches, api_length_batches, token_length_batches, \
@@ -90,19 +90,19 @@ class Dataset:
 
         for i in range(0, self.data_count):
             name_vec = self.vocabulary.get_id_or_unk_multiple(method_names[i])
-            self.name_lengths.append(len(name_vec))
+            self.name_lengths.append(min(len(name_vec), self.seq_length))
             self.name_tensors.append(pad(name_vec))
 
             api_vec = self.vocabulary.get_id_or_unk_multiple(method_api_calls[i])
-            self.api_lengths.append(len(api_vec))
+            self.api_lengths.append(min(len(api_vec), self.seq_length))
             self.api_tensors.append(pad(api_vec))
 
             token_vec = self.vocabulary.get_id_or_unk_multiple(method_tokens[i])
-            self.token_lengths.append(len(token_vec))
+            self.token_lengths.append(min(len(token_vec), self.seq_length))
             self.token_tensors.append(pad(token_vec))
 
             javadoc_vec = self.vocabulary.get_id_or_unk_multiple(javadoc[i])
-            self.javadoc_lengths.append(len(javadoc_vec))
+            self.javadoc_lengths.append(min(len(javadoc_vec), self.seq_length))
             self.javadoc_tensors.append(pad(javadoc_vec))
 
 

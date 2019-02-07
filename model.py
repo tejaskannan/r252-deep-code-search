@@ -3,6 +3,7 @@ import numpy as np
 import tensorflow as tf
 import gzip
 import pickle
+import csv
 
 from datetime import datetime
 from dpu_utils.mlutils import Vocabulary
@@ -16,7 +17,7 @@ LINE = "-" * 50
 
 class Model:
 
-    def __init__(self, train_dir="data", save_dir="trained_models/"):
+    def __init__(self, train_dir="data", save_dir="trained_models/", log_dir="log/"):
         # Intialize some hyperparameters
         self.params = Parameters(
             train_frac = 0.8,
@@ -25,7 +26,7 @@ class Model:
             gradient_clip = 1,
             margin = 0.05,
             max_vocab_size = 50000,
-            seq_length = 30,
+            seq_length = 50,
             rnn_units = 16,
             dense_units = 16,
             batch_size = 128,
@@ -35,8 +36,12 @@ class Model:
 
         if save_dir[-1] != "/":
             save_dir += "/"
-
         self.save_dir = save_dir
+
+        if log_dir[-1] != "/":
+            log_dir += "/"
+        self.log_dir = log_dir
+
         self.scope = "deep-cs"
 
         self.dataset = Dataset(data_dir=train_dir,
@@ -64,6 +69,18 @@ class Model:
             self.name_len_placeholder = tf.placeholder(dtype=tf.int32,
                                                        shape=[None],
                                                        name="name-len")
+            self.api_len_placehodler = tf.placeholder(dtype=tf.int32,
+                                                      shape=[None],
+                                                      name="api-len")
+            self.token_len_placeholder = tf.placeholder(dtype=tf.int32,
+                                                        shape=[None],
+                                                        name="token-len")
+            self.javadoc_pos_len_placeholder = tf.placeholder(dtype=tf.int32,
+                                                              shape=[None],
+                                                              name="jd-pos-len")
+            self.javadoc_neg_len_placeholder = tf.placeholder(dtype=tf.int32,
+                                                              shape=[None],
+                                                              name="jd-neg-len")
 
             self.optimizer = tf.train.AdamOptimizer(learning_rate=self.params.step_size)
 
@@ -82,10 +99,12 @@ class Model:
             best_valid_loss = 10000
 
             train_name = datetime.now().strftime("%Y-%m-%d-%H-%M-%S")
-            csv_name = train_name + "-data.csv"
+            csv_name = self.log_dir + train_name + "-data.csv"
+            self._log_record(csv_name, ["Epoch", "Avg Train Loss", "Avg Validation Loss"])
 
             for epoch in range(self.params.num_epochs):
-                losses = []
+                train_losses = []
+                valid_losses = []
 
                 batches = self.dataset.make_mini_batches(self.params.batch_size)
 
@@ -94,8 +113,13 @@ class Model:
                 print(LINE)
 
                 num_batches = batches.num_batches
-                for i in range(0, num_batches - 1):
-                    javadoc_neg = self._generate_neg_javadoc(batches.javadoc_batches[i])
+
+                split_point = int(num_batches * self.params.train_frac)
+
+                for i in range(0, split_point):
+                    javadoc_neg, javadoc_neg_len = \
+                            self._generate_neg_javadoc(batches.javadoc_batches[i],
+                                                       batches.javadoc_len_batches[i])
 
                     feed_dict = {
                         self.name_placeholder: batches.name_batches[i],
@@ -103,33 +127,50 @@ class Model:
                         self.token_placeholder: batches.token_batches[i],
                         self.javadoc_pos_placeholder: batches.javadoc_batches[i],
                         self.javadoc_neg_placeholder: javadoc_neg,
-                        self.name_len_placeholder: batches.name_len_placeholder[i]
+                        self.name_len_placeholder: batches.name_len_batches[i],
+                        self.api_len_placehodler: batches.api_len_batches[i],
+                        self.token_len_placeholder: batches.token_len_batches[i],
+                        self.javadoc_pos_len_placeholder: batches.javadoc_len_batches[i],
+                        self.javadoc_neg_len_placeholder: javadoc_neg_len
                     }
 
                     ops = [self.loss_op, self.optimizer_op]
                     op_result = self._sess.run(ops, feed_dict=feed_dict)
-                    losses.append(op_result[0])
+                    train_losses.append(op_result[0])
 
-                    print("Training batch {0}/{1}: {2}".format(i, num_batches-2, op_result[0]))
+                    print("Training batch {0}/{1}: {2}".format(i, split_point-1, op_result[0]))
 
-                javadoc_neg = self._generate_neg_javadoc(batches.javadoc_batches[num_batches-1])
-                feed_dict = {
-                    self.name_placeholder: batches.name_batches[num_batches-1],
-                    self.api_placeholder: batches.api_batches[num_batches-1],
-                    self.token_placeholder: batches.token_batches[num_batches-1],
-                    self.javadoc_pos_placeholder: batches.javadoc_batches[num_batches-1],
-                    self.javadoc_neg_placeholder: javadoc_neg,
-                    self.name_len_placeholder: batches.name_len_placeholder[num_batches-1]
-                }
-                valid_loss = self._sess.run(self.loss_op, feed_dict=feed_dict)
-                total_loss = np.sum(losses)
+                for i in range(split_point, num_batches):
+                    javadoc_neg, javadoc_neg_len = \
+                            self._generate_neg_javadoc(batches.javadoc_batches[i],
+                                                       batches.javadoc_len_batches[i])
+
+                    feed_dict = {
+                        self.name_placeholder: batches.name_batches[i],
+                        self.api_placeholder: batches.api_batches[i],
+                        self.token_placeholder: batches.token_batches[i],
+                        self.javadoc_pos_placeholder: batches.javadoc_batches[i],
+                        self.javadoc_neg_placeholder: javadoc_neg,
+                        self.name_len_placeholder: batches.name_len_batches[i],
+                        self.api_len_placehodler: batches.api_len_batches[i],
+                        self.token_len_placeholder: batches.token_len_batches[i],
+                        self.javadoc_pos_len_placeholder: batches.javadoc_len_batches[i],
+                        self.javadoc_neg_len_placeholder: javadoc_neg_len
+                    }
+                    valid_result = self._sess.run(self.loss_op, feed_dict=feed_dict)
+                    valid_losses.append(valid_result)
+
+                avg_valid_loss = np.average(valid_losses)
+                avg_train_loss = np.average(train_losses)
+
+                self._log_record(csv_name, [str(epoch), str(avg_train_loss), str(avg_valid_loss)])
 
                 print(LINE)
-                print("Total training loss in epoch {0}: {1}".format(epoch, total_loss))
-                print("Validation loss in epoch {0}: {1}".format(epoch, valid_loss))
+                print("Average training loss in epoch {0}: {1}".format(epoch, avg_train_loss))
+                print("Average validation loss in epoch {0}: {1}".format(epoch, avg_valid_loss))
 
-                if (valid_loss < best_valid_loss):
-                    best_valid_loss = valid_loss
+                if (avg_valid_loss < best_valid_loss):
+                    best_valid_loss = avg_valid_loss
                     name = train_name + "-" + str(epoch)
                     path = self.save_dir + name + "_best.pkl.gz"
                     print("Saving model: " + name)
@@ -159,23 +200,36 @@ class Model:
         with tf.variable_scope(self.scope, reuse=tf.AUTO_REUSE):
             # Method Name embedding
             name_emb, name_state = self._make_rnn_embedding(self.name_placeholder,
-                                                           name="name-embedding")
+                                                            self.name_len_placeholder,
+                                                            name="name-embedding")
             name_pooled = self._make_max_pooling_1d(name_emb[1], name="name-pooling")
 
             # API Embedding
             api_emb, api_state = self._make_rnn_embedding(self.api_placeholder,
+                                                          self.api_len_placehodler,
                                                           name="api-embedding")
             api_pooled = self._make_max_pooling_1d(api_emb[1], name="api-pooling")
 
             # Method Token embedding
-            on_hot_tokens = tf.one_hot(self.token_placeholder,
+            one_hot_tokens = tf.one_hot(self.token_placeholder,
                                        depth=len(self.dataset.vocabulary),
                                        on_value=1.0,
                                        off_value=0.0,
                                        dtype=tf.float32)
-            token_emb = tf.layers.dense(inputs=on_hot_tokens,
+            token_emb = tf.layers.dense(inputs=one_hot_tokens,
                                         units=self.params.dense_units,
                                         activation=tf.nn.tanh)
+
+            # We mask out elements which are padded before feeding tokens into max pooling
+            index_list = tf.range(self.params.seq_length)
+            index_tensor = tf.tile(tf.expand_dims(index_list, axis=0),
+                                   multiples=(tf.shape(self.token_placeholder)[0],1))
+
+            token_mask = index_tensor < tf.expand_dims(self.token_len_placeholder, axis=1)
+            exp_mask = tf.tile(tf.expand_dims(token_mask, axis=2),
+                               multiples=(1,1,self.params.dense_units))
+
+            token_emb *= tf.cast(exp_mask, dtype=tf.float32)
             token_pooled = self._make_max_pooling_1d(token_emb, name="token-pooling")
 
             # Fusion Layer
@@ -186,10 +240,12 @@ class Model:
 
             # Javadoc Embeddings
             jd_pos_emb, jd_pos_state = self._make_rnn_embedding(self.javadoc_pos_placeholder,
+                                                                self.javadoc_pos_len_placeholder,
                                                                 name="jd-embedding")
             jd_pos_pooled = self._make_max_pooling_1d(jd_pos_emb[1], name="jd-pooling")
 
             jd_neg_emb, jd_neg_state = self._make_rnn_embedding(self.javadoc_neg_placeholder,
+                                                                self.javadoc_neg_len_placeholder,
                                                                 name="jd-embedding")
             jd_neg_pooled = self._make_max_pooling_1d(jd_neg_emb[1], name="jd-pooling")
 
@@ -211,7 +267,7 @@ class Model:
         self.optimizer_op = self.optimizer.apply_gradients(pruned_gradients)
 
 
-    def _make_rnn_embedding(self, placeholder, name):
+    def _make_rnn_embedding(self, placeholder, len_placeholder, name):
         one_hot = tf.one_hot(placeholder,
                              depth=len(self.dataset.vocabulary),
                              on_value=1.0,
@@ -225,6 +281,7 @@ class Model:
                                         cell_fw=cell_fw,
                                         cell_bw=cell_bw,
                                         inputs=one_hot,
+                                        sequence_length=len_placeholder,
                                         dtype=tf.float32,
                                         scope=name)
         return emb, state
@@ -236,17 +293,19 @@ class Model:
                                          name=name)
         return tf.squeeze(pooled, axis=1)
 
-    def _generate_neg_javadoc(self, javadoc):
+    def _generate_neg_javadoc(self, javadoc, javadoc_len):
         neg_javadoc = []
+        neg_javadoc_len = []
         for i, jd in enumerate(javadoc):
             rand_index = np.random.randint(0, len(javadoc))
             while self._lst_equal(javadoc[i], javadoc[rand_index]):
                 rand_index = np.random.randint(0, len(javadoc))
             neg_javadoc.append(javadoc[rand_index])
+            neg_javadoc_len.append(javadoc_len[rand_index])
 
         assert len(neg_javadoc) == len(javadoc)
 
-        return neg_javadoc
+        return neg_javadoc, neg_javadoc_len
 
 
     def _lst_equal(_, lst1, lst2):
@@ -256,3 +315,8 @@ class Model:
             if (lst1[i] != lst2[i]):
                 return False
         return True
+
+    def _log_record(self, file_name, record):
+        with open(file_name, "a+") as csv_file:
+            csv_writer = csv.writer(csv_file, delimiter=",", quotechar="|")
+            csv_writer.writerow(record)
