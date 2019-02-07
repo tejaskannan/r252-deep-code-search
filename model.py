@@ -100,42 +100,38 @@ class Model:
             # Method Name embedding
             name_emb, name_state = self._make_rnn_embedding(self.name_placeholder,
                                                            name="name-embedding")
-            name_pooled = tf.layers.max_pooling1d(inputs=name_emb[1],
-                                                  pool_size=(self.seq_length,),
-                                                  strides=(1,),
-                                                  name="name-pooling")
-            name_pooled = tf.squeeze(name_pooled, axis=1)
+            name_pooled = self._make_max_pooling_1d(name_emb[1], name="name-pooling")
 
             # API Embedding
             api_emb, api_state = self._make_rnn_embedding(self.api_placeholder,
                                                           name="api-embedding")
-            api_pooled = tf.layers.max_pooling1d(inputs=api_emb[1],
-                                                 pool_size=(self.seq_length,),
-                                                 strides=(1,),
-                                                 name="api-pooling")
-            api_pooled = tf.squeeze(api_pooled, axis=1)
+            api_pooled = self._make_max_pooling_1d(api_emb[1], name="api-pooling")
+
+            # Method Token embedding
+            on_hot_tokens = tf.one_hot(self.token_placeholder,
+                                       depth=len(self.vocabulary),
+                                       on_value=1.0,
+                                       off_value=0.0,
+                                       dtype=tf.float32)
+            token_emb = tf.layers.dense(inputs=on_hot_tokens,
+                                        units=self.dense_units,
+                                        activation=tf.nn.tanh)
+            token_pooled = self._make_max_pooling_1d(token_emb, name="token-pooling")
 
             # Fusion Layer
-            code_concat = tf.concat([name_pooled, api_pooled], axis=1, name="code-concat")
+            code_concat = tf.concat([name_pooled, api_pooled, token_pooled],
+                                    axis=1, name="code-concat")
             code_emb = tf.layers.dense(inputs=code_concat, units=self.dense_units,
                                        activation=tf.nn.tanh, name="fusion")
 
             # Javadoc Embeddings
             jd_pos_emb, jd_pos_state = self._make_rnn_embedding(self.javadoc_pos_placeholder,
                                                                 name="jd-embedding")
-            jd_pos_pooled = tf.layers.max_pooling1d(inputs=jd_pos_emb[1],
-                                                    pool_size=(self.seq_length,),
-                                                    strides=(1,),
-                                                    name="jd-pooling")
-            jd_pos_pooled = tf.squeeze(jd_pos_pooled, axis=1)
+            jd_pos_pooled = self._make_max_pooling_1d(jd_pos_emb[1], name="jd-pooling")
 
             jd_neg_emb, jd_neg_state = self._make_rnn_embedding(self.javadoc_neg_placeholder,
                                                                 name="jd-embedding")
-            jd_neg_pooled = tf.layers.max_pooling1d(inputs=jd_neg_emb[1],
-                                                    pool_size=(self.seq_length,),
-                                                    strides=(1,),
-                                                    name="jd-pooling")
-            jd_neg_pooled = tf.squeeze(jd_neg_pooled, axis=1)
+            jd_neg_pooled = self._make_max_pooling_1d(jd_neg_emb[1], name="jd-pooling")
 
             self.loss_op = tf.math.reduce_sum(
                     tf.constant(self.margin, dtype=tf.float32) - \
@@ -145,7 +141,11 @@ class Model:
 
 
     def _make_rnn_embedding(self, placeholder, name):
-        one_hot = tf.one_hot(placeholder, depth=1, on_value=1.0, off_value=0.0, dtype=tf.float32)
+        one_hot = tf.one_hot(placeholder,
+                             depth=len(self.vocabulary),
+                             on_value=1.0,
+                             off_value=0.0,
+                             dtype=tf.float32)
         cell_fw = tf.nn.rnn_cell.LSTMCell(num_units=self.rnn_units,
                                           activation=tf.nn.tanh)
         cell_bw = tf.nn.rnn_cell.LSTMCell(num_units=self.rnn_units,
@@ -157,6 +157,13 @@ class Model:
                                         dtype=tf.float32,
                                         scope=name)
         return emb, state
+
+    def _make_max_pooling_1d(self, inpt, name):
+        pooled = tf.layers.max_pooling1d(inputs=inpt,
+                                         pool_size=(self.seq_length,),
+                                         strides=(1,),
+                                         name=name)
+        return tf.squeeze(pooled, axis=1)
 
     def _tensorize_data(self, method_names, method_api_calls, method_tokens, javadoc):
 
