@@ -27,10 +27,10 @@ class Model:
             margin = 0.05,
             max_vocab_size = 50000,
             seq_length = 50,
-            rnn_units = 16,
-            dense_units = 16,
+            rnn_units = 64,
+            dense_units = 64,
             batch_size = 128,
-            num_epochs = 2,
+            num_epochs = 10,
             optimizer="adam"
         )
 
@@ -136,9 +136,11 @@ class Model:
 
                     ops = [self.loss_op, self.optimizer_op]
                     op_result = self._sess.run(ops, feed_dict=feed_dict)
-                    train_losses.append(op_result[0])
 
-                    print("Training batch {0}/{1}: {2}".format(i, split_point-1, op_result[0]))
+                    avg_train_loss = (op_result[0]) / self.params.batch_size
+                    train_losses.append(avg_train_loss)
+
+                    print("Training batch {0}/{1}: {2}".format(i, split_point-1, avg_train_loss))
 
                 for i in range(split_point, num_batches):
                     javadoc_neg, javadoc_neg_len = \
@@ -158,7 +160,8 @@ class Model:
                         self.javadoc_neg_len_placeholder: javadoc_neg_len
                     }
                     valid_result = self._sess.run(self.loss_op, feed_dict=feed_dict)
-                    valid_losses.append(valid_result)
+                    avg_valid_loss = valid_result / self.params.batch_size
+                    valid_losses.append(avg_valid_loss)
 
                 avg_valid_loss = np.average(valid_losses)
                 avg_train_loss = np.average(train_losses)
@@ -277,11 +280,16 @@ class Model:
                                           activation=tf.nn.tanh)
         cell_bw = tf.nn.rnn_cell.LSTMCell(num_units=self.params.rnn_units,
                                           activation=tf.nn.tanh)
+
+        initial_state_fw = cell_fw.zero_state(tf.shape(placeholder)[0], dtype=tf.float32)
+        initial_state_bw = cell_bw.zero_state(tf.shape(placeholder)[0], dtype=tf.float32)
         emb, state = tf.nn.bidirectional_dynamic_rnn(
                                         cell_fw=cell_fw,
                                         cell_bw=cell_bw,
                                         inputs=one_hot,
                                         sequence_length=len_placeholder,
+                                        initial_state_fw=initial_state_fw,
+                                        initial_state_bw=initial_state_bw,
                                         dtype=tf.float32,
                                         scope=name)
         return emb, state
