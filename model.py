@@ -26,7 +26,7 @@ class Model:
             gradient_clip = 1,
             margin = 0.05,
             max_vocab_size = 50000,
-            seq_length = 50,
+            max_seq_length = 50,
             rnn_units = 64,
             dense_units = 64,
             batch_size = 128,
@@ -45,26 +45,26 @@ class Model:
         self.scope = "deep-cs"
 
         self.dataset = Dataset(data_dir=train_dir,
-                               seq_length=self.params.seq_length,
+                               max_seq_length=self.params.max_seq_length,
                                max_vocab_size=self.params.max_vocab_size)
 
         self._sess = tf.Session(graph=tf.Graph())
 
         with self._sess.graph.as_default():
             self.name_placeholder = tf.placeholder(dtype=tf.int32,
-                                                   shape=[None, self.params.seq_length],
+                                                   shape=[None, self.params.max_seq_length],
                                                    name="name")
             self.api_placeholder = tf.placeholder(dtype=tf.int32,
-                                                  shape=[None, self.params.seq_length],
+                                                  shape=[None, self.params.max_seq_length],
                                                   name="api")
             self.token_placeholder = tf.placeholder(dtype=tf.int32,
-                                                    shape=[None, self.params.seq_length],
+                                                    shape=[None, self.params.max_seq_length],
                                                     name="token")
             self.javadoc_pos_placeholder = tf.placeholder(dtype=tf.int32,
-                                                          shape=[None, self.params.seq_length],
+                                                          shape=[None, self.params.max_seq_length],
                                                           name="javadoc-pos")
             self.javadoc_neg_placeholder = tf.placeholder(dtype=tf.int32,
-                                                          shape=[None, self.params.seq_length],
+                                                          shape=[None, self.params.max_seq_length],
                                                           name="javadoc-neg")
             self.name_len_placeholder = tf.placeholder(dtype=tf.int32,
                                                        shape=[None],
@@ -214,25 +214,21 @@ class Model:
             api_pooled = self._make_max_pooling_1d(api_emb[1], name="api-pooling")
 
             # Method Token embedding
-            one_hot_tokens = tf.one_hot(self.token_placeholder,
-                                       depth=len(self.dataset.vocabulary),
-                                       on_value=1.0,
-                                       off_value=0.0,
-                                       dtype=tf.float32)
-            token_emb = tf.layers.dense(inputs=one_hot_tokens,
-                                        units=self.params.dense_units,
-                                        activation=tf.nn.tanh)
+            vocab_size = len(self.dataset.vocabulary)
+            token_emb_var = tf.Variable(tf.random.uniform(shape=(vocab_size, self.params.dense_units), maxval=1.0),
+                                        name="token-embedding-var")
+            token_emb = tf.nn.embedding_lookup(token_emb_var, self.token_placeholder)
 
             # We mask out elements which are padded before feeding tokens into max pooling
-            index_list = tf.range(self.params.seq_length)
+            index_list = tf.range(self.params.max_seq_length)
             index_tensor = tf.tile(tf.expand_dims(index_list, axis=0),
                                    multiples=(tf.shape(self.token_placeholder)[0],1))
-
             token_mask = index_tensor < tf.expand_dims(self.token_len_placeholder, axis=1)
-            exp_mask = tf.tile(tf.expand_dims(token_mask, axis=2),
+            token_mask = tf.tile(tf.expand_dims(token_mask, axis=2),
                                multiples=(1,1,self.params.dense_units))
 
-            token_emb *= tf.cast(exp_mask, dtype=tf.float32)
+            token_emb *= tf.cast(token_mask, dtype=tf.float32)
+
             token_pooled = self._make_max_pooling_1d(token_emb, name="token-pooling")
 
             # Fusion Layer
@@ -271,22 +267,24 @@ class Model:
 
 
     def _make_rnn_embedding(self, placeholder, len_placeholder, name):
-        one_hot = tf.one_hot(placeholder,
-                             depth=len(self.dataset.vocabulary),
-                             on_value=1.0,
-                             off_value=0.0,
-                             dtype=tf.float32)
-        cell_fw = tf.nn.rnn_cell.LSTMCell(num_units=self.params.rnn_units,
-                                          activation=tf.nn.tanh)
-        cell_bw = tf.nn.rnn_cell.LSTMCell(num_units=self.params.rnn_units,
-                                          activation=tf.nn.tanh)
+        vocab_size = len(self.dataset.vocabulary)
+        encoding_var = tf.Variable(tf.random.uniform(shape=(vocab_size, self.params.rnn_units), maxval=1.0,
+                                   name=name + "-var"))
+        encoding = tf.nn.embedding_lookup(encoding_var, placeholder, name=name + "-enc")
 
-        initial_state_fw = cell_fw.zero_state(tf.shape(placeholder)[0], dtype=tf.float32)
-        initial_state_bw = cell_bw.zero_state(tf.shape(placeholder)[0], dtype=tf.float32)
+        cell_fw = tf.nn.rnn_cell.LSTMCell(num_units=self.params.rnn_units,
+                                          activation=tf.nn.tanh,
+                                          name=name + "-fw")
+        cell_bw = tf.nn.rnn_cell.LSTMCell(num_units=self.params.rnn_units,
+                                          activation=tf.nn.tanh,
+                                          name=name + "-bw")
+
+        initial_state_fw = cell_fw.zero_state(tf.shape(encoding)[0], dtype=tf.float32)
+        initial_state_bw = cell_bw.zero_state(tf.shape(encoding)[0], dtype=tf.float32)
         emb, state = tf.nn.bidirectional_dynamic_rnn(
                                         cell_fw=cell_fw,
                                         cell_bw=cell_bw,
-                                        inputs=one_hot,
+                                        inputs=encoding,
                                         sequence_length=len_placeholder,
                                         initial_state_fw=initial_state_fw,
                                         initial_state_bw=initial_state_bw,
@@ -296,7 +294,7 @@ class Model:
 
     def _make_max_pooling_1d(self, inpt, name):
         pooled = tf.layers.max_pooling1d(inputs=inpt,
-                                         pool_size=(self.params.seq_length,),
+                                         pool_size=(self.params.max_seq_length,),
                                          strides=(1,),
                                          name=name)
         return tf.squeeze(pooled, axis=1)

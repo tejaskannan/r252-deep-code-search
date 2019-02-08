@@ -2,7 +2,7 @@
 class Parameters:
 
     def __init__(self, train_frac, valid_frac, step_size, gradient_clip,
-                 max_vocab_size, seq_length, margin, rnn_units, dense_units,
+                 max_vocab_size, max_seq_length, margin, rnn_units, dense_units,
                  batch_size, num_epochs, optimizer):
         self.train_frac = train_frac
         self.valid_frac = valid_frac
@@ -10,7 +10,7 @@ class Parameters:
         self.gradient_clip = gradient_clip
         self.margin = margin
         self.max_vocab_size = max_vocab_size
-        self.seq_length = seq_length
+        self.max_seq_length = max_seq_length
         self.rnn_units = rnn_units
         self.dense_units = dense_units
         self.batch_size = batch_size
@@ -25,7 +25,7 @@ class Parameters:
             "gradient_clip": self.gradient_clip,
             "margin": self.margin,
             "max_vocab_size": self.max_vocab_size,
-            "seq_length": self.seq_length,
+            "max_seq_length": self.max_seq_length,
             "rnn_units": self.rnn_units,
             "dense_units": self.dense_units,
             "batch_size": self.batch_size,

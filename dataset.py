@@ -7,7 +7,7 @@ from parser import METHOD_API_FILE_NAME, METHOD_TOKENS_FILE_NAME
 
 class Dataset:
 
-    def __init__(self, data_dir, seq_length, max_vocab_size):
+    def __init__(self, data_dir, max_seq_length, max_vocab_size):
         self.method_names = self._load_data_file(data_dir + "/" + METHOD_NAME_FILE_NAME)
         self.method_api_calls = self._load_data_file(data_dir + "/" + METHOD_API_FILE_NAME)
         self.method_tokens = self._load_data_file(data_dir + "/" + METHOD_TOKENS_FILE_NAME)
@@ -17,7 +17,7 @@ class Dataset:
         assert len(self.method_tokens) == len(self.javadoc)
         assert len(self.method_names) == len(self.javadoc)
 
-        self.seq_length = seq_length
+        self.max_seq_length = max_seq_length
         self.data_count = len(self.method_names)
 
         all_tokens = self._flatten([self.method_names, self.method_tokens,\
@@ -71,10 +71,10 @@ class Dataset:
     def _tensorize_data(self, method_names, method_api_calls, method_tokens, javadoc):
 
         def pad(text):
-            if len(text) > self.seq_length:
-                return text[:self.seq_length]
+            if len(text) > self.max_seq_length:
+                return text[:self.max_seq_length]
             return np.pad(text,
-                          (0, self.seq_length - len(text)),
+                          (0, self.max_seq_length - len(text)),
                           'constant',
                           constant_values=0)
 
@@ -90,19 +90,19 @@ class Dataset:
 
         for i in range(0, self.data_count):
             name_vec = self.vocabulary.get_id_or_unk_multiple(method_names[i])
-            self.name_lengths.append(min(len(name_vec), self.seq_length))
+            self.name_lengths.append(min(len(name_vec), self.max_seq_length))
             self.name_tensors.append(pad(name_vec))
 
             api_vec = self.vocabulary.get_id_or_unk_multiple(method_api_calls[i])
-            self.api_lengths.append(min(len(api_vec), self.seq_length))
+            self.api_lengths.append(min(len(api_vec), self.max_seq_length))
             self.api_tensors.append(pad(api_vec))
 
             token_vec = self.vocabulary.get_id_or_unk_multiple(method_tokens[i])
-            self.token_lengths.append(min(len(token_vec), self.seq_length))
+            self.token_lengths.append(min(len(token_vec), self.max_seq_length))
             self.token_tensors.append(pad(token_vec))
 
             javadoc_vec = self.vocabulary.get_id_or_unk_multiple(javadoc[i])
-            self.javadoc_lengths.append(min(len(javadoc_vec), self.seq_length))
+            self.javadoc_lengths.append(min(len(javadoc_vec), self.max_seq_length))
             self.javadoc_tensors.append(pad(javadoc_vec))
 
 
