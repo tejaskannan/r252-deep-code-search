@@ -29,6 +29,7 @@ class Model:
             max_seq_length = 50,
             rnn_units = 64,
             dense_units = 64,
+            embedding_size = 64,
             batch_size = 128,
             num_epochs = 10,
             optimizer="adam"
@@ -215,7 +216,7 @@ class Model:
 
             # Method Token embedding
             vocab_size = len(self.dataset.vocabulary)
-            token_emb_var = tf.Variable(tf.random.uniform(shape=(vocab_size, self.params.dense_units), maxval=1.0),
+            token_emb_var = tf.Variable(tf.random.uniform(shape=(vocab_size, self.params.embedding_size), maxval=1.0),
                                         name="token-embedding-var")
             token_emb = tf.nn.embedding_lookup(token_emb_var, self.token_placeholder)
 
@@ -268,7 +269,7 @@ class Model:
 
     def _make_rnn_embedding(self, placeholder, len_placeholder, name):
         vocab_size = len(self.dataset.vocabulary)
-        encoding_var = tf.Variable(tf.random.uniform(shape=(vocab_size, self.params.rnn_units), maxval=1.0,
+        encoding_var = tf.Variable(tf.random.uniform(shape=(vocab_size, self.params.embedding_size), maxval=1.0,
                                    name=name + "-var"))
         encoding = tf.nn.embedding_lookup(encoding_var, placeholder, name=name + "-enc")
 

@@ -3,7 +3,7 @@ class Parameters:
 
     def __init__(self, train_frac, valid_frac, step_size, gradient_clip,
                  max_vocab_size, max_seq_length, margin, rnn_units, dense_units,
-                 batch_size, num_epochs, optimizer):
+                 embedding_size, batch_size, num_epochs, optimizer):
         self.train_frac = train_frac
         self.valid_frac = valid_frac
         self.step_size = step_size
@@ -16,6 +16,7 @@ class Parameters:
         self.batch_size = batch_size
         self.num_epochs = num_epochs
         self.optimizer = optimizer
+        self.embedding_size = embedding_size
 
     def as_dict(self):
         return {
@@ -30,5 +31,6 @@ class Parameters:
             "dense_units": self.dense_units,
             "batch_size": self.batch_size,
             "num_epochs": self.num_epochs,
-            "optimizer": self.optimizer
+            "optimizer": self.optimizer,
+            "embedding_size": self.embedding_size
         }
