@@ -15,14 +15,20 @@ class CodeGraph:
         self.edges = { (e.sourceId, e.destinationId): e for e in ast_graph.edge }
 
         self.adj = {}
+        self.rev_adj = {}
         for src in self.nodes.keys():
             self.adj[src] = []
+            self.rev_adj[src] = []
             for dest in self.nodes.keys():
                 if (src, dest) in self.edges:
                     self.adj[src].append(dest)
+                if (dest, src) in self.edges:
+                    self.rev_adj[src].append(dest)
 
-        self.vars = self._create_variables_dict()
+
         self.methods = self._create_javadoc_method_dict()
+        if len(self.methods) > 0:
+            self.vars = self._create_variables_dict()
 
     def get_nodes_with_type(self, node_type):
         return list(filter(lambda n: n.type == node_type, self.nodes.values()))
@@ -53,11 +59,7 @@ class CodeGraph:
         return neighbors
 
     def get_predecessors(self, node_id):
-        pred = []
-        for n_id in self.adj:
-            if node_id in self.adj[n_id]:
-                pred.append(n_id)
-        return pred
+        return self.rev_adj[node_id]
 
     def get_out_neighbors_with_edge_type(self, node_id, edge_type):
         out_edges = self.get_out_edges_with_type(node_id, edge_type)
@@ -94,8 +96,12 @@ class CodeGraph:
         for var_ast_node in var_ast_nodes:
             type_node = self.get_neighbors_with_type_content(var_ast_node.id,
                                                              neigh_type=None,
-                                                             neigh_content=TYPE)[0]
-            
+                                                             neigh_content=TYPE)
+            if type_node == None or len(type_node) == 0:
+                continue
+            else:
+                type_node = type_node[0]
+
             while type_node.type != FeatureNode.IDENTIFIER_TOKEN:
                 type_node = self.get_out_neighbors(type_node.id)[0]
 
@@ -123,12 +129,21 @@ class CodeGraph:
                                            method_assoc_tokens))
 
             method_body = self.get_neighbors_with_type_content(method_node.id,
-                                                               neigh_type=FeatureNode.FAKE_AST,
-                                                               neigh_content=BODY)[0]
-            method_block = self.get_neighbors_with_type_content(method_body.id,
-                                                                neigh_type=FeatureNode.AST_ELEMENT,
-                                                                neigh_content=BLOCK)[0]
+                                                               neigh_type=None,
+                                                               neigh_content=BODY)
 
+            if len(method_body) == 0:
+                continue
+
+            method_body = method_body[0]
+            method_block = self.get_neighbors_with_type_content(method_body.id,
+                                                                neigh_type=None,
+                                                                neigh_content=BLOCK)
+
+            if len(method_block) == 0:
+                continue
+
+            method_block = method_block[0]
             num_lines = method_node.endLineNumber - method_node.startLineNumber
             method_dict[method_block.id] = JavadocMethod(javadoc_node, method_block,
                                                          method_name_node.contents,

@@ -36,10 +36,14 @@ class Parser:
         self.line_threshold = line_threshold
 
     def parse_directory(self, base, output_folder="data"):
+        num_files = 0
         for root, _dirs, files in os.walk(base):
             for file_name in files:
                 file_path = root + "/" + file_name
-                self.parse_file(file_path)
+                self.parse_file(file_path, output_folder)
+                num_files += 1
+                if num_files % 5 == 0:
+                    print(num_files)
 
     def parse_file(self, file_name, output_folder="data"):
 
@@ -80,8 +84,10 @@ class Parser:
                 method_tokens = self._get_method_tokens(method.method_block, code_graph)
                 method_tokens = self._clean_tokens(method_tokens)
 
-                print(api_call_tokens)
-                print(method_tokens)
+                self._append_to_file(" ".join(method_name_tokens), method_name_file)
+                self._append_to_file(" ".join(api_call_tokens), method_api_file)
+                self._append_to_file(method_tokens, method_tokens_file)
+                self._append_to_file(javadoc_tokens, javadoc_tokens_file)
 
             # method_invocations = code_graph.get_nodes_with_content("METHOD_INVOCATION")
             # for method_invoke in method_invocations:
@@ -116,10 +122,20 @@ class Parser:
     def _parse_method_invocation(self, method_invocation_node, code_graph):
         method_select = code_graph.get_neighbors_with_type_content(method_invocation_node.id,
                                                                    neigh_type=None,
-                                                                   neigh_content=METHOD_SELECT)[0]
+                                                                   neigh_content=METHOD_SELECT)
+
+        if len(method_select) == 0:
+            return ""
+        else:
+            method_select = method_select[0]
+
         member_select = code_graph.get_neighbors_with_type_content(method_select.id,
                                                                    neigh_type=None,
-                                                                   neigh_content=MEMBER_SELECT)[0]
+                                                                   neigh_content=MEMBER_SELECT)
+        if len(member_select) == 0:
+            return ""
+        else:
+            member_select = member_select[0]
         
         expr_node = code_graph.get_neighbors_with_type_content(member_select.id,
                                                                neigh_type=FeatureNode.FAKE_AST,
@@ -138,9 +154,13 @@ class Parser:
         else:
             token = token_node[0]
             type_node = self._find_variable_type(token, code_graph)
-            api_str = type_node.contents
-        api_str = API_FORMAT.format(api_str, identifier.contents)
-        return api_str
+            if type_node != None:
+                api_str = type_node.contents
+
+        if len(api_str) == 0:
+            return api_str
+        else:
+            return API_FORMAT.format(api_str, identifier.contents)
 
     def _find_variable_type(self, variable_node, code_graph):
         node = variable_node
@@ -174,28 +194,60 @@ class Parser:
     # separately in the parsing stage
     def _get_method_invocations(self, method_block, code_graph):
         statements = code_graph.get_neighbors_with_type_content(method_block.id,
-                                                                neigh_type=FeatureNode.FAKE_AST,
-                                                                neigh_content=STATEMENTS)[0]
+                                                                neigh_type=None,
+                                                                neigh_content=STATEMENTS)
+
+        if len(statements) == 0:
+            return []
+        statements = statements[0]
+
         bounds = code_graph.get_neighbors_with_type_content(method_block.id,
                                                             neigh_type=FeatureNode.TOKEN,
                                                             neigh_content=None)
-        method_invocations = []
-        node_stack = [statements]
 
-        # This initalization prevents an infinite loop by bounding
-        # the search space
-        seen_ids = { bounds[0].id, bounds[1].id }
-        while len(node_stack) > 0:
-            node = node_stack.pop()
-            seen_ids.add(node.id)
-            if node.contents == METHOD_INVOCATION:
-                method_invocations.append(node)
-            else:
-                neighbors = code_graph.get_out_neighbors(node.id)
-                for n in neighbors:
-                    if not (n.id in seen_ids):
-                        node_stack.append(n)
-        return method_invocations
+
+        all_invocations = code_graph.get_nodes_with_content(METHOD_INVOCATION)
+        startLine = method_block.startLineNumber
+        endLine = method_block.endLineNumber
+
+        method_invocations = list(filter(lambda m: m.startLineNumber >= startLine and \
+                                                   m.endLineNumber <= endLine,
+                                         all_invocations))
+
+        top_level_invocations = []
+        for m_invoc in method_invocations:
+            is_top_level = True
+            for m in method_invocations:
+                if m.id == m_invoc.id:
+                    continue
+
+                if m_invoc.startPosition >= m.startPosition and \
+                   m_invoc.endPosition <= m.endPosition:
+                   is_top_level = False
+                   break
+
+            if is_top_level:
+                top_level_invocations.append(m_invoc)
+        return top_level_invocations
+
+        # method_invocations = []
+        # node_stack = [statements]
+
+        # # This initalization prevents an infinite loop by bounding
+        # # the search space
+        # seen_ids = { bounds[0].id, bounds[1].id }
+        # while len(node_stack) > 0:
+        #     node = node_stack.pop()
+        #     seen_ids.add(node.id)
+        #     if node.contents == METHOD_INVOCATION:
+        #         method_invocations.append(node)
+        #     else:
+        #         neighbors = code_graph.get_out_neighbors(node.id)
+        #         for n in neighbors:
+        #             if not (n.id in seen_ids) and \
+        #                not n.type in (FeatureNode.TOKEN, FeatureNode.IDENTIFIER_TOKEN):
+        #                 node_stack.append(n)
+        # return method_invocations
 
 
     def _get_method_tokens(self, method_block, code_graph):

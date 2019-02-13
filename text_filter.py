@@ -28,6 +28,8 @@ class TextFilter:
         return cleaned_lines
 
     def filter_single_token(self, token, use_keywords=True, use_stopwords=True, use_tags=True):
+        if len(token.strip()) == 0:
+            return False
         if use_keywords and token in self.java_keywords:
             return False
         if use_stopwords and token in self.stopwords:
