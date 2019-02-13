@@ -7,7 +7,15 @@ if __name__ == '__main__':
 		print("Too few arguments.")
 	elif sys.argv[1] == "-g":
 		parser = Parser("filters/tags.txt", "filters/stopwords.txt")
-		parser.parse_directory(sys.argv[2])
+
+		out_folder = "data"
+		if len(sys.argv) > 3:
+			out_folder = sys.argv[3]
+
+		if sys.argv[2][-1] == "/":
+			parser.parse_directory(sys.argv[2], out_folder)
+		else:
+			parser.parse_file(sys.argv[2], out_folder)
 	elif sys.argv[1] == "train":
 		model = Model()
 		model.train()

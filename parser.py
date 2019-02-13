@@ -6,6 +6,7 @@ import re
 from graph_pb2 import Graph
 from graph_pb2 import FeatureNode
 from text_filter import TextFilter
+from code_graph import CodeGraph
 
 
 JAVADOC_FILE_NAME = "javadoc.txt"
@@ -16,6 +17,8 @@ METHOD_TOKENS_FILE_NAME = "method-tokens.txt"
 METHOD = "METHOD"
 DOT = "DOT"
 LPAREN = "LPAREN"
+VARIABLE = "VARIABLE"
+TYPE = "TYPE"
 
 class Parser:
 
@@ -43,29 +46,32 @@ class Parser:
                 print("Error parsing: " + file_name)
                 return
 
-            javadoc_nodes = list(filter(lambda n: n.type == FeatureNode.COMMENT_JAVADOC, g.node))
-            for javadoc_node in javadoc_nodes:
-                javadoc_edge = next(e for e in g.edge if e.sourceId == javadoc_node.id)
-                entity_node = next(n for n in g.node if javadoc_edge.destinationId == n.id)
+            code_graph = CodeGraph(g)
 
-                # We only consider methods in our dataset
-                if entity_node.contents != METHOD:
-                    continue
+            # javadoc_nodes = list(filter(lambda n: n.type == FeatureNode.COMMENT_JAVADOC, g.node))
+            # for javadoc_node in javadoc_nodes:
+            #     javadoc_edge = next(e for e in g.edge if e.sourceId == javadoc_node.id)
+            #     entity_node = next(n for n in g.node if javadoc_edge.destinationId == n.id)
 
-                javadoc_out_file = output_folder + "/" + JAVADOC_FILE_NAME
-                cleaned_javadoc = self.clean_javadoc(javadoc_node.contents)
-                if len(cleaned_javadoc) == 0:
-                    continue
-                self.append_to_file(cleaned_javadoc, javadoc_out_file)
+            #     # We only consider methods in our dataset
+            #     if entity_node.contents != METHOD:
+            #         continue
 
-                method_name, method_api_calls, method_tokens = self.extract_method_tokens(
-                                g, entity_node.startLineNumber, entity_node.endLineNumber)
+            #     javadoc_out_file = output_folder + "/" + JAVADOC_FILE_NAME
+            #     cleaned_javadoc = self.clean_javadoc(javadoc_node.contents)
+            #     if len(cleaned_javadoc) == 0:
+            #         continue
+            #     self.append_to_file(cleaned_javadoc, javadoc_out_file)
 
-                self.append_to_file(" ".join(method_name), method_name_file)
-                self.append_to_file(" ".join(method_api_calls), method_api_file)
+            #     method_name, method_api_calls, method_tokens = self.extract_method_tokens(
+            #                     g, entity_node.startLineNumber, entity_node.endLineNumber)
 
-                cleaned_tokens = self.clean_tokens(method_tokens)
-                self.append_to_file(cleaned_tokens, method_tokens_file)
+            #     self.append_to_file(" ".join(method_name), method_name_file)
+            #     self.append_to_file(" ".join(method_api_calls), method_api_file)
+
+            #     cleaned_tokens = self.clean_tokens(method_tokens)
+            #     self.append_to_file(cleaned_tokens, method_tokens_file)
+
 
     def extract_method_tokens(self, graph, start, end):
 
@@ -113,3 +119,12 @@ class Parser:
 
     def split_camel_case(self, text):
         return re.sub('([a-z])([A-Z])', r'\1 \2', text).split()
+
+
+
+
+class Variable:
+
+    def __init__(self, type_node, var_node):
+        self.type_node = type_node
+        self.var_node = var_node
