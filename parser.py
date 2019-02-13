@@ -24,11 +24,13 @@ MEMBER_SELECT = "MEMBER_SELECT"
 EXPRESSION = "EXPRESSION"
 STATEMENTS = "STATEMENTS"
 METHOD_INVOCATION = "METHOD_INVOCATION"
+LBRACE = "LBRACE"
 
 class Parser:
 
-    def __init__(self, tags_file, keywords_file):
+    def __init__(self, tags_file, keywords_file, line_threshold=3):
         self.text_filter = TextFilter(tags_file, keywords_file)
+        self.line_threshold = line_threshold
 
     def parse_directory(self, base, output_folder="data"):
         for root, _dirs, files in os.walk(base):
@@ -54,12 +56,26 @@ class Parser:
             code_graph = CodeGraph(g)
 
             for method in code_graph.methods.values():
-                method_invocations = self._get_method_invocations(method.method_block, code_graph)
 
+                # We skip very small methods because these can often be described with
+                # heuristics
+                if method.num_lines <= self.line_threshold:
+                    continue
+
+                method_name_tokens = self._split_camel_case(method.method_name)
+
+                method_invocations = self._get_method_invocations(method.method_block, code_graph)
                 api_call_tokens = []
                 for invocation in method_invocations:
                     api_call_tokens.append(self._parse_method_invocation(invocation, code_graph))
-                print(api_call_tokens)
+
+                javadoc_tokens = self._clean_javadoc(method.javadoc.contents)
+
+                method_tokens = self._get_method_tokens(method.method_block, code_graph)
+                method_tokens = self._clean_tokens(method_tokens)
+
+                print(method_tokens)
+
             # method_invocations = code_graph.get_nodes_with_content("METHOD_INVOCATION")
             # for method_invoke in method_invocations:
             #     print(self._parse_method_invocation(method_invoke, code_graph))
@@ -173,6 +189,31 @@ class Parser:
                     if not (n.id in seen_ids):
                         node_stack.append(n)
         return method_invocations
+
+
+    def _get_method_tokens(self, method_block, code_graph):
+        bounds = code_graph.get_neighbors_with_type_content(method_block.id,
+                                                            neigh_type=FeatureNode.TOKEN,
+                                                            neigh_content=None)
+        start = bounds[0]
+        end = bounds[1]
+        if start.contents != LBRACE:
+            t = start
+            start = end
+            end = t
+
+        tokens = list()
+        node = start
+        while (node.id != end.id):
+            if node.type == FeatureNode.IDENTIFIER_TOKEN:
+                in_neighbors = code_graph.get_in_neighbors_with_edge_type(node.id, FeatureEdge.ASSOCIATED_TOKEN)
+                for n in in_neighbors:
+                    if not n.contents in (EXPRESSION, MEMBER_SELECT):
+                        tokens += [token.lower() for token in self._split_camel_case(node.contents)]
+            else:
+                tokens.append(node.contents.lower())
+            node = code_graph.get_out_neighbors_with_edge_type(node.id, FeatureEdge.NEXT_TOKEN)[0]
+        return list(set(tokens))
 
 
     def _clean_tokens(self, tokens):

@@ -125,4 +125,12 @@ just
 don
 should
 now
-
+lbrace
+rbrace
+dot
+comma
+eq
+semi
+lparen
+rparen
+colon

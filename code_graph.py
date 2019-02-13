@@ -128,8 +128,10 @@ class CodeGraph:
                                                                 neigh_type=FeatureNode.AST_ELEMENT,
                                                                 neigh_content=BLOCK)[0]
 
+            num_lines = method_node.endLineNumber - method_node.startLineNumber
             method_dict[method_block.id] = JavadocMethod(javadoc_node, method_block,
-                                                         method_name_node.contents)
+                                                         method_name_node.contents,
+                                                         num_lines)
         return method_dict
 
 
@@ -141,7 +143,8 @@ class Variable:
 
 class JavadocMethod:
 
-    def __init__(self, javadoc, method_block, method_name):
+    def __init__(self, javadoc, method_block, method_name, num_lines):
         self.javadoc = javadoc
         self.method_block = method_block
         self.method_name = method_name
+        self.num_lines = num_lines
