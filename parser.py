@@ -4,7 +4,7 @@ import os
 import re
 
 from graph_pb2 import Graph
-from graph_pb2 import FeatureNode
+from graph_pb2 import FeatureNode, FeatureEdge
 from text_filter import TextFilter
 from code_graph import CodeGraph
 
@@ -19,6 +19,11 @@ DOT = "DOT"
 LPAREN = "LPAREN"
 VARIABLE = "VARIABLE"
 TYPE = "TYPE"
+METHOD_SELECT = "METHOD_SELECT"
+MEMBER_SELECT = "MEMBER_SELECT"
+EXPRESSION = "EXPRESSION"
+STATEMENTS = "STATEMENTS"
+METHOD_INVOCATION = "METHOD_INVOCATION"
 
 class Parser:
 
@@ -48,6 +53,17 @@ class Parser:
 
             code_graph = CodeGraph(g)
 
+            for method in code_graph.methods.values():
+                method_invocations = self._get_method_invocations(method.method_block, code_graph)
+
+                api_call_tokens = []
+                for invocation in method_invocations:
+                    api_call_tokens.append(self._parse_method_invocation(invocation, code_graph))
+                print(api_call_tokens)
+            # method_invocations = code_graph.get_nodes_with_content("METHOD_INVOCATION")
+            # for method_invoke in method_invocations:
+            #     print(self._parse_method_invocation(method_invoke, code_graph))
+
             # javadoc_nodes = list(filter(lambda n: n.type == FeatureNode.COMMENT_JAVADOC, g.node))
             # for javadoc_node in javadoc_nodes:
             #     javadoc_edge = next(e for e in g.edge if e.sourceId == javadoc_node.id)
@@ -73,58 +89,104 @@ class Parser:
             #     self.append_to_file(cleaned_tokens, method_tokens_file)
 
 
-    def extract_method_tokens(self, graph, start, end):
 
-        def is_method_token(node):
-            return (node.type in (FeatureNode.TOKEN, FeatureNode.IDENTIFIER_TOKEN)) and \
-                   (node.startLineNumber >= start) and \
-                   (node.endLineNumber <= end)
+    def _parse_method_invocation(self, method_invocation_node, code_graph):
+        method_select = code_graph.get_neighbors_with_type_content(method_invocation_node.id,
+                                                                   neigh_type=None,
+                                                                   neigh_content=METHOD_SELECT)[0]
+        member_select = code_graph.get_neighbors_with_type_content(method_select.id,
+                                                                   neigh_type=None,
+                                                                   neigh_content=MEMBER_SELECT)[0]
+        
+        expr_node = code_graph.get_neighbors_with_type_content(member_select.id,
+                                                               neigh_type=FeatureNode.FAKE_AST,
+                                                               neigh_content=EXPRESSION)[0]
+        identifier = code_graph.get_neighbors_with_type_content(member_select.id,
+                                                                neigh_type=FeatureNode.IDENTIFIER_TOKEN,
+                                                                neigh_content=None)[0]
 
-        method_nodes = list(filter(is_method_token, graph.node))
+        token_node = code_graph.get_out_neighbors_with_edge_type(expr_node.id, FeatureEdge.ASSOCIATED_TOKEN)
 
-        method_name = []
-        method_api_calls = []
-        method_tokens = []
+        # This means we have a nested method call
+        api_str = ""
+        if token_node == None:
+            inner_invocation = code_graph.get_out_neighbors_with_edge_type(expr_node.id, FeatureEdge.AST_CHILD)[0]
+            api_str = self._parse_method_invocation(inner_invocation, code_graph)
+        else:
+            token = token_node[0]
+            type_node = self._find_variable_type(token, code_graph)
+            api_str = type_node.contents
+        api_str = "{0}.{1}".format(api_str, identifier.contents)
+        return api_str
 
-        first = True
-        for i in range(0, len(method_nodes)):
-            node = method_nodes[i]
-            if node.type == FeatureNode.TOKEN:
-                continue
-            if first:
-                method_name = self.split_camel_case(node.contents)
-                method_name = list(map(lambda s: s.lower(), method_name))
-                first = False
-            elif (i+1) < len(method_nodes) and method_nodes[i+1].type == FeatureNode.TOKEN and \
-                 (method_nodes[i+1].contents == DOT or method_nodes[i+1].contents == LPAREN):
-                api_tokens = self.split_camel_case(node.contents)
-                method_api_calls += list(map(lambda s: s.lower(), api_tokens))
+    def _find_variable_type(self, variable_node, code_graph):
+        node = variable_node
+        # We first move forward
+        while node:
+            if node.id in code_graph.vars:
+                variable = code_graph.vars[node.id]
+                return variable.type_node
+            next_use = code_graph.get_out_neighbors_with_edge_type(node.id,
+                                                                   FeatureEdge.LAST_LEXICAL_USE)
+            if next_use:
+                node = next_use[0]
             else:
-                method_tokens.append(node.contents.lower())
+                node = next_use
 
-        return method_name, method_api_calls, method_tokens
+        node = variable_node
+        while node:
+            if node.id in code_graph.vars:
+                variable = code_graph.vars[node.id]
+                return variable.type_node
+            prev_use = code_graph.get_in_neighbors_with_edge_type(node.id,
+                                                                  FeatureEdge.LAST_LEXICAL_USE)
+            if prev_use:
+                node = prev_use[0]
+            else:
+                node = prev_use
 
-    def clean_tokens(self, tokens):
+        return None
+
+    # This method only gets top-level invocations. Nested method calls are handled
+    # separately in the parsing stage
+    def _get_method_invocations(self, method_block, code_graph):
+        statements = code_graph.get_neighbors_with_type_content(method_block.id,
+                                                                neigh_type=FeatureNode.FAKE_AST,
+                                                                neigh_content=STATEMENTS)[0]
+        bounds = code_graph.get_neighbors_with_type_content(method_block.id,
+                                                            neigh_type=FeatureNode.TOKEN,
+                                                            neigh_content=None)
+        method_invocations = []
+        node_stack = [statements]
+
+        # This initalization prevents an infinite loop by bounding
+        # the search space
+        seen_ids = { bounds[0].id, bounds[1].id }
+        while len(node_stack) > 0:
+            node = node_stack.pop()
+            seen_ids.add(node.id)
+            if node.contents == METHOD_INVOCATION:
+                method_invocations.append(node)
+            else:
+                neighbors = code_graph.get_out_neighbors(node.id)
+                for n in neighbors:
+                    if not (n.id in seen_ids):
+                        node_stack.append(n)
+        return method_invocations
+
+
+    def _clean_tokens(self, tokens):
         return " ".join(self.text_filter.apply_to_token_lst(tokens))
 
-    def clean_javadoc(self, javadoc):
+    def _clean_javadoc(self, javadoc):
         javadoc_contents = javadoc.replace("/", "").replace("*", "") \
                                   .replace("{", "").replace("}", "").lower()
         cleaned_javadoc = self.text_filter.apply_to_javadoc(javadoc_contents)
         return " ".join(cleaned_javadoc)
 
-    def append_to_file(self, text, file_name):
+    def _append_to_file(self, text, file_name):
         with open(file_name, "a") as file:
             file.write(text + "\n")
 
-    def split_camel_case(self, text):
+    def _split_camel_case(self, text):
         return re.sub('([a-z])([A-Z])', r'\1 \2', text).split()
-
-
-
-
-class Variable:
-
-    def __init__(self, type_node, var_node):
-        self.type_node = type_node
-        self.var_node = var_node
