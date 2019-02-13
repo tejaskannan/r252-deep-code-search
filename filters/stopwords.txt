@@ -134,3 +134,7 @@ semi
 lparen
 rparen
 colon
+lbracket
+rbracket
+lt
+gt

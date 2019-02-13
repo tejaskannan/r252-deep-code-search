@@ -5,6 +5,7 @@ VARIABLE = "VARIABLE"
 METHOD = "METHOD"
 BLOCK = "BLOCK"
 BODY = "BODY"
+PARAM_TYPE = "PARAMETERIZED_TYPE"
 
 class CodeGraph:
 
@@ -94,14 +95,14 @@ class CodeGraph:
             type_node = self.get_neighbors_with_type_content(var_ast_node.id,
                                                              neigh_type=None,
                                                              neigh_content=TYPE)[0]
-            var_type_node = self.get_out_neighbors_with_edge_type(type_node.id,
-                                                                  FeatureEdge.ASSOCIATED_TOKEN)
-            if var_type_node == None:
-                continue
-            var_type_node = var_type_node[0]
+            
+            while type_node.type != FeatureNode.IDENTIFIER_TOKEN:
+                type_node = self.get_out_neighbors(type_node.id)[0]
 
-            var_node = self.get_out_neighbors(var_type_node.id)[0]
-            var_dict[var_node.id] = Variable(var_type_node, var_node)
+            var_node = self.get_neighbors_with_type_content(var_ast_node.id,
+                                                            neigh_type=FeatureNode.IDENTIFIER_TOKEN,
+                                                            neigh_content=None)[0]
+            var_dict[var_node.id] = Variable(type_node, var_node)
         return var_dict
 
     def _create_javadoc_method_dict(self):

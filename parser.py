@@ -25,6 +25,9 @@ EXPRESSION = "EXPRESSION"
 STATEMENTS = "STATEMENTS"
 METHOD_INVOCATION = "METHOD_INVOCATION"
 LBRACE = "LBRACE"
+NEW = "NEW"
+NEW_LOWER = "new"
+API_FORMAT = "{0}.{1}"
 
 class Parser:
 
@@ -59,8 +62,8 @@ class Parser:
 
                 # We skip very small methods because these can often be described with
                 # heuristics
-                if method.num_lines <= self.line_threshold:
-                    continue
+                # if method.num_lines <= self.line_threshold:
+                #     continue
 
                 method_name_tokens = self._split_camel_case(method.method_name)
 
@@ -69,11 +72,15 @@ class Parser:
                 for invocation in method_invocations:
                     api_call_tokens.append(self._parse_method_invocation(invocation, code_graph))
 
+                obj_init_tokens = self._get_object_inits(method.method_block, code_graph)
+                api_call_tokens += obj_init_tokens
+
                 javadoc_tokens = self._clean_javadoc(method.javadoc.contents)
 
                 method_tokens = self._get_method_tokens(method.method_block, code_graph)
                 method_tokens = self._clean_tokens(method_tokens)
 
+                print(api_call_tokens)
                 print(method_tokens)
 
             # method_invocations = code_graph.get_nodes_with_content("METHOD_INVOCATION")
@@ -132,7 +139,7 @@ class Parser:
             token = token_node[0]
             type_node = self._find_variable_type(token, code_graph)
             api_str = type_node.contents
-        api_str = "{0}.{1}".format(api_str, identifier.contents)
+        api_str = API_FORMAT.format(api_str, identifier.contents)
         return api_str
 
     def _find_variable_type(self, variable_node, code_graph):
@@ -192,17 +199,9 @@ class Parser:
 
 
     def _get_method_tokens(self, method_block, code_graph):
-        bounds = code_graph.get_neighbors_with_type_content(method_block.id,
-                                                            neigh_type=FeatureNode.TOKEN,
-                                                            neigh_content=None)
-        start = bounds[0]
-        end = bounds[1]
-        if start.contents != LBRACE:
-            t = start
-            start = end
-            end = t
+        start, end = self._get_bounds(method_block, code_graph)
 
-        tokens = list()
+        tokens = []
         node = start
         while (node.id != end.id):
             if node.type == FeatureNode.IDENTIFIER_TOKEN:
@@ -215,6 +214,30 @@ class Parser:
             node = code_graph.get_out_neighbors_with_edge_type(node.id, FeatureEdge.NEXT_TOKEN)[0]
         return list(set(tokens))
 
+    def _get_object_inits(self, method_block, code_graph):
+        start, end = self._get_bounds(method_block, code_graph)
+
+        tokens = []
+        node = start
+        while (node.id != end.id):
+            if node.contents == NEW:
+                obj_type_node = code_graph.get_out_neighbors_with_edge_type(node.id, FeatureEdge.NEXT_TOKEN)[0]
+                tokens.append(API_FORMAT.format(obj_type_node.contents, NEW_LOWER))
+                node = obj_type_node
+            node = code_graph.get_out_neighbors_with_edge_type(node.id, FeatureEdge.NEXT_TOKEN)[0]
+        return tokens
+
+    def _get_bounds(self, method_block, code_graph):
+        bounds = code_graph.get_neighbors_with_type_content(method_block.id,
+                                                            neigh_type=FeatureNode.TOKEN,
+                                                            neigh_content=None)
+        start = bounds[0]
+        end = bounds[1]
+        if start.contents != LBRACE:
+            t = start
+            start = end
+            end = t
+        return start, end
 
     def _clean_tokens(self, tokens):
         return " ".join(self.text_filter.apply_to_token_lst(tokens))
