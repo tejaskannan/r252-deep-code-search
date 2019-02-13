@@ -1,4 +1,5 @@
 from graph_pb2 import Graph, FeatureNode, FeatureEdge
+import time
 
 TYPE = "TYPE"
 VARIABLE = "VARIABLE"
@@ -14,17 +15,12 @@ class CodeGraph:
         self.nodes = { n.id : n for n in ast_graph.node }
         self.edges = { (e.sourceId, e.destinationId): e for e in ast_graph.edge }
 
-        self.adj = {}
-        self.rev_adj = {}
-        for src in self.nodes.keys():
-            self.adj[src] = []
-            self.rev_adj[src] = []
-            for dest in self.nodes.keys():
-                if (src, dest) in self.edges:
-                    self.adj[src].append(dest)
-                if (dest, src) in self.edges:
-                    self.rev_adj[src].append(dest)
+        self.adj = { n.id: [] for n in ast_graph.node }
+        self.rev_adj = { n.id: [] for n in ast_graph.node }
 
+        for src, dest in self.edges.keys():
+            self.adj[src].append(dest)
+            self.rev_adj[dest].append(src)
 
         self.methods = self._create_javadoc_method_dict()
         if len(self.methods) > 0:

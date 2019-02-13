@@ -7,7 +7,7 @@ from graph_pb2 import Graph
 from graph_pb2 import FeatureNode, FeatureEdge
 from text_filter import TextFilter
 from code_graph import CodeGraph
-
+import time
 
 JAVADOC_FILE_NAME = "javadoc.txt"
 METHOD_NAME_FILE_NAME = "method-names.txt"
@@ -34,16 +34,19 @@ class Parser:
     def __init__(self, tags_file, keywords_file, line_threshold=3):
         self.text_filter = TextFilter(tags_file, keywords_file)
         self.line_threshold = line_threshold
+        self.camel_case_regex = re.compile('([a-z])([A-Z])')
 
     def parse_directory(self, base, output_folder="data"):
-        num_files = 0
+        num_methods_written = 0
+        num_files_processed = 0
         for root, _dirs, files in os.walk(base):
             for file_name in files:
                 file_path = root + "/" + file_name
-                self.parse_file(file_path, output_folder)
-                num_files += 1
-                if num_files % 5 == 0:
-                    print(num_files)
+                num_methods_written += self.parse_file(file_path, output_folder)
+                num_files_processed += 1
+                if (num_files_processed % 100 == 0):
+                    print("Processed {0} files".format(num_files_processed))
+        return num_methods_written
 
     def parse_file(self, file_name, output_folder="data"):
 
@@ -52,13 +55,15 @@ class Parser:
         method_tokens_file = output_folder + "/" + METHOD_TOKENS_FILE_NAME
         javadoc_tokens_file = output_folder + "/" + JAVADOC_FILE_NAME
 
+        num_methods_written = 0
+
         with open(file_name, 'rb') as proto_file:
             g = Graph()
             try:
                 g.ParseFromString(proto_file.read())
             except:
                 print("Error parsing: " + file_name)
-                return
+                return num_methods_written
 
             code_graph = CodeGraph(g)
 
@@ -66,8 +71,8 @@ class Parser:
 
                 # We skip very small methods because these can often be described with
                 # heuristics
-                # if method.num_lines <= self.line_threshold:
-                #     continue
+                if method.num_lines <= self.line_threshold:
+                    continue
 
                 method_name_tokens = self._split_camel_case(method.method_name)
 
@@ -78,16 +83,22 @@ class Parser:
 
                 obj_init_tokens = self._get_object_inits(method.method_block, code_graph)
                 api_call_tokens += obj_init_tokens
+                api_call_tokens = self._remove_whitespace(api_call_tokens)
 
                 javadoc_tokens = self._clean_javadoc(method.javadoc.contents)
 
                 method_tokens = self._get_method_tokens(method.method_block, code_graph)
+                method_tokens = self._remove_whitespace(method_tokens)
                 method_tokens = self._clean_tokens(method_tokens)
 
-                self._append_to_file(" ".join(method_name_tokens), method_name_file)
-                self._append_to_file(" ".join(api_call_tokens), method_api_file)
-                self._append_to_file(method_tokens, method_tokens_file)
-                self._append_to_file(javadoc_tokens, javadoc_tokens_file)
+                if len(method_tokens) > 0 and len(api_call_tokens) > 0 and \
+                   len(method_name_tokens) > 0 and len(javadoc_tokens) > 0:
+                    self._append_to_file(" ".join(method_name_tokens), method_name_file)
+                    self._append_to_file(" ".join(api_call_tokens), method_api_file)
+                    self._append_to_file(method_tokens, method_tokens_file)
+                    self._append_to_file(javadoc_tokens, javadoc_tokens_file)
+                    num_methods_written += 1
+        return num_methods_written
 
             # method_invocations = code_graph.get_nodes_with_content("METHOD_INVOCATION")
             # for method_invoke in method_invocations:
@@ -305,4 +316,7 @@ class Parser:
             file.write(text + "\n")
 
     def _split_camel_case(self, text):
-        return re.sub('([a-z])([A-Z])', r'\1 \2', text).split()
+        return self.camel_case_regex.sub(r'\1 \2', text).split()
+
+    def _remove_whitespace(self, lst):
+        return list(filter(lambda x: len(x.strip()) > 0, lst))

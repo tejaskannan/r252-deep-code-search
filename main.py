@@ -13,9 +13,10 @@ if __name__ == '__main__':
 			out_folder = sys.argv[3]
 
 		if sys.argv[2][-1] == "/":
-			parser.parse_directory(sys.argv[2], out_folder)
+			written = parser.parse_directory(sys.argv[2], out_folder)
 		else:
-			parser.parse_file(sys.argv[2], out_folder)
+			written = parser.parse_file(sys.argv[2], out_folder)
+		print("Dataset size: {0}".format(written))
 	elif sys.argv[1] == "train":
 		model = Model()
 		model.train()

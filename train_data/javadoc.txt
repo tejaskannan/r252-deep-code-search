@@ -1,0 +1,1059 @@
+decodes provided byte utf-8 char. done avoiding conversions string. provided byte modified method caller needs take care clearing value sensitive.
+constant time equality check strings avoid potential timing attacks.
+encodes provided char utf-8 byte. done avoiding conversions string. provided char modified method caller needs take care clearing value sensitive.
+tests char contains sequence characters match prefix. like
+create new ewma given alpha initialavg. smaller alpha means new data points less weight high alpha means older data points lower influence.
+provides secure source randomness. acts exactly similar #get returning new securerandom.
+provides reproducible source randomness seeded long seed settings key setting.
+provides source randomness reproducible running elasticsearch test suite otherwise produces non-reproducible source randomness. reproducible sources randomness created system property "tests.seed" set security policy allows reading system property. otherwise non-reproducible sources randomness created. acquire instance random randomizedcontext tests running tests.seed set
+return informative string describing tasks performed custom reporting call codegettaskinfocode use task info directly.
+return name last task.
+return array data tasks performed.
+start named task. results undefined #stop timing methods called without invoking method.
+stop current task. results undefined timing methods called without invoking least one pair
+return string table describing tasks performed. custom reporting call gettaskinfo use task info directly.
+return time taken last task.
+determine name package given class: e.g. "java.lang" codejava.lang.stringcode class. defined default package
+creates new fieldmemorystats instance stream
+adds merges given field memory stats stats instance
+generates x-content given builder fields stats instance
+split string first occurrence delimiter. include delimiter result. index 1 delimiter neither element includes delimiter; codenullcode delimiter wasn't found given input string
+format double value single decimal points trimming trailing '.0'.
+trim occurrences supplied leading character given string.
+take string delimited list convert string array. pa single delimiter consists one character: still considered single delimiter string rather bunch potential delimiter characters - contrast codetokenizetostringarraycode. rather bunch individual delimiter characters line breaks: e.g. "rnf" delete new lines line feeds string.
+return substringbeginindex endindex impervious string length.
+convenience method convert csv string list set. note suppress duplicates.
+convenience method return collection delimited e.g. csv string. e.g. useful codetostringcode implementations.
+convenience method return string array delimited e.g. csv string. e.g. useful codetostringcode implementations.
+replace occurrences substring within string another string.
+splits backslash escaped string separator. p current backslash escaping supported: br n r b f escaped java string br characters following backslash produced verbatim c => c
+check whether given charsequence actual text. specifically returns codetruecode string codenullcode length greater 0 contains least one non-whitespace character. pre stringutils.hastextnull = false stringutils.hastext"" = false stringutils.hastext" " = false stringutils.hastext"12345" = true stringutils.hastext" 12345 " = true pre length greater 0 contain whitespace
+return string json representation provided toxcontent. wraps output anonymous object needed. allows control whether outputted json needs pretty printed human readable.
+tokenizes specified string collection using specified delimiters token delimiters. method trims whitespace tokens ignores empty tokens.
+copy given collection string array. collection must contain string elements only. collection codenullcode
+delete character given string. e.g. "azn" delete 'a's 'z's new lines.
+truncates string length less length. backtracks throw high surrogates.
+test whether given string matches given substring given index.
+tokenize given string string array via stringtokenizer. trims tokens omits empty tokens. pthe given delimiters string supposed consist number delimiter characters. characters used separate tokens. delimiter always single character; multi-character delimiters consider using codedelimitedlisttostringarraycode characters individually considered delimiter.
+match string given pattern supporting following simple pattern styles: "xxx" "xxx" "xxx" "xxxyyy" matches arbitrary number pattern parts well direct equality.
+add sequence validation errors accumulating validation errors
+return long n stores throws exception stored value cannot converted long stores exact value.
+return long stringvalue stores throws exception stored value cannot converted long stores exact value coerce false.
+return byte n stores throws exception stored value cannot converted byte stores exact value.
+return short n stores throws exception stored value cannot converted short stores exact value.
+converts int byte array.
+converts long byte array.
+converts int byte array.
+test rounded values always greater equal last rounded value date increasing. example covers interval around 2011-10-30t02:10:00+01:00 time zone cet interval: 2700000ms
+test dst end interval rounding cet: 25 october 2015 03:00:00 clocks turned backward 1 hour 25 october 2015 02:00:00 local standard time
+tests dst transition overlaps day roundings.
+special test intervals don't fit evenly rounding interval. case interval crosses dst transition point rounding local time land dst gap results wrong utc rounding values.
+test dst start offset fitting interval e.g. asiakathmandu adding 15min 1986-01-01t00:00:00 interval 1986-01-01t00:15:00+05:45 1986-01-01t00:20:00+05:45 5min long
+randomized test org.elasticsearch.common.rounding.rounding.timeintervalrounding random interval time zone offsets
+test dst start interval rounding cet: 27 march 2016 02:00:00 clocks turned forward 1 hour 27 march 2016 03:00:00 local daylight time
+test #10025 strict local utc conversion cause joda exceptions dst start
+test time zone whose days overlap clocks set back across midnight end dst.
+randomized test timeunitrounding. test uses random chooses test dates exactly close offset changes e.g. dst chosen time zone. rounds test date performs various checks rounding unit interval defined this. assumptions tested described
+even nasty go transition selected time zone. one third cases stay otherwise go half unit back forth
+perform number assertions checks org.elasticsearch.common.rounding.rounding.timeunitrounding intervals
+test half day rounding intervals scrossing dst.
+returns true iff sequence chars one "true""false".
+returns false text "false" "0" "off" "no"; else true.
+parses char representation boolean value codebooleancode. provided default value iff either text codenullcode length == 0.
+parses string representation boolean value codebooleancode.
+fieldname match field? field name match parsefield names parsefield.
+primary name field. returned names field deprecated accepted strict matching used.
+returns base64 encoded version version 4.0 compatible uuid randomly initialized given java.util.random instance defined here: http:www.ietf.orgrfcrfc4122.txt
+parses provided string ratiovalue string either percentage format eg. 73.5% floating-point ratio format eg. 0.735
+parse provided string memory size. method either accepts absolute values heap 1g 10% parsed 100mb.
+parse distance given string unit provided first argument
+convert string distanceunit
+converts distance value given specific distanceunit value equal specified value distanceunit.
+parses suffix given distance string return corresponding distanceunit
+read distanceunit streaminput.
+able parsed using unlike #tostring method output fractional rounded values method preferred serialising value json.
+read stream.
+copy contents given reader string. closes reader done.
+copy contents given string given output writer. closes write done.
+copy contents given inputstream given outputstream. closes streams done.
+copy contents given byte array given outputstream. closes stream done.
+copy contents given reader given writer. closes done.
+check directory exists directory readable current user
+appends path given base strips n elements path strip > 0.
+check whether file denoted given path hidden. practice check file name starts dot. preferred files#ishiddenpath depend operating system.
+returns inputstream given url url protocol 'file' 'jar' host port.
+returns path uri p works like paths.get. p remember: almost never used. usually resolve path existing one!
+tries resolve given path list available roots. path starts one listed roots returned back method otherwise null returned.
+read file channel byte buffer starting certain position. fit destination byte buffer.
+writes part byte array java.nio.channels.writablebytechannel
+read ilengthi bytes ipositioni file channel. eofexception thrown attempt read beyond end file.
+writes java.nio.bytebuffer java.nio.channels.writablebytechannel
+read file channel byte buffer starting certain position. eofexception thrown attempt read beyond end file.
+read ilengthi bytes ipositioni file channel
+flushes internal bytes buffer.
+writes portion string.
+writes specified character sequence.
+sets output stream use writing writer closed. example:code writer writer = new utf8streamwriter.setoutputstreamout; code equivalent writes faster code writer writer = new java.io.outputstreamwriterout "utf-8"; code #close closed #reset reset.
+closes #reset resets writer reuse.
+flushes stream. stream saved characters various write methods buffer write immediately intended destination. destination another character byte stream flush it. thus one flush invocation flush buffers chain writers outputstreams.
+writes collection generic objects via writer
+write map k-type keys v-type. precode map<string string> map = ...; out.writemapmap streamoutput::writestring streamoutput::writestring; codepre
+writes list writeable objects
+writes list streamable objects
+writes non-negative long variable-length format. writes one ten bytes. smaller values take fewer bytes. negative numbers use ten bytes trip assertions running tests prefer #writelonglong #writezlonglong negative numbers.
+write map stream consistent order make sure every map generated bytes order same. method compatible streaminput.readmap streaminput.readgenericvalue method handle map keys order maps contained within map
+writes optional bytes reference including length header. use need differentiate null empty bytes references. use #writebytesreferencebytesreference streaminput#readbytesreference not.
+notice: serialization map stream map stream map maybe different key-value orders maybe different stream order. want keep stream map stream map stream order stream use writemapwithconsistentorder
+writes bytes reference including length header.
+writes specified array stream using specified writer element array. method seen writer version streaminput#readarraywriteable.reader intfunction. length array encoded variable-length integer first written stream elements array written stream.
+serializes potential null value.
+constructs new registry given entries.
+returns reader namedwriteable object identified name provided argument category.
+creates new inputstreamstreaminput size limit
+read map k-type keys v-type lists. precode map<string list<string>> map = in.readmapoflistsstreaminput::readstring streaminput::readstring; codepre
+reads array stream using specified org.elasticsearch.common.io.stream.writeable.reader read array elements stream. method seen reader version streamoutput#writearraywriteable.writer object. assumed stream first contains variable-length integer representing size array contains many elements read stream.
+reads list namedwriteables.
+reads enum type e serialized based value it's ordinal
+reads long stored variable-length format. reads one ten bytes. smaller values take fewer bytes. negative numbers encoded ten bytes prefer #readlong #readzlong negative numbers.
+reads collection objects
+read list streamable objects using constructor instantiate instance. p expected take form: code list<mystreamableclass> list = in.readstreamlistmystreamableclass::new; code
+reads enum type e serialized based value it's ordinal
+serializes potential null value.
+reads bytes reference stream might hold actual reference underlying bytes stream.
+reads int stored variable-length format. reads one five bytes. smaller values take fewer bytes. negative numbers always use 5 bytes therefore better serialized using #readint
+read timevalue stream
+reads namedwriteable current stream given name. assumed caller obtained name source it's read stream. name used looking corresponding entry registry name proper object read returned. default implementation throws unsupportedoperationexception streaminput doesn't hold registry. use filterinputstream instead wraps stream supports namedwriteableregistry too. prefer streaminput#readnamedwriteableclass streamoutput#writenamedwriteablenamedwriteable unless compelling reason use method instead.
+reads vint via #readvint applies basic checks ensure read array size sane. method uses #ensurecanreadbytesint ensure stream enough bytes read read array size.
+checks deprecated setting logs correct alternative
+checks removed setting logs correct alternative
+wrap two recyclers forward calls codesmallobjectrecyclercode codesize < minsizecode codedefaultrecyclercode otherwise.
+wrap provided recycler calls recycler#obtain recycler.v#close protected lock.
+return recycler based deque.
+create concurrent implementation support concurrent access codeconcurrencylevelcode threads little contention.
+converts object value bytesref.
+converts value string taking special care bytesref call
+register leafreader. necessary core cache key reader found later using #getcorekeysforindexstring.
+get set core cache keys associated given index.
+returns iterable allows iterate files segments info
+check whether one documents matching provided query.
+method removes files given directory referenced given segments file. method open indexwriter relies index file deleter remove unreferenced files. segment files newer given segments file removed forcefully prevent problems indexwriter opening potentially broken commit point leftover. bnote:b method fail another indexwriter open given directory. method also acquire write lock directory pruning unused files. method expects existing index given directory given segments file.
+return scorer throws elasticsearchillegalstateexception operations given message.
+given scorersupplier return bits instance match documents contained set. note returned bits instance must consumed order.
+method removes lucene files given directory. first try delete commit points segments files ensure broken commits corrupted indices opened future. segment files can't deleted operation fails.
+returns number documents index referenced segmentinfos
+tries extract segment reader given index reader. segmentreader extracted illegalstateexception thrown.
+adds given listener provided directory reader. reader must contain elasticsearchdirectoryreader it's hierarchy otherwise can't safely install listener.
+test core cache key needed nrt working
+initialize lookup provided segment
+returns internal lucene doc id given id bytes.
+return null id found.
+return null id found. pass leafreadercontext argument things still work reader wrappers hide documents still using cache key. otherwise we'd disable caching entirely readers.
+load internal doc id sequence number uid reader returningul linull uid wasn't found lia doc id associated seqno otherwise ul
+load primaryterm associated given docidandseqno
+load internal doc id version uid reader returningul linull uid wasn't found lia doc id version otherwise ul
+test version map cache behaves properly filtered reader
+test version map cache works evicted close etc
+test version lookup two documents matching id
+test version lookup actually works
+returns terms position phrase
+add multiple terms next position phrase. terms may match.
+returns relative positions terms phrase.
+allows specify relative position terms within phrase.
+returns hash code value object.
+creates new non-nested docs query
+return query matches documents match given query.
+add existing boolean query like query priorityqueue
+determines passed term likely interest "more like" comparisons
+return query return docs like passed lucene document id.
+find words more-like-this query former. result priority queue arrays one entry bevery wordb document. array 6 elements. elements are: ol li word string li top field word comes string li score word float li idf value float li frequency word index integer li frequency word source document integer ol somewhat "advanced" routine general 1st entry array interest. method exposed identify "interesting words" document. easier method call see #retrieveinterestingterms retrieveinterestingterms.
+convenience routine make easy return interesting words document. advanced users call #retrievetermsreader string retrieveterms directly.
+return query return docs like passed readers. added order treat multi-value fields.
+return query return docs like passed fields.
+adds term frequencies found tokenizing text reader map words
+adds terms frequencies found vector map termfreqmap
+find words more-like-this query former.
+describe parameters control "more like this" query formed.
+create like query priorityqueue
+return query return docs like passed terms.
+create priorityqueue word->tf map.
+creates functionscorequery multiple score functions
+sets amount time entry cache expires written. greater 0.
+sets amount time entry cache expires last accessed. greater 0.
+put entry segment
+cache statistics tracking hits misses evictions. taken best-effort basis meaning could out-of-date mid-flight.
+remove entry segment
+get entry segment; expired entries returned null removed cache lru list pruned manual cache#refresh performed however caller take action using provided callback
+remove entry segment iff future done value equal expected value
+lru sequencing keys cache supports removal. sequence protected mutations cache except iterator#remove. result iteration mutation undefined.
+specified key already associated value mapped null attempts compute value using given mapping function enters map unless null. load method given key invoked once. use different cacheloader implementations key concurrently may result first loader function called second returned result provided first including exceptions thrown execution first.
+force outstanding size-based time-based evictions occur
+lru sequencing values cache. sequence protected mutations cache except iterator#remove. result iteration mutation undefined.
+invalidate cache entries. removal notification issued invalidated entries
+true bytes compressed lzf: used elasticsearch 2.0
+decompress provided bytesreference.
+create compressedxcontent toxcontent instance.
+create compressedxcontent serialized toxcontent may already compressed.
+return uncompressed bytes.
+timezone.getoffsett != timezone.getoffsetutcmillis. returns long.max value.
+determine whether local instant valid instant given time zone. logic taken `strict` mode case instead throwing flag indicating value illegal time zone.
+test #10025 strict local utc conversion cause joda exceptions dst start
+test time zones correctly parsed. bug joda 2.9.4 see https:github.comjodaorgjoda-timeissues373
+test half day rounding intervals scrossing dst.
+test rounded values always greater equal last rounded value date increasing. example covers interval around 2011-10-30t02:10:00+01:00 time zone cet interval: 2700000ms
+test dst end interval rounding cet: 25 october 2015 03:00:00 clocks turned backward 1 hour 25 october 2015 02:00:00 local standard time
+perform number assertions checks timeunitrounding intervals
+tests dst transition overlaps day roundings.
+randomized test timeunitrounding. test uses random chooses test dates exactly close offset changes e.g. dst chosen time zone. rounds test date performs various checks rounding unit interval defined this. assumptions tested described
+even nasty go transition selected time zone. one third cases stay otherwise go half unit back forth
+test time zone whose days overlap clocks set back across midnight end dst.
+special test intervals don't fit evenly rounding interval. case interval crosses dst transition point rounding local time land dst gap results wrong utc rounding values.
+test dst start offset fitting interval e.g. asiakathmandu adding 15min 1986-01-01t00:00:00 interval 1986-01-01t00:15:00+05:45 1986-01-01t00:20:00+05:45 5min long
+randomized test timeintervalrounding random interval time zone offsets
+test dst start interval rounding cet: 27 march 2016 02:00:00 clocks turned forward 1 hour 27 march 2016 03:00:00 local daylight time
+equivalent #wrapreleasable... called multiple times without double releasing.
+insert value given path. path already exists replace value with: pre value = updater.applyoldvalue newvalue; pre allowing value updated desired.
+read stream.
+test map written multiple times trigger self-reference check
+parses value given xcontentparser
+parses value given xcontentparser
+adapts array varags setter list setter.
+makes sure current token type token#field name field name equal provided one
+parse current token depending token type. following token types parsed corresponding parser methods: ul li@link token#value string: xcontentparser#textli li@link token#value number: xcontentparser#numbervalue li li@link token#value boolean: xcontentparser#booleanvalue li li@link token#value embedded object: xcontentparser#binaryvalue li li@link token#value null: returns nullli li@link token#start object: xcontentparser#mapordered li li@link token#start array: xcontentparser#listorderedmap li ul
+makes sure provided token expected type
+method expects current field name concatenation type delimiter name ex: terms#foo "terms" refers type registered namedxcontentregistry.entry "#" delimiter "foo" name object parse. also expected following field name either object array xcontent structure cursor points start token structure. method splits field's name extract type name parses object using xcontentparser#namedobjectclass string object method. field's name
+returns binary content builder provided content type.
+constructs xcontent builder output result provided output stream.
+guesses content type based provided bytes returns corresponding xcontent headers. till fixed rest layer read content-type header place guessing needed.
+guesses content type based provided char sequence returns corresponding xcontent rest layer move reading content-type header instead. places auto-detection may needed. method deprecated prevent usages spreading without specific reasons.
+returns org.elasticsearch.common.xcontent.xcontent provided content type.
+guesses content type based provided input stream without consuming it. rest layer move reading content-type header instead. places auto-detection may needed. method deprecated prevent usages spreading without specific reasons.
+guesses content type based provided char sequence. rest layer move reading content-type header instead. places auto-detection may needed. method deprecated prevent usages spreading without specific reasons.
+attempts match given media type known xcontenttype values. match done case-insensitive manner. provided media type include parameters. method suitable parsing part content-type http header. method return null match found
+accepts either format string equivalent xcontenttype#shortname media type optionally parameters attempts match value xcontenttype. comparisons done lower case format method also supports wildcard accept application. method used parse accept http header format query string parameter. method return null match found
+finish parsing object.
+creates consumer "field arrived" behavior. targetobject hasn't built queues value. otherwise applies value like objectparser does.
+call actual parsing. implements bifunction conveniently integrating objectparser.
+set constructor argument build target object constructor arguments arrived.
+queue consumer we'll call targetobject built. targetobject built fail caller applied consumer immediately.
+build parser. objectparser. external systems never parsing requests users. parser casting elements array arguments work favorite constructor. objects array order declared #constructorargs none null. second argument value context provided #parsexcontentparser object parse function. constructor arguments aren't defined xcontent parsing throw error. use array rather
+test ensures use classic pull-parsing parser together object parser
+humanreadable flag set writes formatted unformatted version time value using date transformer
+writes raw field value taken bytes stream
+write time-based value value null null value written otherwise date transformers lookup performed.
+tests non-constructor fields set time.
+builds object random order parses it.
+helper declare object parsed bytesreference
+creates parser based bytes provided
+returns bytes represent xcontent output provided toxcontent object using provided toxcontent#isfragment method returns.
+updates provided changes source. key exists changes overrides one source unless maps case recursively updated it. unequal? .equals check objects take time long strings.
+writes "raw" bytes field handling cases bytes compressed tries optimize writing using
+converts given bytes map optionally ordered. provided xcontenttype must non-null.
+guesses content type based provided bytes. rest layer move reading content-type header instead. places auto-detection may needed. method deprecated prevent usages spreading without specific reasons.
+convert string xcontent format map. throws elasticsearchparseexception error. note unlike #converttomapbytesreference boolean doesn't automatically uncompress input.
+merges defaults provided second parameter content first. recursive merge inner maps.
+writes "raw" bytes field handling cases bytes compressed tries optimize writing using auto-detection
+convert string xcontent format map. throws elasticsearchparseexception error.
+creates parser bytes using supplied content-type
+register parser.
+lookup value registry name checking name matches parsefield.
+lookup value registry name checking name matches parsefield.
+parse named object throwing exception parser isn't found. throws namedobjectnotfoundexception
+low level implementation detail xcontentgenerator#copycurrentstructurexcontentparser.
+copy contents given inputstream given outputstream. closes streams done.
+return long stringvalue stores throws exception stored value cannot converted long stores exact value coerce false.
+extracts raw values string int based path provided returning single list.
+returns function filters document map based given include exclude rules.
+returns array string value node value. node represents array corresponding array strings returned. otherwise node treated comma-separated string.
+evaluates property name matches one given filter paths.
+construct new evictingqueue holds maximumsize elements.
+add given element queue possibly forcing eviction head #remainingcapacity zero.
+wraps given map prevent adding codenullcode keys. expected number elements guaranteed cause buffer expansion inclusive.
+#copyandremoveobject arbitrary number entries.
+remove given key map. current hash table modified.
+return copy provided map.
+associate codekeycode codevaluecode return new copy hash table. current hash table modified.
+returns direct iterator keys.
+puts entries map builder.
+builds new instance
+returns direct iterator keys.
+puts entries map builder.
+builds new instance
+returns direct iterator keys.
+returns direct iterator keys.
+construct prefix logger specified name prefix.
+called log4j2 initialize converter.
+remove threadcontext used add deprecation headers network responses. p expected emonlyem invoked node's close method therefore outside tests.
+creates new deprecation logger based parent logger. automatically prefixes logger name "deprecation" starts "org.elasticsearch." replaces "org.elasticsearch" "org.elasticsearch.deprecation" maintain "org.elasticsearch" namespace.
+set threadcontext used add deprecation headers network responses. p expected emonlyem invoked node's constructor therefore outside tests.
+assert specified string warning value equal provided warning value.
+encode string containing characters outside legal characters rfc 7230 quoted-string.
+extracts warning value value warning header formatted according rfc 7234. given string warning value.
+called log4j2 initialize converter.
+converts binding keytypeliteralt value typeliteralt. it's bit awkward pull inner type type literal.
+returns just-in-time binding key creating necessary.
+attempts create just-in-time binding key root injector falling back ancestor injectors injector tried.
+looks thread local context. creates removes new context necessary.
+returns new just-in-time binding created resolving key. strategies used create just-in-time bindings are: ol liinternalizing providers. requested binding providert delegate binding t. liconverting constants. liimplementedby providedby annotations. unannotated keys. lithe constructor raw type. unannotated keys. ol binding cannot created.
+converts constant string binding required type. error resolving binding
+gets binding implementation. first check see parent binding. parent binding binding scoped use binding. otherwise checks explicit binding. explicit binding found looks just-in-time binding.
+creates synthetic binding providert i.e. binding provider
+creates binding type annotated @implementedby.
+creates binding injectable type given scope. looks scope type none specified.
+indexes bindings type.
+creates binding type annotated @providedby.
+returns parameter injectors null parameters.
+like #assertinstancebindingmodule class predicate filters classes checked given annotation.
+configures module checks map<string class> "to" class bound "theclass".
+attempts configure module asserts illegalargumentexception caught containing given messages
+configures module asserts "clazz" bound anything.
+configures module ensures map exists "keytype" "valuetype" "expected" values bound.
+configures module asserts "clazz" bound "to".
+configures module returns instance bound "to" class.
+configures module checks set "to" class bound "classes". may classes bound "to" "classes".
+returns initializable instance requires initialization.
+returns array parameter values.
+creates injector given set modules given development stage. construction
+gets strategy annotation type.
+gets strategy annotation.
+construct instance. returns object instead may return proxy.
+sets stage created injector. stage stage#production class eagerly load singletons.
+initialize validate everything.
+inject everything injected. method intentionally synchronized. locked injecting members ie. running user code things would deadlock user code build just-in-time binding another thread.
+performs creation-time injections objects require it. whenever fulfilling injection depends another object requires injection inject first. two instances codependent directly transitively ordering injection arbitrary.
+prepares member injectors injected instances. prompts guice static analysis injected instances.
+reentrant. instance registered injection injector-creation time method ensure members injected returning.
+registers instance member injection step performed. @inject.
+returns copy configuration exception specified partial value.
+tolerate duplicate bindings one exposes other.
+scopes internal factory.
+replaces annotation scopes instance scopes using injector's annotation-to-instance map. scope annotation corresponding instance error added unscoped retuned.
+injector special case allow parent child injectors binding key.
+logger special case knows injection point injected member. it's binding this.
+creates returns injector shells current modules. multiple shells returned modules contain binder#newprivatebinder private environments. primary injector first returned list.
+returns injectors specified injection points.
+creates new members injector attaches injection listeners method aspects.
+creates creationexception containing messages.
+installs default converters primitives enums class literals.
+returns generic form supertype. example arrayliststring returns iterablestring given input iterable.class.
+returns resolved generic exception types thrown constructor.
+returns resolved generic type field.
+returns resolved generic parameter types methodorconstructor.
+returns immutable list resolved types.
+returns resolved generic return type method.
+returns type super class's type parameter moretypes#canonicalizetype canonical form.
+creates configurationexception containing messages.
+returns new multibinder collects instances type set bound binding annotation.
+returns new multibinder collects instances type set bound annotation.
+invoked guice injector-creation time prepare providers element set. time set's size known contents evaluated get invoked.
+returns new multibinder collects instances type set bound annotationtype.
+returns new mapbinder collects entries keytype@code valuetype
+returns new mapbinder collects entries keytype@code valuetype
+returns new mapbinder collects entries keytype@code valuetype
+creates two bindings. one map.entryk providerv another v.
+returns instance constructed using constructor supplied arguments.
+returns guice key parameter.
+returns unique binding annotation specified list
+creates constant binding @namedkey property. method binds properties including inherited
+creates constant binding @namedkey entry
+returns dependencies given injection points.
+returns looked members injector. result valid lookup initialized usually happens injector created. members injector throw illegalstateexception try use beforehand.
+sets actual members injector.
+returns new injection point injectable constructor type. no-arguments constructor private. constructor parameters injectable constructor malformed parameter multiple binding annotations.
+returns static method field injection points type. fields returned methods. within fields supertype fields returned subtype fields. similarly supertype methods returned subtype methods. field multiple binding annotations. exception's configurationexception#getpartialvalue partial value setinjectionpoint valid injection points.
+returns instance method field injection points type. fields returned methods. within fields supertype fields returned subtype fields. similarly supertype methods returned subtype methods. field multiple binding annotations. exception's configurationexception#getpartialvalue partial value setinjectionpoint valid injection points.
+records elements executed modules.
+creates recording binder that's backed prototype.
+creates private recording binder.
+returns module composed elements.
+sets actual provider.
+returns new module installs modules.
+returns provider always provides instance. necessary use application helpful several types unit tests. permitted null enable aggressive testing although real life guice-supplied provider never return null.
+returns calling line code. selected line nearest top stack skipped.
+returns field.class method.class constructor.class.
+returns type functionally equal necessarily equal according object#equalsobject object.equals.
+returns equivalent type that's safe use key. returned type free primitive types. type literals primitives return corresponding wrapper types.
+returns true b equal.
+returns declaring class typevariable null declared class.
+returns generic supertype supertype. example given class integerset result supertype set.class setinteger result supertype collection.class collectioninteger.
+formats member concise string java.util.arraylist.size
+returns hashcode type.
+returns module creates bindings provider methods given object. useful notably href="http:code.google.compgoogle-gin"gina
+returns string equivalent specified string first character converted uppercase string#touppercase. returned string value specified string first character non-alphabetic first character already uppercase specified string length 0. p example: pre capitalize"foo bar".equals"foo bar"; capitalize"2b 2b".equals"2b 2b" capitalize"foo bar".equals"foo bar"; capitalize"".equals""; pre converted uppercase
+returns scoping annotation null isn't one.
+gets key given type member annotations.
+returns binding annotation member null isn't one.
+adds error misplaced annotations type. scoping annotations allowed abstract classes interfaces.
+appends contents map appendable entries separated entrydelimiter keys values separated p key value converted charsequence using note implies null tokens appended four-character string "null". associated value beginning end
+appends tokens appendable separated p token converted charsequence using note implies null tokens appended four-character string "null". beginning end
+returns string containing tokens converted strings necessary separated delimiter. tokens empty returns empty string. p token converted charsequence using note implies null tokens appended four-character string "null". beginning end
+returns string containing contents map entries separated entrydelimiter keys values separated p key value converted charsequence using note implies null tokens appended four-character string "null". associated value beginning end map empty
+returns instance uses source reference point newly added errors.
+returns value non-null allowed null. otherwise message added errorsexception thrown.
+returns cause throwable exactly one cause messages. zero multiple messages causes null returned.
+returns formatted message exception specified messages.
+return automaton matches given pattern.
+match string given pattern supporting following simple pattern styles: "xxx" "xxx" "xxx" "xxxyyy" matches arbitrary number pattern parts well direct equality.
+return automaton matches union provided patterns.
+normalize geo point given coordinates lie within respective normalized ranges. p control coordinate gets normalized two flags. p note: shift 180° applied longitude necessary order normalize properly latitude. normalizing latitude longitude assumed longitude form x+k360 x -180;180 k meaningful application. therefore x adjusted keeping k preserved.
+parse geopoint xcontentparser. geopoint one following forms: ul liobject: pre"lat": i<latitude>i "lon": i<longitude>ipreli listring: pre"i<latitude>ii<longitude>i"preli ligeohash: pre"i<geohash>i"preli liarray: prei<longitude>ii<latitude>ipreli ul
+return sortednumericdoublevalues instance returns distances list geo-points document.
+checks precision within range supported elasticsearch - 1 12 returns precision value range throws illegalargumentexception outside range.
+parses value geopoint. following types values supported: p object: contain either lat lon geohash fields p string: expected "latitude longitude" format geohash p array: two elements first element longitude second latitude rest ignored ignorezvalue true
+check point within rectangle todo: move lucene rectangle class
+parse precision expressed integer distance measure like "1km" "10m". precision expressed number 1 12 indicates length geohash used represent geo points.
+test enveloping polygon around max mercator bounds
+get geodistance according given name. valid values ul libplaneb codegeodistance.planecodeli libarcb codegeodistance.arccodeli ul
+creates geodistance instance input stream
+encode geohash string geohash based long format
+encode geohash string given level morton long
+computes bounding box coordinates given geohash
+add geohashes cells next given geohash list.
+encode geohash string geohash based long format lonlat interleaved 4 least significant bits = level
+calculate geohash neighbor geohash
+encode morton long value given geohash string
+invokes geoutils.parseprecision parser value generated tokengenerator p supplied tokengenerator generate single field contains precision one supported formats malformed precision value error handling tested. method return parsed value throws exception precision value malformed.
+makes closed ring current coordinates adding starting point end point. effect starting end point already coordinate.
+add new coordinate collection
+takes input polygon returns identical one opposing orientation setting. done don't expose setter orientation actual class
+copy coordinate new array
+ctor serialized stream input
+ctor list coordinates
+builds array coordinates xcontentbuilder
+build envelope top left bottom right coordinates.
+read stream.
+add new hole polygon
+create connected list list coordinates array point index first point number points
+coordinates setup builder assembled polygon. result consist set polygons. components holds list linestrings defining polygon: first set coordinates used shell polygon. others defined holes within polygon. method also wraps polygons dateline. order fact result may contains polygons less holes defined builder self.
+method sets component id edges ring given id shifts coordinates component according dateline
+create multipolygon set coordinates. primary array contains polygon turn contains array linestrings. line strings represented array coordinates. first linestring shell polygon others define holes within polygon.
+validates 1 vertex tangential shared interior exterior polygon
+concatenate set points polygon component id polygon direction ring list points concatenate index first point array edges write result index first edge result number points use
+setup whole base test class
+test creates new shape random test shape checks equality
+read stream.
+add shallow copy polygon multipolygon. apply orientation
+read stream.
+read stream.
+decompose linestring given array coordinates vertical line.
+construct new linestring. per geojson spec http:geojson.orggeojson-spec.html#linestring linestring must contain two coordinates
+recursive method parses arrays coordinates used define shapes parser read thrown error occurs reading xcontentparser
+parse geometries array geometrycollection
+create new shapebuilder xcontent shape construction process e.g. orientation todo: refactor place build specific parameters spatialcontext parsers current token codenullcode
+next word stream
+throws exception parsed geometry type match expected shape type
+next word stream
+parse geometry stream tokenizer
+builds url using base url specified path
+@inheritdoc
+constructs new read-only url-based blob store p following settings supported dl dtbuffer sizedt dd- size read buffer defaults 100kbdd dl
+adjust instant displayoffset adjust offset might added
+adjust instant displayoffset adjust offset might added
+parses joda based pattern including named ones similar built joda iso ones.
+return bytes ref composed bytes. direct byte buffer bytes copied.
+returns array byte buffers given bytesreference.
+writes bytes directly output stream.
+returns bytesreference composed provided bytebuffers.
+convert xcontentbuilder bytesreference. method closes builder fields may added.
+returns compact array given bytesreference. returned array won't copied unless necessary. need modify returned array use bytesref.deepcopyofreference.tobytesref instead
+returns bytesrefiterator bytesreference. method allows access internal pages reference without copying them. use care!
+compares two references using given int function.
+first value hit.
+parse text potentially contains date math milliseconds since epoch examples code2014-11-18||-2ycode substracts two years input date codenowmcode rounds current time minute granularity supported rounding units y year m month w week beginning monday d day hh hour m minute second
+configure specific time zone date formatter
+configure defaults missing values parser return new compound date formatter
+method used trip breaker
+add number bytes tripping circuit breaker aggregated estimates limit. automatically trips breaker memory limit set 0. never trip breaker limit set < 0 still used aggregate estimations.
+add bexactb number bytes checking tripping circuit breaker. bypasses overheadconstant multiplication.
+create circuit breaker break number estimated bytes grows limit. estimations multiplied given overheadconstant. uses given oldbreaker initialize starting offset.
+create circuit breaker break number estimated bytes grows limit. estimations multiplied given overheadconstant. uses given oldbreaker initialize starting offset.
+add number bytes tripping circuit breaker aggregated estimates limit. automatically trips breaker memory limit set 0. never trip breaker limit set < 0 still used aggregate estimations.
+method used trip breaker delegates parent determine whether trip breaker
+add bexactb number bytes checking tripping circuit breaker. bypasses overheadconstant multiplication. also check parent breaker see parent limit exceeded.
+format byte array hex string.
+test selecting name possible properly matches addresses interfaces virtual interfaces. note avoid test fails interfaces addresses assigned ignored.
+test ordinary addresses sort private addresses
+test private addresses sort link local addresses
+test filtering ipv4ipv6 addresses
+convert byte array inetaddress. exception "if ip address illegal length." replace unchecked exception use callers already know addr array length 4 16.
+parse ip address prefix length using cidr notation.
+convert list hextets human-readable ipv6 address. pin order "::" compression work input contain negative sentinel values place elided zeroes.
+returns inetaddress given string representation. pthis deliberately avoids nameservice lookups e.g. dns.
+returns string representation inetaddress. pfor ipv4 addresses identical follows href="http:tools.ietf.orghtmlrfc5952"rfc 5952a section 4. main difference method uses "::" zero compression java's version uses uncompressed form. pthis method uses hexadecimal ipv6 addresses including ipv4-mapped ipv6 addresses "::c000:201". output include scope id.
+resolves deduplicates host specification
+resolves bindhosts list internet addresses. list contain duplicate addresses. local see documentation. null fall back local
+resolves single host specification
+closes channels.
+perform actual logging: might throw exception things go wrong
+format network interface flags
+log interface configuration debug level enabled
+format internet address: java's default doesn't include everything useful
+ensure specifying wildcard ipv6 address selects reasonable publish address
+ensure specifying wildcard ipv4 address bind interfaces
+ensure exception publish multicast ipv6 address
+ensure bind multiple addresses
+ensure exception publish multicast ipv4 address
+ensure can't bind multiple addresses using wildcard
+ensure exception bind multicast ipv6 address
+ensure specifying wildcard ipv4 address selects reasonable publish address
+ensure exception bind multicast ipv4 address
+returns global scope addresses interfaces up.
+returns addresses given interface must marked
+returns addresses scope interfaces up. used pick publish address user set network.host wildcard
+helper getinterfaces recursively adds subinterfaces target
+sorts addresses order preference. used pick first one publishing
+returns site-local scope private addresses interfaces up.
+returns interface-local scope loopback addresses interfaces up.
+returns ipv4 addresses addresses
+returns ipv6 addresses addresses
+return interfaces subinterfaces system
+sorts address preference. way code like publishing pick first one
+parses ipv4 address block cidr notation pair longs representing bottom top address block
+round trip test code ipv4 ipv6. inetaddress contains getbyaddress test.
+adds transport implementation selected setting #transport type key.
+register allocation command. p lives instead aptly named clustermodule transport client needs registered. p name command's reader registered.
+creates network module custom networking classes plugged into.
+remove entry key hash table return associated value null entry associated key.
+get value associated codekeycode null codekeycode present hash table.
+constructor.
+return rotated view given list given distance.
+deeply inspects map iterable object array looking references back itself. context handler exception
+returns codetruecode iff cache needs refreshed.
+returns currently cached object potentially refreshes cache returning.
+cancel current running operations. future calls #checkforcancel failed given reason
+run interruptable capturing executing thread. concurrent calls #cancelstring interrupt thread causing call prematurely return.
+called #checkforcancel invoked operation cancelled. default implementation always throws executioncancelledexception suppressing exception occurred cancellation
+run interruptable capturing executing thread. concurrent calls #cancelstring interrupt thread causing call prematurely return.
+tests custom data paths upgraded
+tests upgrade partially upgraded index crash upgrading
+test method .
+test method org.apache.lucene.util.bytesrefhash#size.
+test method .
+dataoutput#writevlong accepts negative values written 9 bytes.
+dataoutput#readvlong read negative values read 9 bytes.
+constructor.
+clears value previously created calling value. next call #getorcompute recreate value.
+returns value created codesuppliercode. value might previously created created thread safe course.
+constructor.
+constructor.
+return key code0 <= index <= capacitycode. result undefined slot unused. pbeware content bytesref may become invalid soon #close calledp
+get id associated codekeycode
+parse given locale language language-country either underscores hyphens may used separators consistently ie. may use hyphen separate language country underscore separate country variant.
+constructor.
+constructor.
+constructs uri pattern
+get id associated codekeycode -1 key contained hash.
+renames codeindexfoldernamecode index folders found node paths custom path iff #needsupgradeindex string true. index folder custom paths renamed first followed index folders node path.
+moves index folder found codesourcecode codetargetcode
+upgrades indices found codenodeenvcode. already upgraded indices ignored.
+grow array size larger codeminsizecode preserving content potentially reusing part provided array.
+resize array exact provided size.
+allocate new intarray.
+resize array exact provided size.
+allocate new floatarray.
+grow array size larger codeminsizecode preserving content potentially reusing part provided array.
+resize array exact provided size.
+resize array exact provided size.
+allocate new doublearray.
+grow array size larger codeminsizecode preserving content potentially reusing part provided array.
+return next size grow >= codemintargetsizecode. inspired arrayutil#oversizeint int adapted play nicely paging.
+allocate new bytearray.
+resize array exact provided size.
+grow array size larger codeminsizecode preserving content potentially reusing part provided array.
+allocate new longarray.
+resize array exact provided size.
+adjust circuit breaker given delta delta negative checkbreaker false breaker adjusted without tripping. data already created calling method breaker trips add delta without breaking account created data. data created yet add delta breaker trips.
+grow array size larger codeminsizecode preserving content potentially reusing part provided array.
+allocate new objectarray.
+grow array size larger codeminsizecode preserving content potentially reusing part provided array.
+produces two random sets consisting elements 0 endexclusive.
+relative complement difference specified left right set. namely resulting set contains elements left set right set. neither input mutated operation entirely new set returned.
+relative complement difference specified left right set returned sorted set. namely resulting set contains elements left set right set set sorted using natural ordering element type. neither input mutated operation entirely new set returned.
+fast forwards count-down zero returns codetruecode iff count reached zero fast forward call otherwise codefalsecode
+decrements count-down returns codetruecode iff call reached zero otherwise codefalsecode
+forces adding element queue without size checks.
+calls future#get without checked exceptions.
+calls future#getlong timeunit without checked exceptions.
+subclasses invoke method set result computation error throwable. set state future state successfully changed.
+blocks task complete timeout expires. throws
+implementation actual value retrieval. return value success exception failure cancellation cancellation illegal state synchronizer invalid state.
+subclasses invoke method set result computation value. set state future state successfully changed.
+@inheritdoc p default basefuture implementation throws interruptedexception current thread interrupted call even value already available. call optional recommended.
+@inheritdoc p default basefuture implementation throws interruptedexception current thread interrupted call even value already available. call optional recommended.
+tries acquire lock given key returns it. lock can't acquired null returned.
+returns codetruecode iff caller thread holds lock given key
+acquires lock given key. key compared it's equals method object identity. lock acquired thread multiple times. lock released closing returned releasable.
+execute blank task times times executor
+return new executor automatically adjust queue size based queue throughput.
+adds listener future. future yet completed listener notified response exception runnable submitted executorservice provided. future completed listener notified immediately without forking different thread.
+test accounting whether thread holds releasable lock correct. previously bug re-entrant lock thread entered lock twice would declare hold lock exits first entrance second entrance.
+breaks barrier reset broken reason. p note: call atomic respect awaitreset calls. breakifbroken may context switched invoke reset prior await. resets barrier initial state - parties currently waiting barrier accounted for! await wasn't time limited block indefinitely.
+sometimes wraps runnable abstractrunnable.
+adds given item queue. listener notified item processed
+@inheritdoc p overrides default behavior onafter add caveat runs #lifecycle emnotem stopped closed. p note: guarantee won't stopped concurrently invokes #onafterinlifecycle it's solid attempt preventing it. use rescheduling purposes next invocation would effectively cancelled immediately that's case.
+@inheritdoc p invokes #doruninlifecycle emonlyem #lifecycle stopped closed. otherwise exits immediately.
+sets element position given value.
+copies content underlying atomic array normal one.
+returns non null list.
+removes current context resets new context contains merge current headers given headers. removed context restored closing returned storedcontext. merge strategy headers already existing preserved unless defaults.
+#newrestorablecontextboolean wraps existing context restore.
+saves current thread context wraps command runnable restores context running command. codecommandcode already passed method returned unaltered rather wrapped twice.
+returns header given key codenullcode present
+like #stashcontext default context set.
+removes current context resets default context. removed context restored closing returned storedcontext
+creates new threadcontext instance
+get copy emresponseem headers.
+returns request contexts headers
+timeout callback might remain timer scheduling queue time might hold pointers objects. result it's possible run memory large number tasks executed
+returns bytesreference view data.
+add setting builder doesn't exists source settings. value added builder taken given default settings object.
+returns string representation concrete setting key
+returns map namespaces it's values give provided settings
+returns value setting falls back second provided settings object
+returns string representation concrete setting key
+updates settings depend other. see abstractscopedsettings#addsettingsupdateconsumersetting setting biconsumer usage details.
+build updater responsible validating new values logging new value eventually setting value belongs.
+returns new copy object backed char array. closing new instance effect instance created from. useful apis accept char array want safe api potentially modifying char array. example: pre try securestring copy = securestring.clone pass thee char external api passwordauthentication auth = new passwordauthenticationusername copy.getchars; ... pre
+constant time equality avoid potential timing attacks.
+throw exception string closed indicating something trying access data closed.
+possible retrieve setting names even keystore closed. allows securesetting correctly determine entry exists even though cannot read. thus attempting read secure setting keystore closed generate "keystore closed" exception rather using fallback setting.
+set string setting.
+ensure given setting name allowed.
+add bootstrap seed setting may used unique secure random value node
+upgrades format keystore necessary.
+remove given setting keystore.
+set file setting.
+encrypt keystore entries return encrypted data.
+decrypts underlying keystore data. may called once.
+write keystore given config directory.
+loads information elasticsearch keystore provided config directory. returns null keystore exists.
+constructs new keystore given password.
+merge given secure settings one.
+adds settings consumer affix settings. affix settings namespace associated needs available consumer order processed correctly. consumer get namespace value map instead individual namespace value #addaffixupdateconsumersetting.affixsetting biconsumer biconsumer
+adds settings consumer predicate evaluated update time. p note: settings registered settingsmodule changed dynamically. p useful add additional validation settings runtime compared startup time.
+returns codetruecode given key valid delete key
+adds settings consumer affix settings. affix settings namespace associated needs available consumer order processed correctly.
+archives invalid unknown settings. setting recognized fails validation archived. means setting prefixed @value archived settings prefix remains settings object. used detect invalid settings via apis. associated value associated value exception
+adds settings consumer accepts values two settings. consumer notified one settings change provided validator succeeded. p note: settings registered settingsmodule changed dynamically. p method registers compound updater useful two settings depending other. consumer always provided values even one two changes.
+applies given settings settings consumers none them. settings merged node settings applied given settings override existing node settings.
+updates target settings builder new updated deleted settings given settings builder. removed builder codetruecode non-dynamic setting updated exception thrown.
+returns setting given key codenullcode setting found.
+returns settings object contains settings already set given source. diff contains either default value setting settings value given default settings.
+validates settings valid.
+validates given settings running update listeners without applying it. method change settings fail settings can't applied.
+returns value given setting.
+validates settings registered valid.
+registers settings filter pattern allows filter certain settings instance contain sensitive information setting internal purposes only. given pattern must either valid settings key simple regexp pattern.
+registers new setting. method used plugins order expose custom settings plugin defines. unless setting registered setting unusable. setting never less specified node reject setting startup.
+returns group settings given setting prefix.
+sets provided settings.
+values associated setting key immutable list. p also automatically load separated list settingprefix merge numbered format.
+returns setting value int associated setting key. exists returns default value provided.
+loads settings actual string content represents using #fromxcontentxcontentparser
+returns fully qualified setting names contained settings object.
+returns parsed version.
+returns setting value double associated setting key. exists returns default value provided.
+sets setting provided setting key list values.
+loads settings stream represents using #fromxcontentxcontentparser
+returns settings delimited string.
+returns setting value float associated setting key. exists returns default value provided.
+checks settings builder start specified prefix. setting doesn't start prefix builder appends prefix setting.
+sets setting group.
+returns setting value long associated setting key. exists returns default value provided.
+read stream.
+copy contents given inputstream given outputstream. closes streams done.
+deletes one files directories everything underneath it.
+closes given closeables. non-null exception passed closing stream causes exception throws exception runtimeexception
+closes given closeables suppressing thrown exceptions.
+ask shard check whether inactive reduces indexing buffer so.
+shard calls indexingdelete op
+called indexshard record estimated bytes written translog operation
+ask shard refresh background free heap
+tests index structure creation fails relocation new node shard stuck properly failed.
+deletes index assigned node. method cleans disk folders relating index deal in-memory structures. call #removeindexindex indexremovalreason string
+creates new mapper service given index order administrative work like mapping updates. used document parsing. result exception. note: returned mapperservice closed unneeded.
+method verifies given metadata holds sane values create indexservice. method tries update meta data created indexservice given metadataupdate different given metadata. method throw exception creation update fails. created indexservice registered closed immediately.
+deletes shard already acquired shard lock.
+cache something calculated shard level.
+creates new indexservice without registering
+processes pending deletes given index. method acquire locks given index process pending deletes index. pending deletes might occur os doesn't allow deletion files used different process ie. windows files might still open virus scanner. shared filesystem replica might closed primary deleted causing problems delete calls schedule deletes later.
+returns indexservice specified index exists otherwise indexnotfoundexception thrown.
+clears caches given shard id shard still allocated node
+loads cache result computing needed executing query phase otherwise deserializing cached value searchcontext#queryresult context's query result. combination load + compute allows single load operation cause requests key wait till loaded reuse cache.
+shard request cached all?
+checks changes adding removing indices shards allowed.
+creates new pending delete index
+method deletes shard contents disk given shard id. method fail shard deleting prevented #candeleteshardcontentshardid indexsettings shards lock acquired. data nodes deleted shard last shard folder index method attempt remove index folder well.
+returns codesharddeletioncheckresultcode signaling whether shards content given shard deleted.
+deletes index store trying acquire shards locks index. method delete metadata index even actual shards can't locked. package private testing
+adds pending delete given index shard.
+verify contents disk given index deleted; delete contents. method assumes index already deleted cluster state andor explicitly index tombstones.
+creates new indexservice given metadata. per-index listeners
+method returns true current node allowed delete given index. case index deleted metadata allocation local node index isn't shared file system.
+clear entries belong given index.
+get usage statistics given shard.
+test checks edge case node index lets call uuid 1 deleted tombstone entry exist cluster state created new index uuid 2 shutdown node comes back online look tombstones deletions proceed trying delete uuid 1 throw errors index still exists cluster state. case ensuring tombstones name current valid indices don't cause confusion trying delete index exists. see https:github.comelasticelasticsearchissues18054
+tests teh mapperservice created indicesservice#createindexmapperserviceindexmetadata contains custom types similarities registered plugins
+read stream.
+issues cache clear waits 30 seconds field data breaker cleared
+returns true nodes used noop breaker
+relocate shard block cluster state processing relocation target node activate shard
+test safely concurrently index get stats. test inspired serialization issue arose due race getting doc stats heavy indexing. race could lead deleted docs negative would serialized variable-length long. since serialization negative longs using variable-length format unsupported org.elasticsearch.common.io.stream.streamoutput#writevlonglong stream would become corrupted. want test continue get stats indexing.
+closes current recovery target waits certain timeout resources freed. returns true resetting recovery successful false recovery target already cancelled failed marked done.
+creates new recovery target object represents recovery provided shard. version; necessary primary relocation new primary knows ongoing replica recoveries replicating documents see recoverysourcehandler
+mark current recovery done
+creates org.apache.lucene.store.indexoutput given file name. note indexoutput actually point temporary file. p note: use #getopenindexoutputstring filename retrieve indexoutput later stage
+fail recovery call listener
+cancel recovery. calling method clean temporary files release store unless object use case cleaned ongoing users call p #cancellablethreads used threads interrupted.
+fail recovery given id found remove recovery collection
+cancel recovery given id found remove recovery collection
+gets recoverytarget given id. recoverystatus returned it's ref count already incremented make sure it's safe use. however must call recoverytarget#decref done typically using method try-with-resources clause. p returns null recovery found
+mark recovery given id done found
+cancel ongoing recoveries given shard
+resets recovery performs recovery restart currently recovering index shard
+starts new recovery given shard source node state
+similar #getrecoverylong throws exception recovery found
+percent bytes recovered total files bytes recovered
+percent recovered i.e. reused files total files recovered
+total bytes files recovered potentially yet done
+number file recovered excluding ongoing files
+total number bytes th shard
+total number files recovered potentially yet done
+total number bytes recovered far including existing reused
+construct request starting peer recovery.
+performs recovery local engine target
+send given snapshot's operations sequence number greater specified staring sequence number handler's target node. p operations bulked single request depending operation count limit size-in-bytes limit. total number operations sent
+perform phase two recovery process. p phase two uses snapshot current translog without acquiring write lock however translog snapshot point-in-time view translog. sends translog operation target node replayed new shard. ops sent
+perform phase1 recovery operations. indexcommit snapshot performed commit operations files fsync'd effectively allowed index recovery phases done p phase1 examines segment files target node copies segments missing. segments size checksum reused
+determines source translog ready sequence-number-based peer recovery. main condition source translog contains operations local checkpoint target. already know translog contains contain ops source local checkpoint stop check there.
+tests scenario recovery target successfully sends recovery request source channel gets closed source working recovery process.
+obtains snapshot store metadata recovery target.
+get starting sequence number sequence-number-based request. failed
+prepare start recovery request.
+test makes sure infinite loop flushing condition `shouldperiodicallyflush` eventually false peer-recovery primary sends fully-baked index commit.
+adds recovery source handler.
+blocking version syncedflushservice#sendpresyncrequestslist clusterstate shardid actionlistener
+blocking version syncedflushservice#attemptsyncedflushshardid actionlistener
+send presync requests started copies given shard
+returns number flight operations primary. -1 upon error.
+utility method perform synced flush shards multiple indices. see #attemptsyncedflushshardid actionlistener details.
+success constructor
+test breaker correctly redistributes different breaker case request breaker borrows space fielddata breaker
+validate child settings valid
+checks whether parent breaker tripped
+allows register custom circuit breaker. warning: overwrite existing custom breaker name.
+tests plugins register pre-configured token filters vary behavior based elasticsearch version lucene version vary based version all.
+tests plugins register pre-configured token filters vary behavior based elasticsearch version lucene version vary based version all.
+tests plugins register pre-configured char filters vary behavior based elasticsearch version lucene version vary based version all.
+loads hunspell dictionary given local.
+scans hunspell directory loads found dictionaries
+returns hunspell dictionary given locale.
+hunspell dictionary directory may contain settings.yml holds dictionary specific settings. default values settings defined given default settings.
+creates new global scope analysis provider without index specific settings settings provider itself. used get default instance analysis factory without binding index. codetruecode
+map containing pre-configured token filters available installing plugin. map name token filter class lucene tokenfilterfactory emulating. lucene tokenfilterfactory lucene tokenfilterfactory right hand side void.
+map containing pre-configured tokenizers available installing plugin. map name token filter class lucene tokenizerfactory emulating. lucene tokenizerfactory lucene tokenizerfactory right hand side void.
+checks cluster state matches internal state indicesclusterstateservice instance
+finds routing source node peer recovery return null found. note method expects shard routing require peer recovery use shardrouting#recoverysource check needed not.
+deletes indices shard data.
+returns shard specified id exists otherwise returns codenullcode.
+removes shard entries failed shards cache longer allocated node master. sends shard failures shards marked actively allocated node don't actually exist node. resends shard failures shards still marked allocated node previously failed.
+notifies master shards don't exist supposed active node.
+removes shards currently loaded indicesservice disappeared routing table current node. method delete shard data.
+removes indices shards allocated node. delete shard data wait enough shard copies exist cluster deleting shard data triggered org.elasticsearch.indices.store.indicesstore.
+rare cases possible nodes gets instruction replace replica shard that's post recovery new initializing primary allocation id. happen batching cluster states include starting replica closing indices opening allocating primary shard node question. node clean it's initializing replica replace new initializing primary.
+test ensures node joins brand new cluster different cluster uuid different cluster previously part in-memory index data structures removed disk contents indices remain later imported dangling indices. normally first cluster state update node receives new cluster would contain cluster block would cause in-memory structures removed see indicesclusterstateservice#applyclusterstateclusterchangedevent case node joined cluster state updates behind would received cluster block case still need remove in-memory structures ensuring data remains disk. test executes particular scenario.
+return cors setting array origins. never pass null check anyway.
+determine cors setting regex
+decodes bit url encoded browser. p string expected encoded per rfc 3986 section 2. encoding used javascript functions encodeuri encodeuricomponent escape. example encoding é unicode u+00e9 utf-8 p essentially equivalent calling code@link java.net.urldecoder urldecoder.@link java.net.urldecoder#decodestring stringcode except it's 2x faster generates less garbage gc. actually function doesn't allocate memory there's nothing decode argument returned. standardcharsets#utf 8. string decode null returns empty string. escape sequence.
+get content request contents source param throw exception missing. prefer #contentorsourceparamparser #withcontentorsourceparamparserornullcheckedconsumer need parser.
+creates new rest request. path decoded constructor throw
+content call applyparser parser otherwise nothing.
+returns list parameters yet consumed. method returns copy callers free modify returned list.
+get value header null found. method retrieves first header value multiple values sent. use #getallheadervaluesstring preferred
+call consumer parser contents request contents otherwise parser source parameter one otherwise null. use #contentorsourceparamparser throw exception back user isn't request content.
+get values header null header found
+creates new rest request. method throw badparameterexception path cannot decoded
+add custom header.
+registers rest handler executed provided method path match request.
+registers rest handler executed provided method path match request provided deprecatedmethod deprecatedpath. expected usage: precode remove deprecation next major release controller.registerwithdeprecatedhandlerpost " forcemerge" post " optimize" deprecationlogger; controller.registerwithdeprecatedhandlerpost "index forcemerge" post "index optimize" deprecationlogger; codepre p registered rest handler method path normal rest handler deprecated replacing deprecated rest handler deprecatedmethod deprecatedpath using emsameem p deprecated rest handlers without direct replacement deprecated directly using #registerasdeprecatedhandler specific message.
+checks request parameters enabled settings error trace support
+dispatch request possible returning true response sent false otherwise.
+handle requests valid rest endpoint using unsupported http method. 405 http response code returned response 'allow' header includes list valid http methods endpoint see href="https:tools.ietf.orghtmlrfc2616#section-10.4.6"http1.1 - 10.4.6 - 405 method alloweda.
+handle requests candidate handlers return 400 bad request error.
+request contains content method return true content-type header present matches
+get valid set http methods rest request.
+registers rest handler executed one provided methods path match request.
+handle http options requests valid rest endpoint. 200 http response code returned response 'allow' header includes list valid http methods endpoint see href="https:tools.ietf.orghtmlrfc2616#section-9.2"http1.1 - 9.2 - optionsa.
+construct channel handling request.
+channel level bytes output reused. bytes output lazily instantiated call #newbytesoutput. stream created gets reset call method.
+creates new xcontentbuilder response sent using channel. builder's type determined following logic. request format parameter used attempt map xcontenttype. format parameter http accept header checked see matched xcontenttype. first attempt map fails request content type used value null; value null output format falls back json.
+add additional method handler existing path. note methodhandlers allow replacing handler already existing method.
+requests valid rest endpoint using unsupported http method verify 405 http response code returned response 'allow' header includes list valid http methods endpoint see href="https:tools.ietf.orghtmlrfc2616#section-10.4.6"http1.1 - 10.4.6 - 405 method alloweda.
+create character array characters to.
+@inheritdoc p usage logged via deprecationlogger actual response notified deprecation well.
+basic pass validating header's value contains expected characters according rfc-5987 references. p https:tools.ietf.orghtmlrfc5987 p expected used assertions. idea readable us-ascii characters expected; rest must encoded percent encoding makes checking valid character range simple.
+throw exception value #validheadervaluestring valid header.
+parses top level query including query element wraps
+create xcontent header basenodesresponse.
+automatically transform toxcontent-compatible nodes-level response bytesrestresponse. p looks like: code " nodes" : ... "cluster name" : "..." ... code
+create xcontent header basenodesresponse. looks like: code " nodes" : "total" : 3 "successful" : 1 "failed" : 2 "failures" : ... ... code prefer overload properly invokes method calling directly.
+buildrecoverytable build table recovery information suitable displaying command line.
+extracts required fields restrequest 'h' parameter. order support wildcards like 'bulk.' needs potentially parse configured headers aliases needs ensure everything added returned headers even 'h=bulk..bulk.' specified headers contained twice due matching aliases
+helper method find included fieldmapping metadata typed null means type index exist field
+standard listener extensions listtasksresponse supports group by=nodes.
+parses multi-line restrequest body instantiating searchrequest line applying given consumer.
+parses restrequest body returns multisearchrequest
+parses rest request top searchrequest preserving values overridden rest request. parameter
+parses rest request top searchsourcebuilder preserving values overridden rest request.
+deletes index templates support wildcard notation. template name passed method templates removed.
+deletes given indices tests cluster. index name passed method indices removed.
+method executed test reset cluster initial state.
+deletes repositories supports wildcard notation.
+removes templates except templates defined exclude
+start indexing
+stop background threads
+start indexing background using given number threads. indexing paused numofdocs docs indexed.
+sort versions backwards compatibility guarantees don't. doesn't actually check whether versions released instead relies gradle already checked :core:verifyversions. long rules match rules gradle produce sensible results. guarantees v1 versions without guranteees v2
+returns random version codeminversioncode codemaxversioncode inclusive.
+get released version version#current.
+returns released version version#current minor version less currents minor version.
+get released version version.
+returns first future compatible version
+returns maximum version compatible given version.
+returns first future incompatible version
+test adding additional object within object otherwise correct query always triggers kind parse exception. specific objects cause exception hold arbitrary content; declared overriding #getobjectsholdingarbitrarycontent.
+call method check valid json string representing query test it's generated json. note: time writing nov 2015 queries taken query dsl reference docs mirroring examples there. here's queries generated: ul li take reference documentation example. li stick createparseablequeryjson method respective query test. li manually check querybuilder generates equals input json ignoring default options. li put manual checks assertqueryparsedfromjson method. li copy generated json including default options createparseablequeryjson li roundtrip check json happy. ul
+checks result querybuilder#toqueryqueryshardcontext given original querybuilder queryshardcontext. verifies named queries boost properly handled delegates
+test wraps randomly generated query array follows: "query name" : causes unexpected situations parser code may handled properly.
+generic test creates new query test query checks equality asserts equality two queries.
+test ensures queries need rewritten dedicated tests. queries must override method accordingly.
+traverses json tree valid query provided argument mutates one times adding one object within object encountered. instance given following valid term query: "term" : "field" : "value" : "foo" following two mutations generated exception expected trying parse them: "term" : "newfield" : "field" : "value" : "foo" "term" : "field" : "newfield" : "value" : "foo" every mutation added list results boolean flag indicating parsing exception expected mutation. specific objects cause exception hold arbitrary content; passed using arbitrarymarkers parameter.
+create random value either abstractquerytestcase#boolean field name abstractquerytestcase#int field name
+test creates query querybuilder test delegates assertions made result implementing subclass.
+test unknown field trigger parsingexception. find right position root query add marker `queryname` query builders support. added bogus field trigger exception. queries allow arbitrary field names level need override test.
+serialize given query builder asserts equal
+tests version#minimumcompatibilityversion versionutils#allreleasedversions agree list wire index compatible versions build gradle.
+set static default settings null prevent memory leak. test framework also checks memory leaks computes size cause issues running security manager tries reflection protected sun packages.
+create new search context.
+create new index singleton node provided index settings.
+ensures cluster green state via cluster health api. method also wait relocations. useful ensure action cluster finished shards currently relocating allocated started.
+create new index singleton node provided index settings.
+compare two maps.
+compare two values.
+compare two lists.
+compute numbers.
+return instance unmapped field.
+stops random node cluster applies given filter non non nodes applies filter.
+restarts node calls callback restart.
+restarts nodes rolling restart fashion ie. restarts node time.
+returns random node applies given predicate. predicate filter nodes based nodes settings. nodes filtered method return codenullcode
+returns node client given node.
+stops current nodes master node.
+rebuilds new node object using current node settings starts
+ensures least codencode data nodes present cluster. nodes codencode present method stop running nodes.
+ensures codencode running. less nodes codencode running method start additional nodes.
+returns set nodes least one shard given index.
+returns node client random node master. method fail non-master client available.
+returns node client data node cluster. note: use care tests rely certain nodes client.
+stops random data node cluster. returns true node found stop false otherwise.
+updates min master nodes setting current running cluster.
+ensure cluster formed published nodes using client specified node
+returns client coordinating node
+returns node client current master node. note: use care tests rely certain nodes client.
+stops current master node forcefully
+builds new node method return existing one
+starts multiple nodes given settings returns names
+returns "smart" node client random node cluster
+closes current node already closed builds new node object using current node settings starts
+returns name current master node cluster executes request via node specified vianode parameter. vianode isn't specified random node picked send request to.
+returns iterable instances given class >t< across nodes cluster.
+restarts nodes cluster. first stops nodes restarts nodes again.
+simulates sending diffs wire
+asserts changes applied correctly i.e. applying diffs localinstance produces object equal remotechanges instance.
+tests making random changes object calculating diffs changes sending diffs wire appling diffs side.
+creates new org.elasticsearch.test.nodeconfigurationsource security configuration.
+corrupts random file random position
+fail process didn't detect particular violation. named look like junit assertion even though isn't similar enough.
+returns tuple contains randomized shardinfo value left side corresponding value right side printed toxcontent parsed back using parsing method like shardinfo#fromxcontentxcontentparser. `withshardfailures` parameter indicates randomized shardinfo must must contain shard failures.
+returns tuple containing random stored field values corresponding expected values printed via org.elasticsearch.common.xcontent.toxcontent#toxcontentxcontentbuilder toxcontent.params parsed back via generates values based get printed out. stored fields values retrieved lucene converted via
+returns tuple contains randomized failure value left side corresponding value right side printed toxcontent parsed back using parsing method like shardinfo.failure#fromxcontentxcontentparser.
+randomly adds fields objects arrays provided builder. maximum depth 5.
+returns random source given xcontenttype containing random number fields objects array maximum depth 5. minimum number fields per object provided argument.
+method takes input xcontent data adds random field value inner object array json object. e.g. used test parsers handle resulting xcontent handle augmented xcontent correctly example testing lenient parsing. xcontent output contains objects skipped treatment optional filtering predicate check xcontent path want insert return true path excluded. paths string concatenating field names array indices e.g. in: pre "foo1 : "bar" : ... ... "baz" : insert pre "foo1.bar.2.baz" would point desired insert location. exclude inserting "foo1" object would user predicate like pre path - path.endswith"foo1" pre don't want random insertions "foo1" tree could use pre path - path.contains"foo1" pre
+utility method takes xcontentparser walks xcontent structure find possible paths new object array starts. used tests add random xcontent values test parsing code errors check robustness new fields. path uses separated fieldnames numbers array indices similar stack passed initially empty gets pushed recursive calls example following json xcontent: pre "foo" : "bar" "foo1" : 1 "foo2" : "baz" 3 4 "foo3" : "foo4" : "foo5": "buzz" pre would return following list: ul li"" empty string path root objectli li"foo1.1"li li"foo3li li"foo3.foo4li ul
+inserts keyvalue pairs xcontent passed bytesreference returns new xcontentbuilder paths argument uses separated fieldnames numbers array indices similar keyvalue arguments suppliers either return fixed random values.
+perform common equality hashcode checks input object input one aspect. output call used check equal input object
+verifies nodes version cluster state master cluster state
+waits mappings provided fields exist nodes. note waits current started shards checks concrete mappings.
+returns settings object used #createindexstring... #preparecreatestring friends. method overwritten subclasses set defaults indices created test. default returns settings object sets random number shards. number shards replicas controlled specific methods.
+creates randomized index template. template used pass randomized settings per index basis. allows enabledisable randomization number shards replicas
+returns path random directory used create temporary file system repo
+asserts shards allocated nodes matching given node pattern.
+indexes given indexrequestbuilder instances randomly. shuffles given builders either indexes blocking async fashion. useful catch problems relate internal document ids index segment creations. features might bug given document first last segment one document segment etc. method prevents issues like randomizing index layout. documents indexed. useful produce deleted documents server side.
+waits least give number document visible searchers saves unneeded searches.
+flush indices cluster.
+waits given mapping type exists master node.
+return mock plugins cluster use
+ensures result counts expected logs results different
+creates one indices asserts indices acknowledged. one indices already exists method fail wipe indices created far.
+method used obtain settings nth node cluster. nodes cluster associated ordinal number nodes started specific configurations. method might called multiple times ordinal expected return value invocation. words subclasses must ensure method idempotent.
+asserts segments sorted provided sort.
+waits relocating shards become active cluster reached given health status using cluster health api.
+returns path random directory used create temporary file system repo
+maybe refresh force merge flush always make sure aren't many flight async operations.
+remove customs except customs know clients understand.
+returns transport client ratio class level annotation via return random ratio interval 0..1.
+restricts given index allocated codencode nodes using allocation deciders. yet shards can't allocated node shards index remain allocated codencode nodes.
+returns client ratio configured via
+creates indices provided argument randomly associating aliases indexes one dummy document per index refreshes new indices
+asserts files specified path
+returns bytes represent xcontent output provided toxcontent object using provided toxcontent#isfragment method returns. shuffles keys make sure parsing never relies keys ordering.
+creates indicesmodule testing given mappers metadata mappers.
+returns random number temporary paths.
+assert two objects equals calling toxcontent#toxcontentxcontentbuilder toxcontent.params print differences aren't equal.
+runs code block provided interval waiting assertions trip.
+helper method create byte array given length populated random byte values
+randomly shuffles fields inside objects parsed using xcontentparser passed in. recursively goes inner objects also shuffles them. exceptions recursive shuffling behavior made passing names fields internally stay untouched.
+builds set unique items. usually you'll get requested count might get less number supplier returns lots repeats. make sure items properly implement equals hashcode.
+helper get random value certain range that's different input
+returns java.nio.file.path pointing class path relative resource given first argument. contrast codegetclass.getresource....getfilecode method return url encoded paths parent path contains spaces non-standard characters.
+returns size random values
+creates testanalysis default analyzers configured.
+reset deprecation logger removing current thread context setting new thread context setnewthreadcontext set true otherwise clearing current thread context.
+helper randomly perform codeconsumercode codevaluecode
+helper method return first 20 chars request's body
+closes webserver. also tries stop currently sleeping requests first counting respective latches.
+creates mockrequest incoming http request later checked test assertions
+adds response response queue used request comes note: every response processed
+starts webserver binds arbitrary ephemeral port webserver able serve requests method returns
+sleep specified amount time time value null
+adds new header headers object
+returns closeaction execute actual engine. note method changes state first call treats subsequent calls engine passed already closed.
+obtain logging levels test logging annotation.
+reset logging levels state provided map.
+obtain logger given name.
+applies test logging annotation returns existing logging levels.
+append single vm option.
+creates random shape useful randomized testing note: exercise caution using build random geometrycollections creating large random number random shapes result massive resource consumption see: geoshapequerytests#testshapefilterwithrandomgeocollection following options included
+assert index template missing
+assert index template exists
+asserts provided bytesreferences created comparison done parsing map comparing two keys ordering doesn't matter. also binary values byte properly compared arrays comparisons.
+compares two maps recursively using arrays comparisons byte arrays.equalsbyte byte
+checks shard requests replicated broadcast request failed due cluster block
+compares two lists recursively using arrays comparisons byte arrays.equalsbyte byte
+run future.actionget check throws exception right type optionally checking exception's rest status
+executes request fails request blocked specific clusterblock.
+remove cluster settings.
+used obtain settings rest client used send rest requests.
+checks specific index green. force selection index tests share cluster often leave indices non green state
+convert entity response map maps.
+template one automatically created xpack?
+waits shard initialization completed. handy alternative ensuregreen relates shards cluster doesn't require know many nodesreplica are.
+waits cluster state updates processed cluster state updates still in-progress next test starts.
+cluster tested xpack installed?
+logs message still running tasks. reasoning tasks still running state trying bleed tests.
+wipe fs snapshots created one one repositories next test create repositories fresh they'll start empty. isn't api delete snapshots. api delete snapshot repositories leaves snapshots intact repository.
+tells whether particular key needs looked stash based name. returns true string representation key starts "$" false otherwise stash contains fields eventually extracted previous responses reused arguments following requests e.g. scroll id
+lookup value stash adding support special key $ path returns string location path object currently unstashed. useful documentation testing.
+allows saved specific field stash key-value pair
+retrieves value current stash. stash contains fields eventually extracted previous responses reused arguments following requests e.g. scroll id
+constructs new codeblacklistedpathpatternmatchercode instance provided suffix pattern.
+create new xcontentbuilder xcontent object underlying objectpath. works objectpath instances created xcontent object nested substructures. throw unsupportedoperationexception cases.
+calls elasticsearch api parameters request body provided arguments. saves obtained response execution context.
+clears last obtained response stashed fields
+calls api provided parameters body
+returns body string
+returns body properly parsed depending content type. might string json object parsed map.
+get list values warning headers returned response.
+parses response body extracts specific value identified provided path
+sniff cluster host metadata return
+create parameters parameterized test.
+execute executablesection careful log place origin failure.
+add single suite file set suites.
+tells whether features provided argument supported
+parses complete set rest spec available provided directories
+finds matching rest paths available ones current api based rest spec. best path one exactly number placeholders replace e.g. indextypeid path params exactly index type id.
+returns supported http methods given rest parameters provided
+finds best matching rest path given current parameters replaces placeholders corresponding values received arguments
+parse teardownsection next field skip otherwise returns teardownsection#empty.
+check response contains warning headers expect.
+parse skipsection next field skip otherwise returns skipsection#empty.
+parse setupsection next field skip otherwise returns setupsection#empty.
+opens httpserver start listening random port.
+returns error message form stack traces emitted throwable#printstacktrace
+checks gc disruption never blocks threads something "unsafe" keep retrying threads safely paused
+ensures nodes cluster connected other. network disruptions may leave nodes master disconnected other. handy able ensure happens faster
+applies action disrupted links two sets nodes.
+delays requests random fixed time value delaymin delaymax.
+resolves threads belonging given node suspends current stack trace "safe". threads added nodethreads suspended. returns true live threads found. caller expected call method "live" found.
+simulate remote error given requestid wrapped remotetransportexception request
+returns requests captured far. method clear captured requests list. want captured requests list cleared use #capturedrequests.
+returns requests captured far grouped target node. method clear captured request list. want captured requests list cleared use
+simulate local error given requestid wrapped sendrequesttransportexception request
+build service. updates #trace log exclude setting #trace log include setting.
+adds rule cause ignores send request simulating unresponsive node failing connect rule added.
+adds rule cause every send request fail new connect since rule added fail well.
+adds rule cause ignores send request simulating unresponsive node failing connect rule added.
+utility method detect whether thread network thread. typically used assertions make sure call blocking code networking threads.
+attempts decode message provided bytes. full message available null returned. message ping empty bytesreference returned. dependent available memory.
+validates first 6 bytes message header returns length message. 6 bytes available returns -1. dependent available memory.
+sends back error response caller via given channel
+serializes given message bytes representation
+method handles message receive part request responses
+consumes bytes available network reads. method returns number bytes consumed call. dependent available memory.
+sends message given channel using given callbacks.
+writes tcp message header bytes reference.
+returns profile settings given settings object
+ensures transport still started open
+executed received response error
+parse hostname+port range spec equivalent addresses
+called channel closed instance due disconnect closed socket etc.
+fetches shards search request remote connection. used later run search remote end.
+collects nodes connected cluster returns passes nodeid discoverynode lookup function returns codenullcode node id found.
+ensures cluster connected. cluster connected operation invoke listener immediately.
+get information remote nodes rendered remoteinfo requests.
+returns connection remote cluster preferably direct connection provided discoverynode. node connected returned connection proxy connection redirects it.
+creates new remoteclusterconnection
+collects nodes given clusters returns passes clusteralias nodeid discoverynode function success.
+method updates list remote clusters. it's intended used update consumer settings infrastructure
+connects remote clusters blocking fashion. called node startup establish initial connection configured seed nodes.
+returns connection given node given remote cluster
+ensures given cluster alias connected. cluster connected operation invoke listener immediately.
+returns client remote cluster given cluster alias exists.
+disconnected given node connected nothing.
+connects node given connection profile. node already connected method effect. successful established validated exposed.
+returns connection given node node connected. connections returned method must closed. lifecycle connection maintained connection manager
+copy constructor using another profile base
+adds number connections one types. type added once.
+sets connect timeout connection profile
+returns number connections per type profile. might return count shared types sum connections per type might higher #getnumconnections. instance method connections distinct.
+sets handshake timeout connection profile
+creates new connectionprofile based added connections.
+takes connectionprofile resolves fully specified i.e. nulls profile
+builds connection profile dedicated single channel type. use opening single use connections
+returns one channels configured handle. channel selected round-robin fashion.
+constructs new mockchannel instance intended accepting requests.
+constructs new mockchannel instance intended handling actual incoming outgoing traffic.
+removes returns responsecontext instances match predicate
+called transport implementation response exception received previously sent request processing deserialization done. returns appropriate response handler null found.
+adds new response context associates new request id.
+executes high-level handshake using given connection returns discovery node node connection established with. handshake fail cluster name target node doesn't match local cluster name.
+registers new request handler
+registers new request handler
+returns either real transport connection local node connection using local node optimization.
+called transport implementation incoming request arrives parsing happened exception requestid action
+registers new request handler
+cancels timeout handling. best effort avoid running it. remove requestid #responsehandlers make sure doesn't run.
+registers new request handler
+build service. updates #trace log exclude setting #trace log include setting.
+establishes returns new connection given node. connection maintained service it's callers responsibility close connection goes scope.
+connect specified node given connection profile
+returns codetruecode iff action name starts valid prefix.
+deserializes new instance return type stream. called infra de-serializing response.
+awaits pending connections complete. throw exception least one connections fails.
+groups indices per cluster splitting remote cluster-alias index-name pairs #remote cluster index separator. indices per cluster collected list returned map keyed cluster alias. local indices grouped
+registers proxy request handler allows forward requests given action another node. used response type changes based upcoming request quite rare
+registers proxy request handler allows forward requests given action another node. used response type always cases.
+set number available processors netty uses sizing various resources e.g. thread pools.
+specified cause unrecoverable error method rethrow cause separate thread caught bubbles uncaught exception handler.
+turns given bytesreference bytebuf. note: returned bytebuf reference internal pages bytesreference. don't free bytes reference bytebuf goes scope.
+get current usage statistics node. discoverynode node whether include rest action usage returned statistics node

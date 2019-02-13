@@ -1,0 +1,232 @@
+returns total bytes written merge.
+returns first doc id greater provided codeaftercode doc.
+create new binaryrange provided encoded binary range
+highlights terms extracted provided query within content provided field name
+translate custom queries queries supported unified highlighter.
+must called increasing offset. see fieldhighlighter usage.
+invoked call precedingoffset+1. see fieldhighlighter usage.
+returns breakiterator#getsentenceinstancelocale bounded maxlen. secondary boundaries found using breakiterator#getwordinstancelocale.
+create collapsing top docs collector org.apache.lucene.index.sorteddocvalues field. accepts also org.apache.lucene.index.sortedsetdocvalues field collect fail illegalstateexception document contains one value field. documents. document per collapsed key. must non-null ie want groupsort relevance use sort.relevance.
+transform firstpassgroupingcollector#gettopgroupsint boolean output first pass.
+create collapsing top docs collector org.apache.lucene.index.numericdocvalues field. accepts also org.apache.lucene.index.sortednumericdocvalues field collect fail illegalstateexception document contains one value field. documents. collapsing keeps top sorted document per collapsed key. must non-null ie want groupsort relevance use sort.relevance.
+returns new collapsetopdocs containing topn collapsed results across provided collapsetopdocs sorting score. collapsetopfielddocs instance must sorted.
+need tie-break since score sort value first compare shard index lower shard wins iff shard index use hit index.
+add byte sequence. next byte sequence seen sequence counts 255
+tests docwriteresponse#toxcontentxcontentbuilder toxcontent.params doesn't include forced refresh unless true. can't assert yaml tests "not found" also "false" there....
+parse output #innertoxcontentxcontentbuilder params method. method intended called subclasses must called multiple times parse information concerning needed immediately returns.
+return relative uri location document suitable use location header. use relative uris permitted http1.1 cf. https:tools.ietf.orghtmlrfc7231#section-7.1.2.
+creates listener listens response failure executes corresponding consumer response failure received.
+notifies every given listener failure passed #onfailureexception. listener throws exception remaining listeners processed caught exception re-thrown.
+converts listener biconsumer compatibility java.util.concurrent.completablefuture api.
+notifies every given listener response passed #onresponseobject. listener throws exception exception forwarded #onfailureexception. turn #onfailureexception fails remaining listeners processed caught exception re-thrown.
+index name document.
+type document.
+id document.
+indicates whether response contain stored source.
+indicate source returned "include" andor "exclude" set include simple wildcard elements.
+indicate source returned "include" andor "exclude" set include simple wildcard elements.
+method used parse getresponse object printed xcontent using #toxcontentxcontentbuilder params method. p forward compatibility reason method might fail tries parse field doesn't know. returning result check enough information parsed return valid getresponse instance throws parsingexception otherwise. case get 404 back parsed normal method needs way figure whether got back valid get response done catching parsingexception.
+read stream.
+read stream.
+read stream.
+test behavior named analysis component isn't defined index. case build defaults.
+test equivalent calling analyze specific index. index specific value maximum token count used.
+test equivalent calling analyze without specific index. default value maximum token count used.
+utility method computes total memory adding fielddata percolatorcache segments memory index writer version map
+setting "ignoreunavailable" option prevents indexclosedexception
+set statuses filter shards get stores info on. see clusterhealthstatus details. defaults "yellow" "red" status
+returns string value specified index setting. includedefaults flag set set false getindexrequest method return value setting explicitly set index. includedefaults flag set true getindexrequest method fall back return default value setting explicitly set.
+adds mapping added index gets created.
+sets aliases associated index gets created
+sets settings mappings single source.
+adds mapping added index gets created.
+sets aliases associated index gets created
+settings create index either jsonyamlproperties format
+tests manually recover failed allocation due shards moved away etc.
+test setting source available setters
+test setting settings available setters
+upgrade request works shards.
+finds indices primaries available
+set default routing.
+add action request validate it.
+aliases use action.
+validate action sane. called action added request actions invalid built.
+set index action operating on.
+set alias action operating on.
+read stream.
+allows read alias provided input stream
+associates filter alias
+associates filter alias
+parses alias returns parsed representation
+fills alias result empty entries requested indices specific aliases requested.
+adds mapping added index gets created.
+template source definition.
+sets aliases associated index gets created
+adds mapping added index gets created.
+template source definition.
+settings create index template either json yaml format.
+sets aliases associated index gets created
+mapping type consisting fieldproperties pairs e.g. "field1" "type=stringstore=true" number source arguments divisible two
+mapping source definition.
+mapping source definition.
+returns random putmappingrequest.
+returns mappings specific field.
+attribute extract object. extracted object group attributeclassname
+sets settings updated either json yaml format
+returns string value specified index setting. includedefaults flag set set false getsettingsrequest method return value setting explicitly set index. includedefaults flag set true getsettingsrequest method fall back return default value setting explicitly set.
+newly created index matches index template whose aliases contains rollover alias rollover alias point multiple indices. causes indexing requests rejected. avoid make sure duplicated alias index templates creating new index.
+adds condition check index least codenumdocscode
+adds size-based condition check index size least codesizecode.
+adds condition check index least codeagecode old
+sets number shard copies must active getting health status. defaults activeshardcount#none meaning don't wait active shards. set value activeshardcount#all wait shards primary replicas active across indices cluster. otherwise use total number shard copies would exist across indices cluster.
+allows explicitly override derived cluster health status.
+fetch task status list tasks api using it's "fallback get task index" behavior. asserts obvious stuff fetched task returns map it's status.
+test waiting task times out.
+test wait completion.
+wait test task running nodes return taskid primary task.
+registers recording task event listeners given action mask nodes
+basic "is plugged in" style test indexes document makes sure fetch status process. goal verify large moving parts make fetching task status work fit together rather verify particular status results indexing. look transportreplicationactiontests. intentionally don't use task recording mechanism used places test make sure status fetching works properly wire.
+returns events satisfy criteria across nodes
+resets recording task event listeners given action mask nodes
+test starts nodes actions blocks nodes. node actions blocked middle execution executes tasks action targets blocked node actions. test verifies task actions getting executed nodes listed node filter.
+returns list tasks node
+presents flat list tasks
+convert task response xcontent grouping executing nodes.
+convert response xcontent grouping parent tasks.
+called waiting task complete. attempts load results task tasks index. isn't index returns snapshot task taken shortly completion.
+send getrequest tasks index looking persisted copy task completed task. it'll found task's result stored. called node task node still part cluster coordinating node node longer part cluster.
+called getresponse loading task results index. called node task node part cluster coordinating node node wasn't part cluster.
+executed coordinating node forward execution remaining work node matches requested
+executed node running task find return running task. falls back
+sets repository-specific restore settings p see repository documentation information.
+parses restore definition
+sets settings addedchanged restored indices
+sets repository-specific snapshot settings. p see repository documentation information.
+parses snapshot definition.
+returns http status ul li@link reststatus#accepted snapshot still progressli li@link reststatus#ok snapshot successful partially successfulli li@link reststatus#internal server error snapshot failed completelyli ul
+generate snapshot state code
+reads snapshot status stream input
+returns list snapshot indices
+sets transient settings updated. survive full cluster restart
+sets persistent settings updated. get applied cross restarts
+partitions settings known valid versus unknown invalid. resulting tuple contains known valid settings first component unknown invalid settings second component. note archived settings contained settings partition included first component.
+returns string value setting specified index. order search first persistent settings transient settings finally default settings.
+invokes #acceptbulkrequest actionlistener. backs provided exception delegates results provided listener. retries scheduled using class's thread pool.
+completes operation without anything primary
+indicates operation needs failed required mapping didn't arrive time
+builds bulk shard response return user
+current operation executed primary specified result
+finishes execution current request response returned user
+closes processor. flushing time enabled it's shutdown. remaining bulk actions flushed. p concurrent requests enabled returns true immediately. concurrent requests enabled waits specified timeout bulk requests complete returns true specified waiting time elapses bulk requests complete false returned.
+adds data bytes processed bulk processor
+flush pending delete index requests.
+sets custom backoff policy. backoff policy defines bulk processor handle retries bulk requests internally case failed due resource constraints i.e. thread pool full. default back exponentially.
+failure message null fail.
+type action.
+reads bulkitemresponse xcontentparser. item bulkresponse#getitems array.
+version action.
+read stream.
+index name action.
+id action.
+abort request store org.elasticsearch.action.bulk.bulkitemresponse.failure response.
+tests transportbulkaction evaluates alias routing values correctly dealing alias pointing multiple indices write index exits.
+returns sliced bytesreference. xcontenttype json byte preceding marker checked see carriage return bytesreference sliced carriage return ignored
+add request current bulkrequest.
+executes bulk item requests handles request execution exceptions
+determines whether bulk item request executed replica. primary execution resulted noop possible write requests pre-6.0 nodes
+creates new bulk item result given requests result performing update operation shard.
+executes index operation primary shard updates mapping dynamic mappings found
+anything failed execution.
+see: #frombytebyte
+fail wildcard usage indices named required destructive operations.
+index auto created?
+waits specified number active shards started executing
+returns true iff active shard count shard routing table enough meet required shard count represented instance.
+returns true iff given cluster state's routing table contains enough active shards given indices meet required shard count represented instance.
+parses active shard count given string. valid values "all" shard copies null default value defaults one shard copy numeric value greater equal 0. input throw illegalargumentexception.
+get activeshardcount instance given value. value first validated ensure valid shard count throws illegalargumentexception validation fails. valid values non-negative number. directly use activeshardcount#default default value one shard copy activeshardcount#all specify shards.
+returns true iff given number active shards enough meet required shard count represented instance. method invoked activeshardcount objects created #fromint #none #one.
+use method transport action continue run context current task
+execute transport action local node returning task used track execution accepting
+use method transport action call result creation new task associated call. typical behavior.
+creates new listener
+parse string representation refresh policy usually request parameter.
+syncs operation result translog throws shard available failure
+calls response listener pending operations returned otherwise decrements pending opts counter.
+respond refresh occurred listener ready. always called synchronized this.
+respond refresh occurred listener ready. always called synchronized this.
+checks whether perform write based required active shard count setting. returns null ok proceed string describing reason stop
+sends specified replica request specified node.
+sets current phase task isn't null. pulled method convenient way.
+tries acquire reference indexshard perform primary operation. released performing primary operation locally replication operation replica shards completed failed see replicationoperation.
+resolves derived values request. example target shard id incoming request set request construction. additional processing validation request done here.
+test ensures replication operations adhere indexmetadata#setting wait active shards setting request using default value waitforactiveshards.
+transport channel needed replica operation testing.
+relocating primary shard cluster state update end relocation active primary switched relocation source relocation target. relocation source receives processes cluster state relocation target time span relocation source believes active primary relocation target relocation target believes active primary relocation source. results replication requests sent back forth. p test checks replication request routed back relocation target relocation source case stale index routing table relocation target.
+test replica request rejected arrives shard wrong allocation id
+test primary request rejected arrives shard wrong allocation id term
+test throwing org.elasticsearch.action.support.replication.transportreplicationaction.retryonreplicaexception causes retry
+creates cluster state index #numberofprimaries primary shards started state replicas. cluster state contains #numberofnodes nodes assigns primaries nodes.
+creates cluster state given indices index containing #numberofprimaries started primary shards replicas. cluster state contains #numberofnodes nodes assigns primaries nodes.
+creates cluster state index one shard many replicas numberofreplicas. primary started cluster state. unassignedreplicas unassigned assignedreplicas one initializing started relocating.
+creates cluster state local node master node specified
+creates cluster state several shards one replica shards started.
+creates cluster state index one shard #replicastates replicas
+creates cluster state index
+creates cluster state several indexes shards replicas shards started.
+resolve node ids concrete nodes incoming request
+map responses noderesponseclass responses failednodeexceptions.
+lazily build get map node id node response.
+rethrow task failures any.
+allows directly call transportmasternodeaction#masteroperationmasternoderequest clusterstate actionlistener protected method.
+indexing operations entail mapping changes require blocking request master node update mapping. master node disrupted cannot commit cluster state changes needs retry within timeout limits. retry logic implemented transportmasternodeaction tested following master failover scenario.
+parse current token update parsing context appropriately.
+returns tuple updateresponses. p left element actual updateresponse serialize right element expected updateresponse parsing.
+add script parameter.
+indicate source returned every hit "include" andor "exclude" set include simple wildcard elements. optional include optionally wildcarded pattern filter returned source optional exclude optionally wildcarded pattern filter returned source
+script execute. note make sure send different script times instead use script params possible automatically compiled script.
+controls shard routing request. using value hash shard id.
+indicate source returned "include" andor "exclude" set include simple wildcard elements. optional list include optionally wildcarded pattern filter returned source optional list exclude optionally wildcarded pattern filter returned source
+script execute. note make sure send different script times instead use script params possible automatically compiled script. script execute script language script type script parameters
+indicates whether response contain updated source.
+applies updaterequest#fetchsource source updated document returned update response.
+prepare request merging existing document new one optionally detect noop change. returns result containing new indexrequest executed primary replicas.
+prepare request updating existing document using script. executes script returns result containing either new indexrequest deleterequest depending script's returned "op" value executed primary replicas.
+calculate version use update request using either existing version internal versioning used get result document's version version type "force".
+prepares update request converting index delete request update response action event noop.
+execute scripted upsert existing upsert document script executed. script executed new tuple operation updated source returned.
+calculate routing value used either included index request's routing retrieved document's routing defined.
+prepare request upsert executing upsert script present returning result containing new
+prepares update request converting index delete request update response action.
+sets threshold enforces pre-filter roundtrip pre-filter search shards based query rewriting number shards search request expands exceeds threshold. filter roundtrip limit number shards significantly instance shard match documents based it's rewrite method ie. date filters mandatory match shard bounds query disjoint. default 128
+constructs new search request reading specified stream.
+sets number shard results reduced coordinating node. value used protection mechanism reduce memory overhead per search request potential number shards request large.
+sets number shard requests executed concurrently single node. value used protection mechanism reduce number shard requests fired per high level search request. searches hit entire cluster throttled number reduce cluster load. default 5
+constructs new search request provided indices given search source.
+executes single request queue requests. request finishes another request taken queue. request executed permit taken specified semaphore released request completes.
+returns profile results search response including shards. empty map returned profiling enabled
+returns new arraysearchphaseresults instance. might return instance reduces search responses incrementally.
+builds array potential null elements docs load.
+creates new queryphaseresultconsumer buffer used incrementally reduce aggregation results shards responded.
+enriches search hits completion suggestion hits codesorteddocscode using codefetchresultsarrcode merges suggestions aggregations profile results expects sorteddocs top search docs across shards optionally followed top suggest docs named completion suggestion ordered suggestion name
+reduces given query results consumes aggregations profile results. non-null query results. non-null query results.
+returns score doc array top n search docs across shards followed top suggest docs named completion suggestion across shards. one named completion suggestion specified request suggest docs named suggestion ordered suggestion name. note: order sorted score docs depends shard index result array merge process needs disambiguate result. oder obtain stable results shard index index result result array must same. enabled scroll search retrieves hits length 'size' query phase.
+performs intermediate reduce phase aggregations. instance reduce phase never prune information relevant final reduce step. final reduce see #reduceaggslist list reducecontext
+forcefully counts operation executes provided runnable expected operations executed
+sets result given array index runs #countdown
+escalates failure via searchphasecontext#onshardfailureint searchshardtarget exception runs #countdown
+releases shard targets used docsidstoload.
+method collects nodes remote clusters asynchronously scroll ids references remote cluster. otherwise action listener invoked immediately function based given discovery nodes.
+method called search phase failed ensure relevant search contexts resources released. method also notify listener sends back failure user.
+main entry point search. method starts search execution initial phase.
+add search request execute. note order important search response returned order search requests. p ignoreindices set search request indicesoptions multi search request used set.
+add search request execute. note order important search response returned order search requests.
+parse search scroll request request body provided rest layer. values already set also found parsing overridden.
+returns codetruecode iff search request inner hits needs field collapsing
+sets many search requests specified multi search requests allowed ran concurrently.
+constructs search type based internal id.
+string representation search type execute defaults searchtype#default. one "dfs query fetch""dfsquerythenfetch" "dfs query fetch""dfsqueryandfetch" "query fetch""querythenfetch" "query fetch""queryandfetch".
+returns connection given node provided cluster. cluster alias codenullcode node resolved local cluster.
+used transportsearchaction send expand queries field collapsing.
+minimal set don't include search hits aggregations suggest etc... make test simpler
+" shardtotalfailures" section makes impossible directly compare xcontent failures parsed searchresponse wrapped extra elasticsearchexception client side. special test case compare "top level" fields equality subsections xcontent equivalence independently
