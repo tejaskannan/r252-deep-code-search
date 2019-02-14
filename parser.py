@@ -16,6 +16,7 @@ METHOD_TOKENS_FILE_NAME = "method-tokens.txt"
 
 NEW_LOWER = "new"
 API_FORMAT = "{0}.{1}"
+TOKEN_FORMAT = "{0} "
 
 class Parser:
 
@@ -43,18 +44,20 @@ class Parser:
         api_call_tokens = []
         javadoc_tokens = []
         method_tokens = []
+        method_bodies = []
         
         for root, _dirs, files in os.walk(base):
             for file_name in files:
                 file_path = root + "/" + file_name
-                tokens, api, name, javadoc = self.parse_file(file_path)
+                tokens, api, name, javadoc, body = self.parse_file(file_path)
 
                 method_name_tokens += tokens
                 api_call_tokens += api
                 javadoc_tokens += javadoc
                 method_tokens += tokens
+                method_bodies += body
                 
-        return method_tokens, api_call_tokens, method_name_tokens, javadoc_tokens
+        return method_tokens, api_call_tokens, method_name_tokens, javadoc_tokens, method_bodies
 
     def generate_data_from_file(self, file_name, output_folder="data"):
         method_name_file = output_folder + "/" + METHOD_NAME_FILE_NAME
@@ -62,7 +65,7 @@ class Parser:
         method_tokens_file = output_folder + "/" + METHOD_TOKENS_FILE_NAME
         javadoc_tokens_file = output_folder + "/" + JAVADOC_FILE_NAME
 
-        method_tokens, api_call_tokens, method_name_tokens, javadoc_tokens = self.parse_file(file_name)
+        method_tokens, api_call_tokens, method_name_tokens, javadoc_tokens, _body = self.parse_file(file_name)
 
         if len(method_tokens) > 0 and len(api_call_tokens) > 0 and \
            len(method_name_tokens) > 0 and len(javadoc_tokens) > 0:
@@ -79,6 +82,7 @@ class Parser:
         apis = []
         javadocs = []
         tokens = []
+        method_bodies = []
 
         with open(file_name, 'rb') as proto_file:
             g = Graph()
@@ -114,14 +118,17 @@ class Parser:
                 method_tokens = self._remove_whitespace(method_tokens)
                 method_tokens = self._clean_tokens(method_tokens)
 
+                method_str = self._method_to_str(method.method_block, code_graph)
+
                 if len(method_tokens) > 0 and len(api_call_tokens) > 0 and \
                    len(method_name_tokens) > 0 and len(javadoc_tokens) > 0:
                    names.append(" ".join(method_name_tokens))
                    apis.append(" ".join(api_call_tokens))
                    tokens.append(method_tokens)
                    javadocs.append(javadoc_tokens)
+                   method_bodies.append(method_str)
 
-        return tokens, apis, names, javadocs
+        return tokens, apis, names, javadocs, method_bodies
 
     def _parse_method_invocation(self, method_invocation_node, code_graph):
         method_select = code_graph.get_neighbors_with_type_content(method_invocation_node.id,
@@ -234,26 +241,6 @@ class Parser:
                 top_level_invocations.append(m_invoc)
         return top_level_invocations
 
-        # method_invocations = []
-        # node_stack = [statements]
-
-        # # This initalization prevents an infinite loop by bounding
-        # # the search space
-        # seen_ids = { bounds[0].id, bounds[1].id }
-        # while len(node_stack) > 0:
-        #     node = node_stack.pop()
-        #     seen_ids.add(node.id)
-        #     if node.contents == METHOD_INVOCATION:
-        #         method_invocations.append(node)
-        #     else:
-        #         neighbors = code_graph.get_out_neighbors(node.id)
-        #         for n in neighbors:
-        #             if not (n.id in seen_ids) and \
-        #                not n.type in (FeatureNode.TOKEN, FeatureNode.IDENTIFIER_TOKEN):
-        #                 node_stack.append(n)
-        # return method_invocations
-
-
     def _get_method_tokens(self, method_block, code_graph):
         start, end = self._get_bounds(method_block, code_graph)
 
@@ -269,6 +256,68 @@ class Parser:
                 tokens.append(node.contents.lower())
             node = code_graph.get_out_neighbors_with_edge_type(node.id, FeatureEdge.NEXT_TOKEN)[0]
         return list(set(tokens))
+
+    def _method_to_str(self, method_block, code_graph):
+        _start, end = self._get_bounds(method_block, code_graph)
+        method_str = ""
+
+        body = code_graph.get_in_neighbors(method_block.id)
+        if len(body) == 0:
+            return method_str
+        body = body[0]
+
+        method = code_graph.get_in_neighbors(body.id)
+        if len(method) == 0:
+            return method_str
+        method = method[0]
+
+        modifiers = code_graph.get_neighbors_with_type_content(method.id,
+                                                               neigh_type=None,
+                                                               neigh_content=MODIFIERS)
+        start = None
+        if len(modifiers) == 0:
+            # There are no modifiers on the method, so we start with the return type
+            ret_type = code_graph.get_neighbors_with_type_content(method.id,
+                                                                  neigh_type=None,
+                                                                  neigh_content=RETURN_TYPE)
+            if len(ret_type) == 0:
+                return method_str
+
+            # We traverse down to the return type
+            start = ret_type[0]
+            while start.type != FeatureNode.TOKEN:
+                start = code_graph.get_out_neighbors(start.id)[0]
+        else:
+            modifiers = code_graph.get_neighbors_with_type_content(modifiers[0].id,
+                                                                   neigh_type=None,
+                                                                   neigh_content=MODIFIERS)
+            if len(modifiers) == 0:
+                return method_str
+            modifier_tokens = code_graph.get_out_neighbors(modifiers[0].id)
+
+            if len(modifier_tokens) == 0:
+                return method_str
+
+            # We start with the first modifier token
+            start = modifier_tokens[0]
+            for i in range(1, len(modifier_tokens)):
+                if start.startPosition > modifier_tokens[i].startPosition:
+                    start = modifier_tokens[i]
+
+        
+        node = start
+        while (node.id != end.id):
+            contents = node.contents
+            if contents in translate_dict:
+                contents = translate_dict[contents]
+            if node.type == FeatureNode.TOKEN:
+                contents = contents.lower()
+            method_str += TOKEN_FORMAT.format(contents)
+            node = code_graph.get_out_neighbors_with_edge_type(node.id, FeatureEdge.NEXT_TOKEN)[0]
+        
+        method_str += translate_dict[end.contents]
+        return method_str
+
 
     def _get_object_inits(self, method_block, code_graph):
         start, end = self._get_bounds(method_block, code_graph)

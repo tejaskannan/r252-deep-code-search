@@ -32,6 +32,9 @@ class CodeGraph:
     def get_out_neighbors(self, node_id):
         return [self.nodes[i] for i in self.adj[node_id]]
 
+    def get_in_neighbors(self, node_id):
+        return [self.nodes[i] for i in self.rev_adj[node_id]]
+
     def get_neighbors_with_type_content(self, node_id, neigh_type, neigh_content):
         assert neigh_type != None or neigh_content != None
 

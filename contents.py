@@ -13,3 +13,24 @@ NEW = "NEW"
 BLOCK = "BLOCK"
 BODY = "BODY"
 PARAM_TYPE = "PARAMETERIZED_TYPE"
+MODIFIERS = "MODIFIERS"
+RETURN_TYPE = "RETURN_TYPE"
+
+
+translate_dict = {
+	"LBRACE": "{",
+	"RBRACE": "}",
+	"EQ": "=",
+	"EQEQ": "==",
+	"BANGEQ": "!=",
+	"LPAREN": "(",
+	"RPAREN": ")",
+	"SEMI": ";",
+	"COMMA": ",",
+	"DOT": ".",
+	"COLON": ":",
+	"LT": "<",
+	"GT": ">",
+	"LBRACKET": "[",
+	"RBRACKET": "]",
+}
