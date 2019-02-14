@@ -20,3 +20,7 @@ if __name__ == '__main__':
 	elif sys.argv[1] == "train":
 		model = Model()
 		model.train()
+	elif sys.argv[1] == "test":
+		file_name = sys.argv[2]
+		model = Model()
+		model.restore(file_name)

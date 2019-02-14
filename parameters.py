@@ -1,11 +1,9 @@
 
 class Parameters:
 
-    def __init__(self, train_frac, valid_frac, step_size, gradient_clip,
+    def __init__(self, step_size, gradient_clip,
                  max_vocab_size, max_seq_length, margin, rnn_units, dense_units,
                  embedding_size, batch_size, num_epochs, optimizer):
-        self.train_frac = train_frac
-        self.valid_frac = valid_frac
         self.step_size = step_size
         self.gradient_clip = gradient_clip
         self.margin = margin
@@ -20,8 +18,6 @@ class Parameters:
 
     def as_dict(self):
         return {
-            "train_frac": self.train_frac,
-            "valid_frac": self.valid_frac,
             "step_size": self.step_size,
             "gradient_clip": self.gradient_clip,
             "margin": self.margin,

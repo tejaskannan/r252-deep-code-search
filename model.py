@@ -21,8 +21,6 @@ class Model:
                        save_dir="trained_models/", log_dir="log/"):
         # Intialize some hyperparameters
         self.params = Parameters(
-            train_frac = 0.8,
-            valid_frac = 0.2,
             step_size = 0.001,
             gradient_clip = 1,
             margin = 0.05,
@@ -31,8 +29,8 @@ class Model:
             rnn_units = 64,
             dense_units = 64,
             embedding_size = 64,
-            batch_size = 128,
-            num_epochs = 10,
+            batch_size = 32,
+            num_epochs = 1,
             optimizer="adam"
         )
 
@@ -186,28 +184,42 @@ class Model:
                 if (avg_valid_loss < best_valid_loss):
                     best_valid_loss = avg_valid_loss
                     name = train_name + "-" + str(epoch)
-                    path = self.save_dir + name + "_best.pkl.gz"
                     print("Saving model: " + name)
-                    self.save(path, name)
+                    self.save(self.save_dir, name)
 
                 print(LINE)
 
-    def save(self, path, name):
+    def save(self, base_folder, name):
         variables_to_save = list(set(self._sess.graph.get_collection(tf.GraphKeys.GLOBAL_VARIABLES)))
         weights_to_save = self._sess.run(variables_to_save)
         weights_dict = {
-            var.name: value for (var, value) in zip(variables_to_save, weights_to_save)
+            var.name: var for var in variables_to_save
         }
-        data = {
+        meta_data = {
             "model_type": type(self).__name__,
             "parameters": self.params.as_dict(),
-            "weights": weights_dict,
             "name": name
         }
 
-        with gzip.GzipFile(path, 'wb') as out_file:
-            pickle.dump(data, out_file)
+        meta_path = base_folder + name + "_best_meta.pkl.gz"
+        with gzip.GzipFile(meta_path, 'wb') as out_file:
+            pickle.dump(meta_data, out_file)
 
+        model_path = base_folder + name + "_best_model.chk"
+        saver = tf.train.Saver()
+        saver.save(self._sess, model_path)
+
+    def restore(self, base_path):
+        meta_data = {}
+        meta_path = base_path + "_best_meta.pkl.gz"
+        with gzip.GzipFile(meta_path, 'rb') as in_file:
+            meta_data = pickle.load(in_file)
+        self.params = meta_data["parameters"]
+
+        with self._sess.graph.as_default():
+            model_path = base_path + "_best_model.chk"
+            saver = tf.train.Saver()
+            saver.restore(self._sess, model_path)
 
     def _make_model(self):
 
@@ -248,11 +260,15 @@ class Model:
             code_emb = tf.layers.dense(inputs=code_concat, units=self.params.dense_units,
                                        activation=tf.nn.tanh, name="fusion")
 
+            self.code_embedding = code_emb
+
             # Javadoc Embeddings
             jd_pos_emb, jd_pos_state = self._make_rnn_embedding(self.javadoc_pos_placeholder,
                                                                 self.javadoc_pos_len_placeholder,
                                                                 name="jd-embedding")
             jd_pos_pooled = self._make_max_pooling_1d(jd_pos_emb[1], name="jd-pooling")
+
+            self.description_embedding = jd_pos_pooled
 
             jd_neg_emb, jd_neg_state = self._make_rnn_embedding(self.javadoc_neg_placeholder,
                                                                 self.javadoc_neg_len_placeholder,
