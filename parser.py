@@ -7,25 +7,13 @@ from graph_pb2 import Graph
 from graph_pb2 import FeatureNode, FeatureEdge
 from text_filter import TextFilter
 from code_graph import CodeGraph
-import time
+from contents import *
 
 JAVADOC_FILE_NAME = "javadoc.txt"
 METHOD_NAME_FILE_NAME = "method-names.txt"
 METHOD_API_FILE_NAME = "method-apis.txt"
 METHOD_TOKENS_FILE_NAME = "method-tokens.txt"
 
-METHOD = "METHOD"
-DOT = "DOT"
-LPAREN = "LPAREN"
-VARIABLE = "VARIABLE"
-TYPE = "TYPE"
-METHOD_SELECT = "METHOD_SELECT"
-MEMBER_SELECT = "MEMBER_SELECT"
-EXPRESSION = "EXPRESSION"
-STATEMENTS = "STATEMENTS"
-METHOD_INVOCATION = "METHOD_INVOCATION"
-LBRACE = "LBRACE"
-NEW = "NEW"
 NEW_LOWER = "new"
 API_FORMAT = "{0}.{1}"
 
@@ -36,26 +24,61 @@ class Parser:
         self.line_threshold = line_threshold
         self.camel_case_regex = re.compile('([a-z])([A-Z])')
 
-    def parse_directory(self, base, output_folder="data"):
+
+    def generate_data_from_dir(self, base, output_folder="data"):
         num_methods_written = 0
         num_files_processed = 0
         for root, _dirs, files in os.walk(base):
             for file_name in files:
                 file_path = root + "/" + file_name
-                num_methods_written += self.parse_file(file_path, output_folder)
+                num_methods_written += self.generate_data_from_file(file_path, output_folder)
                 num_files_processed += 1
                 if (num_files_processed % 100 == 0):
                     print("Processed {0} files".format(num_files_processed))
         return num_methods_written
 
-    def parse_file(self, file_name, output_folder="data"):
+    def parse_directory(self, base):
 
+        method_name_tokens = []
+        api_call_tokens = []
+        javadoc_tokens = []
+        method_tokens = []
+        
+        for root, _dirs, files in os.walk(base):
+            for file_name in files:
+                file_path = root + "/" + file_name
+                tokens, api, name, javadoc = self.parse_file(file_path)
+
+                method_name_tokens += tokens
+                api_call_tokens += api
+                javadoc_tokens += javadoc
+                method_tokens += tokens
+                
+        return method_tokens, api_call_tokens, method_name_tokens, javadoc_tokens
+
+    def generate_data_from_file(self, file_name, output_folder="data"):
         method_name_file = output_folder + "/" + METHOD_NAME_FILE_NAME
         method_api_file = output_folder + "/" + METHOD_API_FILE_NAME
         method_tokens_file = output_folder + "/" + METHOD_TOKENS_FILE_NAME
         javadoc_tokens_file = output_folder + "/" + JAVADOC_FILE_NAME
 
-        num_methods_written = 0
+        method_tokens, api_call_tokens, method_name_tokens, javadoc_tokens = self.parse_file(file_name)
+
+        if len(method_tokens) > 0 and len(api_call_tokens) > 0 and \
+           len(method_name_tokens) > 0 and len(javadoc_tokens) > 0:
+            self._append_to_file(method_tokens, method_tokens_file)
+            self._append_to_file(api_call_tokens, method_api_file)
+            self._append_to_file(method_name_tokens, method_name_file)
+            self._append_to_file(javadoc_tokens, javadoc_tokens_file)
+            return len(method_tokens)
+        return 0
+
+    def parse_file(self, file_name):
+
+        names = []
+        apis = []
+        javadocs = []
+        tokens = []
 
         with open(file_name, 'rb') as proto_file:
             g = Graph()
@@ -63,7 +86,7 @@ class Parser:
                 g.ParseFromString(proto_file.read())
             except:
                 print("Error parsing: " + file_name)
-                return num_methods_written
+                return tokens, apis, names, javadocs
 
             code_graph = CodeGraph(g)
 
@@ -93,42 +116,12 @@ class Parser:
 
                 if len(method_tokens) > 0 and len(api_call_tokens) > 0 and \
                    len(method_name_tokens) > 0 and len(javadoc_tokens) > 0:
-                    self._append_to_file(" ".join(method_name_tokens), method_name_file)
-                    self._append_to_file(" ".join(api_call_tokens), method_api_file)
-                    self._append_to_file(method_tokens, method_tokens_file)
-                    self._append_to_file(javadoc_tokens, javadoc_tokens_file)
-                    num_methods_written += 1
-        return num_methods_written
+                   names.append(" ".join(method_name_tokens))
+                   apis.append(" ".join(api_call_tokens))
+                   tokens.append(method_tokens)
+                   javadocs.append(javadoc_tokens)
 
-            # method_invocations = code_graph.get_nodes_with_content("METHOD_INVOCATION")
-            # for method_invoke in method_invocations:
-            #     print(self._parse_method_invocation(method_invoke, code_graph))
-
-            # javadoc_nodes = list(filter(lambda n: n.type == FeatureNode.COMMENT_JAVADOC, g.node))
-            # for javadoc_node in javadoc_nodes:
-            #     javadoc_edge = next(e for e in g.edge if e.sourceId == javadoc_node.id)
-            #     entity_node = next(n for n in g.node if javadoc_edge.destinationId == n.id)
-
-            #     # We only consider methods in our dataset
-            #     if entity_node.contents != METHOD:
-            #         continue
-
-            #     javadoc_out_file = output_folder + "/" + JAVADOC_FILE_NAME
-            #     cleaned_javadoc = self.clean_javadoc(javadoc_node.contents)
-            #     if len(cleaned_javadoc) == 0:
-            #         continue
-            #     self.append_to_file(cleaned_javadoc, javadoc_out_file)
-
-            #     method_name, method_api_calls, method_tokens = self.extract_method_tokens(
-            #                     g, entity_node.startLineNumber, entity_node.endLineNumber)
-
-            #     self.append_to_file(" ".join(method_name), method_name_file)
-            #     self.append_to_file(" ".join(method_api_calls), method_api_file)
-
-            #     cleaned_tokens = self.clean_tokens(method_tokens)
-            #     self.append_to_file(cleaned_tokens, method_tokens_file)
-
-
+        return tokens, apis, names, javadocs
 
     def _parse_method_invocation(self, method_invocation_node, code_graph):
         method_select = code_graph.get_neighbors_with_type_content(method_invocation_node.id,
@@ -311,9 +304,10 @@ class Parser:
         cleaned_javadoc = self.text_filter.apply_to_javadoc(javadoc_contents)
         return " ".join(cleaned_javadoc)
 
-    def _append_to_file(self, text, file_name):
+    def _append_to_file(self, lst, file_name):
         with open(file_name, "a") as file:
-            file.write(text + "\n")
+            for text in lst:
+                file.write(text + "\n")
 
     def _split_camel_case(self, text):
         return self.camel_case_regex.sub(r'\1 \2', text).split()

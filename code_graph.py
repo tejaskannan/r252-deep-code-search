@@ -1,12 +1,5 @@
 from graph_pb2 import Graph, FeatureNode, FeatureEdge
-import time
-
-TYPE = "TYPE"
-VARIABLE = "VARIABLE"
-METHOD = "METHOD"
-BLOCK = "BLOCK"
-BODY = "BODY"
-PARAM_TYPE = "PARAMETERIZED_TYPE"
+from contents import *
 
 class CodeGraph:
 

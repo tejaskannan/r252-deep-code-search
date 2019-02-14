@@ -8,16 +8,15 @@ default_params = {
     "step_size" : 0.001,
     "gradient_clip" : 1,
     "margin" : 0.05,
-    "max_vocab_size" : 50000,
+    "max_vocab_size" : 10000,
     "max_seq_length" : 50,
     "rnn_units" : 64,
     "dense_units" : 64,
     "embedding_size" : 64,
-    "batch_size" : 128,
-    "num_epochs" : 2,
+    "batch_size" : 32,
+    "num_epochs" : 16,
     "optimizer" : "adam"
 }
-
 
 def main(argv):
     try:
@@ -51,7 +50,6 @@ def main(argv):
             params = params_dict_from_json(params_file, params)
 
     params = params_from_dict(params)
-    print(params)
     for opt, arg in opts:
         if opt in ("-g", "--generate"):
             parser = Parser("filters/tags.txt", "filters/stopwords.txt")
@@ -62,9 +60,9 @@ def main(argv):
             parser = Parser("filters/tags.txt", "filters/stopwords.txt")
             out_folder = outpt if len(outpt) > 0 else "data/"
             if inpt[-1] == "/":
-                written = parser.parse_directory(inpt, out_folder)
+                written = parser.generate_data_from_dir(inpt, out_folder)
             else:
-                written = parser.parse_file(inpt, out_folder)
+                written = parser.generate_data_from_file(inpt, out_folder)
             print("Generated dataset size: {0}".format(written))
         if opt in ("-t", "--train"):
             train_dir = train_dir if len(train_dir) > 0 else "train_data/"
