@@ -1,6 +1,6 @@
 {
     "step_size": 0.01,
     "optimizer": "adam",
-    "train_split": 0.4,
-    "combine_type": "max_pool"
+    "combine_type": "attention",
+    "num_epochs": 32
 }

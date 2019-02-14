@@ -289,7 +289,7 @@ class Model:
                 api_context = self._make_attention_layer(api_emb[1], name="api-attn")
                 token_context = self._make_attention_layer(token_emb, name="token-attn")
             else:
-                name_context = self._make_max_pooling_1d(token_emb[1], name="name-pooling")
+                name_context = self._make_max_pooling_1d(name_emb[1], name="name-pooling")
                 api_context = self._make_max_pooling_1d(api_emb[1], name="api-pooling")
                 token_context = self._make_max_pooling_1d(token_emb, name="token-pooling")
 
