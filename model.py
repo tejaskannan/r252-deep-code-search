@@ -4,6 +4,8 @@ import tensorflow as tf
 import gzip
 import pickle
 import csv
+from os import mkdir
+from os.path import exists
 
 from datetime import datetime
 from dpu_utils.mlutils import Vocabulary
@@ -14,6 +16,9 @@ from parameters import Parameters
 from dataset import Dataset, Batch
 
 LINE = "-" * 50
+
+META_NAME = "meta.pkl.gz"
+MODEL_NAME = "model.chk"
 
 class Model:
 
@@ -29,8 +34,8 @@ class Model:
             rnn_units = 64,
             dense_units = 64,
             embedding_size = 64,
-            batch_size = 32,
-            num_epochs = 1,
+            batch_size = 128,
+            num_epochs = 2,
             optimizer="adam"
         )
 
@@ -183,9 +188,8 @@ class Model:
 
                 if (avg_valid_loss < best_valid_loss):
                     best_valid_loss = avg_valid_loss
-                    name = train_name + "-" + str(epoch)
-                    print("Saving model: " + name)
-                    self.save(self.save_dir, name)
+                    print("Saving model: " + train_name)
+                    self.save(self.save_dir, train_name)
 
                 print(LINE)
 
@@ -201,23 +205,28 @@ class Model:
             "name": name
         }
 
-        meta_path = base_folder + name + "_best_meta.pkl.gz"
+        save_folder = base_folder + name
+        if not exists(save_folder):
+            mkdir(save_folder)
+
+        meta_path = save_folder + "/" + META_NAME
         with gzip.GzipFile(meta_path, 'wb') as out_file:
             pickle.dump(meta_data, out_file)
 
-        model_path = base_folder + name + "_best_model.chk"
+        model_path = save_folder + "/" + MODEL_NAME
         saver = tf.train.Saver()
         saver.save(self._sess, model_path)
 
-    def restore(self, base_path):
+    # We assume that save_folder ends in a slash
+    def restore(self, save_folder):
         meta_data = {}
-        meta_path = base_path + "_best_meta.pkl.gz"
+        meta_path = save_folder + META_NAME
         with gzip.GzipFile(meta_path, 'rb') as in_file:
             meta_data = pickle.load(in_file)
         self.params = meta_data["parameters"]
 
         with self._sess.graph.as_default():
-            model_path = base_path + "_best_model.chk"
+            model_path = save_folder + MODEL_NAME
             saver = tf.train.Saver()
             saver.restore(self._sess, model_path)
 
