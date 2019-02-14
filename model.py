@@ -17,12 +17,13 @@ LINE = "-" * 50
 
 class Model:
 
-    def __init__(self, train_dir="data", save_dir="trained_models/", log_dir="log/"):
+    def __init__(self, train_dir="train_data/", valid_dir="validation_data/",
+                       save_dir="trained_models/", log_dir="log/"):
         # Intialize some hyperparameters
         self.params = Parameters(
             train_frac = 0.8,
             valid_frac = 0.2,
-            step_size = 0.01,
+            step_size = 0.001,
             gradient_clip = 1,
             margin = 0.05,
             max_vocab_size = 50000,
@@ -35,6 +36,14 @@ class Model:
             optimizer="adam"
         )
 
+        if train_dir[-1] != "/":
+            train_dir += "/"
+        self.train_dir = train_dir
+
+        if valid_dir[-1] != "/":
+            valid_dir += "/"
+        self.valid_dir = valid_dir
+
         if save_dir[-1] != "/":
             save_dir += "/"
         self.save_dir = save_dir
@@ -45,7 +54,8 @@ class Model:
 
         self.scope = "deep-cs"
 
-        self.dataset = Dataset(data_dir=train_dir,
+        self.dataset = Dataset(train_dir=train_dir,
+                               valid_dir=valid_dir,
                                max_seq_length=self.params.max_seq_length,
                                max_vocab_size=self.params.max_vocab_size)
 
@@ -107,31 +117,31 @@ class Model:
                 train_losses = []
                 valid_losses = []
 
-                batches = self.dataset.make_mini_batches(self.params.batch_size)
+                train_batches = self.dataset.make_mini_batches(self.params.batch_size, train=True)
+                valid_batches = self.dataset.make_mini_batches(self.params.batch_size, train=False)
 
                 print(LINE)
                 print("Epoch: {0}".format(epoch))
                 print(LINE)
 
-                num_batches = batches.num_batches
+                num_train_batches = train_batches.num_batches
+                num_valid_batches = valid_batches.num_batches
 
-                split_point = int(num_batches * self.params.train_frac)
-
-                for i in range(0, split_point):
+                for i in range(0, num_train_batches):
                     javadoc_neg, javadoc_neg_len = \
-                            self._generate_neg_javadoc(batches.javadoc_batches[i],
-                                                       batches.javadoc_len_batches[i])
+                            self._generate_neg_javadoc(train_batches.javadoc_batches[i],
+                                                       train_batches.javadoc_len_batches[i])
 
                     feed_dict = {
-                        self.name_placeholder: batches.name_batches[i],
-                        self.api_placeholder: batches.api_batches[i],
-                        self.token_placeholder: batches.token_batches[i],
-                        self.javadoc_pos_placeholder: batches.javadoc_batches[i],
+                        self.name_placeholder: train_batches.name_batches[i],
+                        self.api_placeholder: train_batches.api_batches[i],
+                        self.token_placeholder: train_batches.token_batches[i],
+                        self.javadoc_pos_placeholder: train_batches.javadoc_batches[i],
                         self.javadoc_neg_placeholder: javadoc_neg,
-                        self.name_len_placeholder: batches.name_len_batches[i],
-                        self.api_len_placehodler: batches.api_len_batches[i],
-                        self.token_len_placeholder: batches.token_len_batches[i],
-                        self.javadoc_pos_len_placeholder: batches.javadoc_len_batches[i],
+                        self.name_len_placeholder: train_batches.name_len_batches[i],
+                        self.api_len_placehodler: train_batches.api_len_batches[i],
+                        self.token_len_placeholder: train_batches.token_len_batches[i],
+                        self.javadoc_pos_len_placeholder: train_batches.javadoc_len_batches[i],
                         self.javadoc_neg_len_placeholder: javadoc_neg_len
                     }
 
@@ -141,23 +151,23 @@ class Model:
                     avg_train_loss = (op_result[0]) / self.params.batch_size
                     train_losses.append(avg_train_loss)
 
-                    print("Training batch {0}/{1}: {2}".format(i, split_point-1, avg_train_loss))
+                    print("Training batch {0}/{1}: {2}".format(i, num_train_batches-1, avg_train_loss))
 
-                for i in range(split_point, num_batches):
+                for i in range(0, num_valid_batches):
                     javadoc_neg, javadoc_neg_len = \
-                            self._generate_neg_javadoc(batches.javadoc_batches[i],
-                                                       batches.javadoc_len_batches[i])
+                            self._generate_neg_javadoc(valid_batches.javadoc_batches[i],
+                                                       valid_batches.javadoc_len_batches[i])
 
                     feed_dict = {
-                        self.name_placeholder: batches.name_batches[i],
-                        self.api_placeholder: batches.api_batches[i],
-                        self.token_placeholder: batches.token_batches[i],
-                        self.javadoc_pos_placeholder: batches.javadoc_batches[i],
+                        self.name_placeholder: valid_batches.name_batches[i],
+                        self.api_placeholder: valid_batches.api_batches[i],
+                        self.token_placeholder: valid_batches.token_batches[i],
+                        self.javadoc_pos_placeholder: valid_batches.javadoc_batches[i],
                         self.javadoc_neg_placeholder: javadoc_neg,
-                        self.name_len_placeholder: batches.name_len_batches[i],
-                        self.api_len_placehodler: batches.api_len_batches[i],
-                        self.token_len_placeholder: batches.token_len_batches[i],
-                        self.javadoc_pos_len_placeholder: batches.javadoc_len_batches[i],
+                        self.name_len_placeholder: valid_batches.name_len_batches[i],
+                        self.api_len_placehodler: valid_batches.api_len_batches[i],
+                        self.token_len_placeholder: valid_batches.token_len_batches[i],
+                        self.javadoc_pos_len_placeholder: valid_batches.javadoc_len_batches[i],
                         self.javadoc_neg_len_placeholder: javadoc_neg_len
                     }
                     valid_result = self._sess.run(self.loss_op, feed_dict=feed_dict)

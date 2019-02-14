@@ -5,38 +5,55 @@ from dpu_utils.mlutils import Vocabulary
 from parser import JAVADOC_FILE_NAME, METHOD_NAME_FILE_NAME
 from parser import METHOD_API_FILE_NAME, METHOD_TOKENS_FILE_NAME
 
+METHOD_NAMES = "method_names"
+METHOD_APIS = "method_apis"
+METHOD_TOKENS = "method_tokens"
+JAVADOC = "javadoc"
+
+METHOD_NAME_LENGTHS = "method_name_lengths"
+METHOD_API_LENGTHS = "method_api_lengths"
+METHOD_TOKEN_LENGTHS = "method_token_lengths"
+JAVADOC_LENGTHS = "javadoc_lengths"
+
+
 class Dataset:
 
-    def __init__(self, data_dir, max_seq_length, max_vocab_size):
-        self.method_names = self._load_data_file(data_dir + "/" + METHOD_NAME_FILE_NAME)
-        self.method_api_calls = self._load_data_file(data_dir + "/" + METHOD_API_FILE_NAME)
-        self.method_tokens = self._load_data_file(data_dir + "/" + METHOD_TOKENS_FILE_NAME)
-        self.javadoc = self._load_data_file(data_dir + "/" + JAVADOC_FILE_NAME)
+    def __init__(self, train_dir, valid_dir, max_seq_length, max_vocab_size):
 
-        assert len(self.method_names) == len(self.method_api_calls)
-        assert len(self.method_tokens) == len(self.javadoc)
-        assert len(self.method_names) == len(self.javadoc)
+        self.train_data = {
+            METHOD_NAMES: self._load_data_file(train_dir + METHOD_NAME_FILE_NAME),
+            METHOD_APIS: self._load_data_file(train_dir + METHOD_API_FILE_NAME),
+            METHOD_TOKENS : self._load_data_file(train_dir + METHOD_TOKENS_FILE_NAME),
+            JAVADOC: self._load_data_file(train_dir + JAVADOC_FILE_NAME)
+        }
+
+        self.valid_data = {
+            METHOD_NAMES: self._load_data_file(valid_dir + METHOD_NAME_FILE_NAME),
+            METHOD_APIS: self._load_data_file(valid_dir + METHOD_API_FILE_NAME),
+            METHOD_TOKENS : self._load_data_file(valid_dir + METHOD_TOKENS_FILE_NAME),
+            JAVADOC: self._load_data_file(valid_dir + JAVADOC_FILE_NAME)
+        }
 
         self.max_seq_length = max_seq_length
-        self.data_count = len(self.method_names)
 
-        all_tokens = self._flatten([self.method_names, self.method_tokens,\
-                                    self.method_api_calls, self.javadoc])
+        all_tokens = self._flatten(self.train_data)
         self.vocabulary = Vocabulary.create_vocabulary(all_tokens,
                                                        max_vocab_size,
                                                        add_pad=True)
 
-        self._tensorize_data(self.method_names, self.method_api_calls,
-                             self.method_tokens, self.javadoc)
+        self.train_tensors = self._tensorize_data(self.train_data)
+        self.valid_tensors = self._tensorize_data(self.valid_data)
 
+    # train = False means we are using validation data
+    def make_mini_batches(self, batch_size, train=True):
+        combined = []
 
+        tensor_dict = self.train_tensors if train else self.valid_tensors
+        combined = list(zip(tensor_dict[METHOD_NAMES], tensor_dict[METHOD_APIS], \
+                            tensor_dict[METHOD_APIS], tensor_dict[JAVADOC], \
+                            tensor_dict[METHOD_NAME_LENGTHS], tensor_dict[METHOD_API_LENGTHS], \
+                            tensor_dict[METHOD_TOKEN_LENGTHS], tensor_dict[JAVADOC_LENGTHS]))
 
-
-    def make_mini_batches(self, batch_size):
-        combined = list(zip(self.name_tensors, self.api_tensors, \
-                            self.token_tensors, self.javadoc_tensors, \
-                            self.name_lengths, self.api_lengths, \
-                            self.token_lengths, self.javadoc_lengths))
         np.random.shuffle(combined)
 
         names, apis, tokens, javadocs, name_lengths, \
@@ -52,7 +69,7 @@ class Dataset:
         token_length_batches = []
         javadoc_length_batches = []
 
-        for index in range(0, self.data_count, batch_size):
+        for index in range(0, len(names), batch_size):
             limit = index + batch_size
             name_batches.append(np.array(names[index:limit]))
             api_batches.append(np.array(apis[index:limit]))
@@ -68,7 +85,7 @@ class Dataset:
                      name_length_batches, api_length_batches, token_length_batches, \
                      javadoc_length_batches)
 
-    def _tensorize_data(self, method_names, method_api_calls, method_tokens, javadoc):
+    def _tensorize_data(self, data_dict):
 
         def pad(text):
             if len(text) > self.max_seq_length:
@@ -78,38 +95,48 @@ class Dataset:
                           'constant',
                           constant_values=0)
 
-        self.name_tensors = []
-        self.api_tensors = []
-        self.token_tensors = []
-        self.javadoc_tensors = []
+        name_tensors = []
+        api_tensors = []
+        token_tensors = []
+        javadoc_tensors = []
 
-        self.name_lengths = []
-        self.api_lengths = []
-        self.token_lengths = []
-        self.javadoc_lengths = []
+        name_lengths = []
+        api_lengths = []
+        token_lengths = []
+        javadoc_lengths = []
 
-        for i in range(0, self.data_count):
+        method_names = data_dict[METHOD_NAMES]
+        method_api_calls = data_dict[METHOD_APIS]
+        method_tokens = data_dict[METHOD_TOKENS]
+        javadoc = data_dict[JAVADOC]
+
+        for i in range(0, len(method_names)):
             name_vec = self.vocabulary.get_id_or_unk_multiple(method_names[i])
-            self.name_lengths.append(min(len(name_vec), self.max_seq_length))
-            self.name_tensors.append(pad(name_vec))
+            name_lengths.append(min(len(name_vec), self.max_seq_length))
+            name_tensors.append(pad(name_vec))
 
             api_vec = self.vocabulary.get_id_or_unk_multiple(method_api_calls[i])
-            self.api_lengths.append(min(len(api_vec), self.max_seq_length))
-            self.api_tensors.append(pad(api_vec))
+            api_lengths.append(min(len(api_vec), self.max_seq_length))
+            api_tensors.append(pad(api_vec))
 
             token_vec = self.vocabulary.get_id_or_unk_multiple(method_tokens[i])
-            self.token_lengths.append(min(len(token_vec), self.max_seq_length))
-            self.token_tensors.append(pad(token_vec))
+            token_lengths.append(min(len(token_vec), self.max_seq_length))
+            token_tensors.append(pad(token_vec))
 
             javadoc_vec = self.vocabulary.get_id_or_unk_multiple(javadoc[i])
-            self.javadoc_lengths.append(min(len(javadoc_vec), self.max_seq_length))
-            self.javadoc_tensors.append(pad(javadoc_vec))
+            javadoc_lengths.append(min(len(javadoc_vec), self.max_seq_length))
+            javadoc_tensors.append(pad(javadoc_vec))
 
-
-        self.name_tensors = np.array(self.name_tensors)
-        self.api_tensors = np.array(self.api_tensors)
-        self.token_tensors = np.array(self.token_tensors)
-        self.javadoc_tensors = np.array(self.javadoc_tensors)
+        return {
+            METHOD_NAMES: np.array(name_tensors),
+            METHOD_NAME_LENGTHS: np.array(name_lengths),
+            METHOD_APIS: np.array(api_tensors),
+            METHOD_API_LENGTHS: np.array(api_lengths),
+            METHOD_TOKENS: np.array(token_tensors),
+            METHOD_TOKEN_LENGTHS: np.array(token_lengths),
+            JAVADOC: np.array(javadoc_tensors),
+            JAVADOC_LENGTHS: np.array(javadoc_lengths)
+        }
 
     def _load_data_file(_, file_name):
         dataset = []
@@ -119,7 +146,9 @@ class Dataset:
                 dataset.append(line.split())
         return dataset
 
-    def _flatten(_, lists):
+    def _flatten(_, data_dict):
+        lists = [data_dict[METHOD_NAMES], data_dict[METHOD_APIS], \
+                 data_dict[METHOD_TOKENS], data_dict[JAVADOC]]
         flattened = []
         for token_list in lists:
             for lst in token_list:
@@ -139,5 +168,4 @@ class Batch:
         self.api_len_batches = api_len_batches
         self.token_len_batches = token_len_batches
         self.javadoc_len_batches = javadoc_len_batches
-
         self.num_batches = len(name_batches)
