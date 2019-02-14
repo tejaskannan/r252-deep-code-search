@@ -20,10 +20,6 @@ class DeepCodeSearchDB:
         self.emb_table = table + "_emb"
         self.model = model
 
-    # Since embedding vectors are stored as lists, the code is really only designed to
-    # index all at once. Indexing multiple times will cause vectors to be written
-    # to the same redis list. This will NOT overwrite existing information--instead, the
-    # lists will be appended with more elements. This causes the cosine similarity metric to fail.
     def index_dir(self, dir_name, start_index=0):
         index = start_index
         for root, _dirs, files in os.walk(dir_name):
@@ -48,6 +44,12 @@ class DeepCodeSearchDB:
             self.redis_db.hset(data_key, METHOD_TOKENS, token)
             self.redis_db.hset(data_key, METHOD_BODY, body)
 
+            # We have to explicitly delete any existing embedding vector because
+            # inserting a vector amounts to appending to a redis list. Thus, plain insertions will
+            # not overwrite eixisting data and instead would cause vectors to be erroneously large.
+            if self.redis_db.exists(emb_key):
+                self.redis_db.delete(emb_key)
+
             for entry in embedding:
                 self.redis_db.rpush(emb_key, str(entry))
 
@@ -66,7 +68,7 @@ class DeepCodeSearchDB:
         for key in self.redis_db.scan_iter(REDIS_KEY_FORMAT.format(self.emb_table, "*")):
             embedded_code = list(map(lambda x: float(x), self.redis_db.lrange(key, 0, -1)))
             sim_score = cosine_similarity(embedded_descr, embedded_code)
-            heapq.heappush(top_results, SimScore(str(key), sim_score))
+            heapq.heappush(top_results, Similarity(str(key), sim_score))
             if len(top_results) > k:
                 heapq.heappop(top_results)
 
@@ -78,7 +80,7 @@ class DeepCodeSearchDB:
 
         return results
 
-class SimScore:
+class Similarity:
     
     def __init__(self, redis_id, sim_score):
         self.redis_id = redis_id
