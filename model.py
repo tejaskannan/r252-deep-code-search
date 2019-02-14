@@ -320,9 +320,12 @@ class Model:
             self.description_embedding = jd_pos_context
 
             self.loss_op = tf.reduce_sum(
-                tf.constant(self.params.margin, dtype=tf.float32) - \
-                self._cosine_similarity(jd_pos_context, code_emb) + \
-                self._cosine_similarity(jd_neg_context, code_emb)
+                tf.math.maximum(
+                    tf.constant(self.params.margin, dtype=tf.float32) - \
+                        self._cosine_similarity(jd_pos_context, code_emb) + \
+                        self._cosine_similarity(jd_neg_context, code_emb),
+                    tf.constant(0, dtype=tf.float32)
+                )
             )
 
 
@@ -380,7 +383,7 @@ class Model:
     def _cosine_similarity(self, labels, predictions):
         dot_prod = tf.reduce_sum(labels * predictions, axis=1)
         label_norm = tf.norm(labels)
-        predict_norm = tf.norm(predictions)
+        predict_norm = tf.norm(predictions) 
         return dot_prod / (label_norm * predict_norm)
 
     def _generate_neg_javadoc(self, javadoc, javadoc_len):
