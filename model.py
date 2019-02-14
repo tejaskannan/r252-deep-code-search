@@ -12,7 +12,7 @@ from dpu_utils.mlutils import Vocabulary
 
 from parser import JAVADOC_FILE_NAME, METHOD_NAME_FILE_NAME
 from parser import METHOD_API_FILE_NAME, METHOD_TOKENS_FILE_NAME
-from parameters import Parameters
+from parameters import Parameters, params_from_dict
 from dataset import Dataset, Batch
 
 LINE = "-" * 50
@@ -22,22 +22,9 @@ MODEL_NAME = "model.chk"
 
 class Model:
 
-    def __init__(self, train_dir="train_data/", valid_dir="validation_data/",
+    def __init__(self, params, train_dir="train_data/", valid_dir="validation_data/",
                        save_dir="trained_models/", log_dir="log/"):
-        # Intialize some hyperparameters
-        self.params = Parameters(
-            step_size = 0.001,
-            gradient_clip = 1,
-            margin = 0.05,
-            max_vocab_size = 50000,
-            max_seq_length = 50,
-            rnn_units = 64,
-            dense_units = 64,
-            embedding_size = 64,
-            batch_size = 128,
-            num_epochs = 2,
-            optimizer="adam"
-        )
+        self.params = params
 
         if train_dir[-1] != "/":
             train_dir += "/"
@@ -223,7 +210,7 @@ class Model:
         meta_path = save_folder + META_NAME
         with gzip.GzipFile(meta_path, 'rb') as in_file:
             meta_data = pickle.load(in_file)
-        self.params = meta_data["parameters"]
+        self.params = params_from_dict(meta_data["parameters"])
 
         with self._sess.graph.as_default():
             model_path = save_folder + MODEL_NAME
