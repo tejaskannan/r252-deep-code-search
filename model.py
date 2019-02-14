@@ -14,6 +14,7 @@ from parser import JAVADOC_FILE_NAME, METHOD_NAME_FILE_NAME
 from parser import METHOD_API_FILE_NAME, METHOD_TOKENS_FILE_NAME
 from parameters import Parameters, params_from_dict
 from dataset import Dataset, Batch
+from utils import pad
 
 LINE = "-" * 50
 
@@ -216,6 +217,49 @@ class Model:
             model_path = save_folder + MODEL_NAME
             saver = tf.train.Saver()
             saver.restore(self._sess, model_path)
+
+    def embed_method(self, method_name, method_api, method_tokens):
+        name_vec = self.dataset.vocabulary.get_id_or_unk_multiple(method_name)
+        api_vec = self.dataset.vocabulary.get_id_or_unk_multiple(method_api)
+        token_vec = self.dataset.vocabulary.get_id_or_unk_multiple(method_tokens)
+
+        name_tensor = np.array([pad(name_vec, self.params.max_seq_length)])
+        name_len_tensor = np.array([min(len(name_vec), self.params.max_seq_length)])
+        api_tensor = np.array([pad(api_vec, self.params.max_seq_length)])
+        api_len_tensor = np.array([min(len(api_vec), self.params.max_seq_length)])
+        token_tensor = np.array([pad(token_vec, self.params.max_seq_length)])
+        token_len_tensor = np.array([min(len(token_vec), self.params.max_seq_length)])
+
+        with self._sess.graph.as_default():
+            feed_dict = {
+                self.name_placeholder: name_tensor,
+                self.name_len_placeholder: name_len_tensor,
+                self.api_placeholder: api_tensor,
+                self.api_len_placehodler: api_len_tensor,
+                self.token_placeholder: token_tensor,
+                self.token_len_placeholder: token_len_tensor
+            }
+
+            embedding = self._sess.run(self.code_embedding, feed_dict=feed_dict)
+        return embedding[0]
+
+    def embed_description(self, description):
+        descr_tokens = description.split(" ")
+        descr_vec = self.dataset.vocabulary.get_id_or_unk_multiple(descr_tokens)
+
+        descr_tensor = np.array([pad(descr_vec, self.params.max_seq_length)])
+        descr_len_tensor = np.array([min(len(descr_vec), self.params.max_seq_length)])
+
+
+        with self._sess.graph.as_default():
+            feed_dict = {
+                self.javadoc_pos_placeholder: descr_tensor,
+                self.javadoc_pos_len_placeholder: descr_len_tensor
+            }
+
+            embedding = self._sess.run(self.description_embedding, feed_dict=feed_dict)
+        return embedding[0]
+
 
     def _make_model(self):
 

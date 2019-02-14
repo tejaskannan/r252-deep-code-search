@@ -8,6 +8,7 @@ from graph_pb2 import FeatureNode, FeatureEdge
 from text_filter import TextFilter
 from code_graph import CodeGraph
 from contents import *
+from utils import append_to_file, remove_whitespace
 
 JAVADOC_FILE_NAME = "javadoc.txt"
 METHOD_NAME_FILE_NAME = "method-names.txt"
@@ -69,10 +70,10 @@ class Parser:
 
         if len(method_tokens) > 0 and len(api_call_tokens) > 0 and \
            len(method_name_tokens) > 0 and len(javadoc_tokens) > 0:
-            self._append_to_file(method_tokens, method_tokens_file)
-            self._append_to_file(api_call_tokens, method_api_file)
-            self._append_to_file(method_name_tokens, method_name_file)
-            self._append_to_file(javadoc_tokens, javadoc_tokens_file)
+            append_to_file(method_tokens, method_tokens_file)
+            append_to_file(api_call_tokens, method_api_file)
+            append_to_file(method_name_tokens, method_name_file)
+            append_to_file(javadoc_tokens, javadoc_tokens_file)
             return len(method_tokens)
         return 0
 
@@ -110,12 +111,12 @@ class Parser:
 
                 obj_init_tokens = self._get_object_inits(method.method_block, code_graph)
                 api_call_tokens += obj_init_tokens
-                api_call_tokens = self._remove_whitespace(api_call_tokens)
+                api_call_tokens = remove_whitespace(api_call_tokens)
 
                 javadoc_tokens = self._clean_javadoc(method.javadoc.contents)
 
                 method_tokens = self._get_method_tokens(method.method_block, code_graph)
-                method_tokens = self._remove_whitespace(method_tokens)
+                method_tokens = remove_whitespace(method_tokens)
                 method_tokens = self._clean_tokens(method_tokens)
 
                 method_str = self._method_to_str(method.method_block, code_graph)
@@ -313,7 +314,10 @@ class Parser:
             if node.type == FeatureNode.TOKEN:
                 contents = contents.lower()
             method_str += TOKEN_FORMAT.format(contents)
-            node = code_graph.get_out_neighbors_with_edge_type(node.id, FeatureEdge.NEXT_TOKEN)[0]
+            node = code_graph.get_out_neighbors_with_edge_type(node.id, FeatureEdge.NEXT_TOKEN)
+            if node == None or len(node) == 0:
+                break
+            node = node[0]
         
         method_str += translate_dict[end.contents]
         return method_str
@@ -353,13 +357,5 @@ class Parser:
         cleaned_javadoc = self.text_filter.apply_to_javadoc(javadoc_contents)
         return " ".join(cleaned_javadoc)
 
-    def _append_to_file(self, lst, file_name):
-        with open(file_name, "a") as file:
-            for text in lst:
-                file.write(text + "\n")
-
     def _split_camel_case(self, text):
         return self.camel_case_regex.sub(r'\1 \2', text).split()
-
-    def _remove_whitespace(self, lst):
-        return list(filter(lambda x: len(x.strip()) > 0, lst))
