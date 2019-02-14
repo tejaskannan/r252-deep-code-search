@@ -319,11 +319,12 @@ class Model:
 
             self.description_embedding = jd_pos_context
 
-            self.loss_op = tf.math.reduce_sum(
-                    tf.constant(self.params.margin, dtype=tf.float32) - \
-                    tf.losses.cosine_distance(labels=jd_pos_context, predictions=code_emb, axis=1) + \
-                    tf.losses.cosine_distance(labels=jd_neg_context, predictions=code_emb, axis=1)
-                )
+            self.loss_op = tf.reduce_sum(
+                tf.constant(self.params.margin, dtype=tf.float32) - \
+                self._cosine_similarity(jd_pos_context, code_emb) + \
+                self._cosine_similarity(jd_neg_context, code_emb)
+            )
+
 
     def _make_training_step(self):
         trainable_vars = self._sess.graph.get_collection(tf.GraphKeys.TRAINABLE_VARIABLES)
@@ -376,7 +377,11 @@ class Model:
         alphas = tf.nn.softmax(weights, name=name + "-attn")
         return tf.reduce_sum(alphas * inputs, axis=1, name=name + "-attn-reduce")
 
-
+    def _cosine_similarity(self, labels, predictions):
+        dot_prod = tf.reduce_sum(labels * predictions, axis=1)
+        label_norm = tf.norm(labels)
+        predict_norm = tf.norm(predictions)
+        return dot_prod / (label_norm * predict_norm)
 
     def _generate_neg_javadoc(self, javadoc, javadoc_len):
         neg_javadoc = []
