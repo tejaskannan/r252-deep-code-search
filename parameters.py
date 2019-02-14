@@ -4,7 +4,7 @@ class Parameters:
 
     def __init__(self, step_size, gradient_clip,
                  max_vocab_size, max_seq_length, margin, rnn_units, dense_units,
-                 embedding_size, batch_size, num_epochs, optimizer):
+                 embedding_size, batch_size, num_epochs, optimizer, combine_type):
         self.step_size = step_size
         self.gradient_clip = gradient_clip
         self.margin = margin
@@ -16,6 +16,7 @@ class Parameters:
         self.num_epochs = num_epochs
         self.optimizer = optimizer
         self.embedding_size = embedding_size
+        self.combine_type = combine_type
 
     def as_dict(self):
         return {
@@ -29,7 +30,8 @@ class Parameters:
             "batch_size": self.batch_size,
             "num_epochs": self.num_epochs,
             "optimizer": self.optimizer,
-            "embedding_size": self.embedding_size
+            "embedding_size": self.embedding_size,
+            "combine_type": self.combine_type
         }
 
     def __str__(self):
@@ -63,5 +65,6 @@ def params_from_dict(params_dict):
             embedding_size = params_dict["embedding_size"],
             batch_size = params_dict["batch_size"],
             num_epochs = params_dict["num_epochs"],
-            optimizer = params_dict["optimizer"]
+            optimizer = params_dict["optimizer"],
+            combine_type = params_dict["combine_type"]
         )

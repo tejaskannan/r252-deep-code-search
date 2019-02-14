@@ -1,4 +1,5 @@
 import numpy as np
+import csv
 
 def pad(text, max_seq_length):
     if len(text) > max_seq_length:
@@ -46,3 +47,16 @@ def value_if_non_empty(val, default):
     if val == None or len(val) == 0:
         return default
     return val
+
+def lst_equal(lst1, lst2):
+    if len(lst1) != len(lst2):
+        return False
+    for i in range(0, len(lst1)):
+        if (lst1[i] != lst2[i]):
+            return False
+    return True
+
+def log_record(file_name, record):
+    with open(file_name, "a+") as csv_file:
+        csv_writer = csv.writer(csv_file, delimiter=",", quotechar="|")
+        csv_writer.writerow(record)

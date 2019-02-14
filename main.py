@@ -16,8 +16,9 @@ default_params = {
     "dense_units" : 64,
     "embedding_size" : 64,
     "batch_size" : 32,
-    "num_epochs" : 16,
-    "optimizer" : "adam"
+    "num_epochs" : 4,
+    "optimizer" : "adam",
+    "combine_type": "attention"
 }
 
 def main(argv):

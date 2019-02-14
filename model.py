@@ -3,7 +3,6 @@ import numpy as np
 import tensorflow as tf
 import gzip
 import pickle
-import csv
 from os import mkdir
 from os.path import exists
 
@@ -14,7 +13,7 @@ from parser import JAVADOC_FILE_NAME, METHOD_NAME_FILE_NAME
 from parser import METHOD_API_FILE_NAME, METHOD_TOKENS_FILE_NAME
 from parameters import Parameters, params_from_dict
 from dataset import Dataset, Batch
-from utils import pad
+from utils import pad, lst_equal, log_record
 
 LINE = "-" * 50
 
@@ -24,7 +23,7 @@ MODEL_NAME = "model.chk"
 class Model:
 
     def __init__(self, params, train_dir="train_data/", valid_dir="validation_data/",
-                       save_dir="trained_models/", log_dir="log/"):
+                       save_dir="trained_models/", log_dir="log/", model_path=None):
         self.params = params
 
         if train_dir[-1] != "/":
@@ -102,7 +101,7 @@ class Model:
 
             train_name = datetime.now().strftime("%Y-%m-%d-%H-%M-%S")
             csv_name = self.log_dir + train_name + "-data.csv"
-            self._log_record(csv_name, ["Epoch", "Avg Train Loss", "Avg Validation Loss"])
+            log_record(csv_name, ["Epoch", "Avg Train Loss", "Avg Validation Loss"])
 
             for epoch in range(self.params.num_epochs):
                 train_losses = []
@@ -168,7 +167,7 @@ class Model:
                 avg_valid_loss = np.average(valid_losses)
                 avg_train_loss = np.average(train_losses)
 
-                self._log_record(csv_name, [str(epoch), str(avg_train_loss), str(avg_valid_loss)])
+                log_record(csv_name, [str(epoch), str(avg_train_loss), str(avg_valid_loss)])
 
                 print(LINE)
                 print("Average training loss in epoch {0}: {1}".format(epoch, avg_train_loss))
@@ -182,11 +181,6 @@ class Model:
                 print(LINE)
 
     def save(self, base_folder, name):
-        variables_to_save = list(set(self._sess.graph.get_collection(tf.GraphKeys.GLOBAL_VARIABLES)))
-        weights_to_save = self._sess.run(variables_to_save)
-        weights_dict = {
-            var.name: var for var in variables_to_save
-        }
         meta_data = {
             "model_type": type(self).__name__,
             "parameters": self.params.as_dict(),
@@ -231,6 +225,7 @@ class Model:
         token_len_tensor = np.array([min(len(token_vec), self.params.max_seq_length)])
 
         with self._sess.graph.as_default():
+
             feed_dict = {
                 self.name_placeholder: name_tensor,
                 self.name_len_placeholder: name_len_tensor,
@@ -241,6 +236,7 @@ class Model:
             }
 
             embedding = self._sess.run(self.code_embedding, feed_dict=feed_dict)
+        
         return embedding[0]
 
     def embed_description(self, description):
@@ -268,14 +264,10 @@ class Model:
             name_emb, name_state = self._make_rnn_embedding(self.name_placeholder,
                                                             self.name_len_placeholder,
                                                             name="name-embedding")
-            name_pooled = self._make_max_pooling_1d(name_emb[1], name="name-pooling")
-
             # API Embedding
             api_emb, api_state = self._make_rnn_embedding(self.api_placeholder,
                                                           self.api_len_placehodler,
                                                           name="api-embedding")
-            api_pooled = self._make_max_pooling_1d(api_emb[1], name="api-pooling")
-
             # Method Token embedding
             vocab_size = len(self.dataset.vocabulary)
             token_emb_var = tf.Variable(tf.random.uniform(shape=(vocab_size, self.params.embedding_size), maxval=1.0),
@@ -292,10 +284,17 @@ class Model:
 
             token_emb *= tf.cast(token_mask, dtype=tf.float32)
 
-            token_pooled = self._make_max_pooling_1d(token_emb, name="token-pooling")
+            if self.params.combine_type == "attention":
+                name_context = self._make_attention_layer(name_emb[1], name="name-attn")
+                api_context = self._make_attention_layer(api_emb[1], name="api-attn")
+                token_context = self._make_attention_layer(token_emb, name="token-attn")
+            else:
+                name_context = self._make_max_pooling_1d(token_emb[1], name="name-pooling")
+                api_context = self._make_max_pooling_1d(api_emb[1], name="api-pooling")
+                token_context = self._make_max_pooling_1d(token_emb, name="token-pooling")
 
             # Fusion Layer
-            code_concat = tf.concat([name_pooled, api_pooled, token_pooled],
+            code_concat = tf.concat([name_context, api_context, token_context],
                                     axis=1, name="code-concat")
             code_emb = tf.layers.dense(inputs=code_concat, units=self.params.dense_units,
                                        activation=tf.nn.tanh, name="fusion")
@@ -306,19 +305,24 @@ class Model:
             jd_pos_emb, jd_pos_state = self._make_rnn_embedding(self.javadoc_pos_placeholder,
                                                                 self.javadoc_pos_len_placeholder,
                                                                 name="jd-embedding")
-            jd_pos_pooled = self._make_max_pooling_1d(jd_pos_emb[1], name="jd-pooling")
-
-            self.description_embedding = jd_pos_pooled
 
             jd_neg_emb, jd_neg_state = self._make_rnn_embedding(self.javadoc_neg_placeholder,
                                                                 self.javadoc_neg_len_placeholder,
                                                                 name="jd-embedding")
-            jd_neg_pooled = self._make_max_pooling_1d(jd_neg_emb[1], name="jd-pooling")
+
+            if self.params.combine_type == "attention":
+                jd_neg_context = self._make_attention_layer(jd_neg_emb[1], name="jd-attn")
+                jd_pos_context = self._make_attention_layer(jd_pos_emb[1], name="jd-attn")
+            else:
+                jd_neg_context = self._make_max_pooling_1d(jd_neg_emb[1], name="jd-pooling")
+                jd_pos_context = self._make_max_pooling_1d(jd_pos_emb[1], name="jd-pooling")
+
+            self.description_embedding = jd_pos_context
 
             self.loss_op = tf.math.reduce_sum(
                     tf.constant(self.params.margin, dtype=tf.float32) - \
-                    tf.losses.cosine_distance(labels=jd_pos_pooled, predictions=code_emb, axis=1) + \
-                    tf.losses.cosine_distance(labels=jd_neg_pooled, predictions=code_emb, axis=1)
+                    tf.losses.cosine_distance(labels=jd_pos_context, predictions=code_emb, axis=1) + \
+                    tf.losses.cosine_distance(labels=jd_neg_context, predictions=code_emb, axis=1)
                 )
 
     def _make_training_step(self):
@@ -359,19 +363,27 @@ class Model:
                                         scope=name)
         return emb, state
 
-    def _make_max_pooling_1d(self, inpt, name):
-        pooled = tf.layers.max_pooling1d(inputs=inpt,
+    def _make_max_pooling_1d(self, inputs, name):
+        pooled = tf.layers.max_pooling1d(inputs=inputs,
                                          pool_size=(self.params.max_seq_length,),
                                          strides=(1,),
                                          name=name)
         return tf.squeeze(pooled, axis=1)
+
+    def _make_attention_layer(self, inputs, name):
+        weights = tf.layers.dense(inputs=inputs, units=1, activation=tf.nn.tanh,
+                                  name=name + "-attn-weights")
+        alphas = tf.nn.softmax(weights, name=name + "-attn")
+        return tf.reduce_sum(alphas * inputs, axis=1, name=name + "-attn-reduce")
+
+
 
     def _generate_neg_javadoc(self, javadoc, javadoc_len):
         neg_javadoc = []
         neg_javadoc_len = []
         for i, jd in enumerate(javadoc):
             rand_index = np.random.randint(0, len(javadoc))
-            while self._lst_equal(javadoc[i], javadoc[rand_index]):
+            while lst_equal(javadoc[i], javadoc[rand_index]):
                 rand_index = np.random.randint(0, len(javadoc))
             neg_javadoc.append(javadoc[rand_index])
             neg_javadoc_len.append(javadoc_len[rand_index])
@@ -380,16 +392,3 @@ class Model:
 
         return neg_javadoc, neg_javadoc_len
 
-
-    def _lst_equal(_, lst1, lst2):
-        if len(lst1) != len(lst2):
-            return False
-        for i in range(0, len(lst1)):
-            if (lst1[i] != lst2[i]):
-                return False
-        return True
-
-    def _log_record(self, file_name, record):
-        with open(file_name, "a+") as csv_file:
-            csv_writer = csv.writer(csv_file, delimiter=",", quotechar="|")
-            csv_writer.writerow(record)
