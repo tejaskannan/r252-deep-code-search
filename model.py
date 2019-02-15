@@ -263,16 +263,16 @@ class Model:
 
         with tf.variable_scope(self.scope, reuse=tf.AUTO_REUSE):
             # Method Name embedding
-            name_emb, name_state = self._make_rnn_embedding(self.name_placeholder,
-                                                            self.name_len_placeholder,
-                                                            name="name-embedding")
+            name_emb, name_state = self._rnn_embedding(self.name_placeholder,
+                                                       self.name_len_placeholder,
+                                                       name="name-embedding")
             # API Embedding
-            api_emb, api_state = self._make_rnn_embedding(self.api_placeholder,
-                                                          self.api_len_placehodler,
-                                                          name="api-embedding")
+            api_emb, api_state = self._rnn_embedding(self.api_placeholder,
+                                                     self.api_len_placehodler,
+                                                     name="api-embedding")
             # Method Token embedding
             vocab_size = len(self.dataset.vocabulary)
-            token_emb_var = tf.Variable(tf.random.uniform(shape=(vocab_size, self.params.embedding_size), maxval=1.0),
+            token_emb_var = tf.Variable(tf.random.normal(shape=(vocab_size, self.params.embedding_size)),
                                         name="token-embedding-var")
             token_emb = tf.nn.embedding_lookup(token_emb_var, self.token_placeholder)
 
@@ -286,14 +286,18 @@ class Model:
 
             token_emb *= tf.cast(token_mask, dtype=tf.float32)
 
+            # We combine the outputs from the forward and backward passes
+            name_embedding = self._reduction_layer(name_emb, self.params.embedding_size, name="name-reduction")
+            api_embedding = self._reduction_layer(api_emb, self.params.embedding_size, name="api-reduction")
+
             if self.params.combine_type == "attention":
-                name_context = self._make_attention_layer(name_emb[1], name="name-attn")
-                api_context = self._make_attention_layer(api_emb[1], name="api-attn")
-                token_context = self._make_attention_layer(token_emb, name="token-attn")
+                name_context = self._attention_layer(name_embedding, name="name-attn")
+                api_context = self._attention_layer(api_embedding, name="api-attn")
+                token_context = self._attention_layer(token_emb, name="token-attn")
             else:
-                name_context = self._make_max_pooling_1d(name_emb[1], name="name-pooling")
-                api_context = self._make_max_pooling_1d(api_emb[1], name="api-pooling")
-                token_context = self._make_max_pooling_1d(token_emb, name="token-pooling")
+                name_context = self._max_pooling_1d(name_embedding, name="name-pooling")
+                api_context = self._max_pooling_1d(api_embedding, name="api-pooling")
+                token_context = self._max_pooling_1d(token_emb, name="token-pooling")
 
             # Fusion Layer
             code_concat = tf.concat([name_context, api_context, token_context],
@@ -304,20 +308,23 @@ class Model:
             self.code_embedding = code_emb
 
             # Javadoc Embeddings
-            jd_pos_emb, jd_pos_state = self._make_rnn_embedding(self.javadoc_pos_placeholder,
+            jd_pos_emb, jd_pos_state = self._rnn_embedding(self.javadoc_pos_placeholder,
                                                                 self.javadoc_pos_len_placeholder,
                                                                 name="jd-embedding")
 
-            jd_neg_emb, jd_neg_state = self._make_rnn_embedding(self.javadoc_neg_placeholder,
-                                                                self.javadoc_neg_len_placeholder,
-                                                                name="jd-embedding")
+            jd_neg_emb, jd_neg_state = self._rnn_embedding(self.javadoc_neg_placeholder,
+                                                           self.javadoc_neg_len_placeholder,
+                                                           name="jd-embedding")
+
+            jd_pos_embedding = self._reduction_layer(jd_pos_emb, self.params.embedding_size, name="jd-reduction")
+            jd_neg_embedding = self._reduction_layer(jd_neg_emb, self.params.embedding_size, name="jd-reduction")
 
             if self.params.combine_type == "attention":
-                jd_neg_context = self._make_attention_layer(jd_neg_emb[1], name="jd-attn")
-                jd_pos_context = self._make_attention_layer(jd_pos_emb[1], name="jd-attn")
+                jd_neg_context = self._attention_layer(jd_neg_embedding, name="jd-attn")
+                jd_pos_context = self._attention_layer(jd_pos_embedding, name="jd-attn")
             else:
-                jd_neg_context = self._make_max_pooling_1d(jd_neg_emb[1], name="jd-pooling")
-                jd_pos_context = self._make_max_pooling_1d(jd_pos_emb[1], name="jd-pooling")
+                jd_neg_context = self._max_pooling_1d(jd_neg_embedding, name="jd-pooling")
+                jd_pos_context = self._max_pooling_1d(jd_pos_embedding, name="jd-pooling")
 
             self.description_embedding = jd_pos_context
 
@@ -343,10 +350,10 @@ class Model:
         self.optimizer_op = self.optimizer.apply_gradients(pruned_gradients)
 
 
-    def _make_rnn_embedding(self, placeholder, len_placeholder, name):
+    def _rnn_embedding(self, placeholder, len_placeholder, name):
         vocab_size = len(self.dataset.vocabulary)
-        encoding_var = tf.Variable(tf.random.uniform(shape=(vocab_size, self.params.embedding_size), maxval=1.0,
-                                   name=name + "-var"))
+        encoding_var = tf.Variable(tf.random.normal(shape=(vocab_size, self.params.embedding_size)),
+                                   name=name + "-var")
         encoding = tf.nn.embedding_lookup(encoding_var, placeholder, name=name + "-enc")
 
         cell_fw = tf.nn.rnn_cell.LSTMCell(num_units=self.params.rnn_units,
@@ -369,18 +376,26 @@ class Model:
                                         scope=name)
         return emb, state
 
-    def _make_max_pooling_1d(self, inputs, name):
+    def _max_pooling_1d(self, inputs, name):
         pooled = tf.layers.max_pooling1d(inputs=inputs,
                                          pool_size=(self.params.max_seq_length,),
                                          strides=(1,),
                                          name=name)
         return tf.squeeze(pooled, axis=1)
 
-    def _make_attention_layer(self, inputs, name):
+    def _attention_layer(self, inputs, name):
         weights = tf.layers.dense(inputs=inputs, units=1, activation=tf.nn.tanh,
                                   name=name + "-attn-weights")
         alphas = tf.nn.softmax(weights, name=name + "-attn")
         return tf.reduce_sum(alphas * inputs, axis=1, name=name + "-attn-reduce")
+
+    def _reduction_layer(self, rnn_embedding, output_size, name):
+        concat_tensor = tf.concat([rnn_embedding[0], rnn_embedding[1]], axis=2,
+                                  name=name + "-concat")
+        return tf.layers.dense(inputs=concat_tensor,
+                               units=output_size,
+                               use_bias=False,
+                               name=name + "-dense")
 
     def _cosine_similarity(self, labels, predictions):
         dot_prod = tf.reduce_sum(labels * predictions, axis=1)
