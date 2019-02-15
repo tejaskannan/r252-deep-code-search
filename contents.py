@@ -33,4 +33,9 @@ translate_dict = {
 	"GT": ">",
 	"LBRACKET": "[",
 	"RBRACKET": "]",
+	"PLUS": "+",
+	"PLUSPLUS": "++",
+	"MINUS": "-",
+	"MINUSMINUS": "--",
+	"AMP": "&"
 }

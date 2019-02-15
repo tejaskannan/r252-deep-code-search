@@ -135,7 +135,9 @@ def main(argv):
             db = DeepCodeSearchDB(table=table_name, model=model)
 
             threshold = try_parse_int(threshold, 10)
-            print(db.search(search_query, k=threshold))
+            results = db.search(search_query, k=threshold)
+            for result in results:
+                print(str(result.decode("utf-8")) + "\n")
             
 
 if __name__ == '__main__':

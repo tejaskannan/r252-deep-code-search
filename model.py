@@ -184,7 +184,8 @@ class Model:
         meta_data = {
             "model_type": type(self).__name__,
             "parameters": self.params.as_dict(),
-            "name": name
+            "name": name,
+            "vocabulary": self.dataset.vocabulary
         }
 
         save_folder = base_folder + name
@@ -192,7 +193,7 @@ class Model:
             mkdir(save_folder)
 
         meta_path = save_folder + "/" + META_NAME
-        with gzip.GzipFile(meta_path, 'wb') as out_file:
+        with gzip.GzipFile(meta_path, "wb") as out_file:
             pickle.dump(meta_data, out_file)
 
         model_path = save_folder + "/" + MODEL_NAME
@@ -203,9 +204,10 @@ class Model:
     def restore(self, save_folder):
         meta_data = {}
         meta_path = save_folder + META_NAME
-        with gzip.GzipFile(meta_path, 'rb') as in_file:
+        with gzip.GzipFile(meta_path, "rb") as in_file:
             meta_data = pickle.load(in_file)
         self.params = params_from_dict(meta_data["parameters"])
+        self.dataset.vocabulary = meta_data["vocabulary"]
 
         with self._sess.graph.as_default():
             model_path = save_folder + MODEL_NAME
