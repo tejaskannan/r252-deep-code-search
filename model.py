@@ -303,7 +303,7 @@ class Model:
             code_concat = tf.concat([name_context, api_context, token_context],
                                     axis=1, name="code-concat")
             code_emb = tf.layers.dense(inputs=code_concat, units=self.params.dense_units,
-                                       activation=tf.nn.tanh, name="fusion")
+                                       activation=tf.nn.tanh, name="code-fusion")
 
             self.code_embedding = code_emb
 

@@ -91,7 +91,7 @@ class Parser:
                 g.ParseFromString(proto_file.read())
             except:
                 print("Error parsing: " + file_name)
-                return tokens, apis, names, javadocs
+                return tokens, apis, names, javadocs, method_bodies
 
             code_graph = CodeGraph(g)
 
@@ -176,6 +176,10 @@ class Parser:
 
     def _find_variable_type(self, variable_node, code_graph):
         node = variable_node
+
+        if node.contents == THIS:
+            return code_graph.class_name_node
+
         # We first move forward
         while node:
             if node.id in code_graph.vars:

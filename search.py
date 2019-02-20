@@ -22,10 +22,16 @@ class DeepCodeSearchDB:
 
     def index_dir(self, dir_name, start_index=0):
         index = start_index
+        count = 0
         for root, _dirs, files in os.walk(dir_name):
             for file_name in files:
                 file_path = root + "/" + file_name
+
                 index += self.index_file(file_path, index)
+                count += 1
+                
+                if count % 100 == 0:
+                    print("Indexed {0} files".format(count))
         return index - start_index
 
     # Returns the number of methods indexed using this file

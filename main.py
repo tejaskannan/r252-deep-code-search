@@ -1,10 +1,11 @@
 import sys
 import getopt
+import subprocess
 from parser import Parser
 from model import Model
 from parameters import params_from_dict, params_dict_from_json
 from search import DeepCodeSearchDB
-from utils import try_parse_int, value_if_non_empty
+from utils import try_parse_int, value_if_non_empty, write_to_file
 
 default_params = {
     "step_size" : 0.001,
@@ -123,6 +124,10 @@ def main(argv):
             if restore_dir[-1] != "/":
                 restore_dir += "/"
 
+            if len(outpt) == 0:
+                print("Must specify an output file to use.")
+                sys.exit(0)
+
             train_dir = value_if_non_empty(train_dir, "train_data/")
             valid_dir = value_if_non_empty(valid_dir, "validation_data/")
             save_dir = value_if_non_empty(outpt, "trained_models/")
@@ -136,8 +141,8 @@ def main(argv):
 
             threshold = try_parse_int(threshold, 10)
             results = db.search(search_query, k=threshold)
-            for result in results:
-                print(str(result.decode("utf-8")) + "\n")
+            results = list(map(lambda r: str(r.decode("utf-8")), results))
+            write_to_file(outpt, results)
             
 
 if __name__ == '__main__':

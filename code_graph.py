@@ -19,6 +19,8 @@ class CodeGraph:
         if len(self.methods) > 0:
             self.vars = self._create_variables_dict()
 
+        self.class_name_node = self._get_class_name_node()
+
     def get_nodes_with_type(self, node_type):
         return list(filter(lambda n: n.type == node_type, self.nodes.values()))
 
@@ -141,6 +143,18 @@ class CodeGraph:
                                                          method_name_node.contents,
                                                          num_lines)
         return method_dict
+
+    def _get_class_name_node(self):
+        compilation_unit = self.get_nodes_with_content(COMPILATION_UNIT)
+        if len(compilation_unit) == 0:
+            return None
+        compilation_unit = compilation_unit[0]
+
+        comp_unit_neighbors = self.get_out_neighbors(compilation_unit.id)
+        class_name_node = list(filter(lambda n: n.type == FeatureNode.IDENTIFIER_TOKEN, comp_unit_neighbors))
+        if len(class_name_node) == 0:
+            return None
+        return class_name_node[0]
 
 
 class Variable:

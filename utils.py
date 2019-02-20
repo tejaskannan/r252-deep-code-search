@@ -60,3 +60,10 @@ def log_record(file_name, record):
     with open(file_name, "a+") as csv_file:
         csv_writer = csv.writer(csv_file, delimiter=",", quotechar="|")
         csv_writer.writerow(record)
+
+def write_to_file(file_name, string_arr):
+    line = "-" * 50
+    with open(file_name, "w") as file:
+        for elem in string_arr:
+            file.write(elem + "\n")
+            file.write(line + "\n")

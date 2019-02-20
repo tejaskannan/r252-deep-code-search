@@ -3,3 +3,6 @@ __pycache__/*
 data/*
 trained_models/*
 log/*
+searches/*
+train_data/*
+validation_data/*
