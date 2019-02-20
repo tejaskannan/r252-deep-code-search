@@ -399,8 +399,8 @@ class Model:
 
     def _cosine_similarity(self, labels, predictions):
         dot_prod = tf.reduce_sum(labels * predictions, axis=1)
-        label_norm = tf.norm(labels)
-        predict_norm = tf.norm(predictions) 
+        label_norm = tf.norm(labels, axis=1)
+        predict_norm = tf.norm(predictions, axis=1)
         return dot_prod / (label_norm * predict_norm)
 
     def _generate_neg_javadoc(self, javadoc, javadoc_len):
