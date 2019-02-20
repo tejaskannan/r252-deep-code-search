@@ -302,10 +302,10 @@ class Model:
             # Fusion Layer
             code_concat = tf.concat([name_context, api_context, token_context],
                                     axis=1, name="code-concat")
-            code_emb = tf.layers.dense(inputs=code_concat, units=self.params.dense_units,
-                                       activation=tf.nn.tanh, name="code-fusion")
-
-            self.code_embedding = code_emb
+            self.code_embedding = tf.layers.dense(inputs=code_concat,
+                                                  units=self.params.embedding_size,
+                                                  activation=tf.nn.tanh,
+                                                  name="code-fusion")
 
             # Javadoc Embeddings
             jd_pos_emb, jd_pos_state = self._rnn_embedding(self.javadoc_pos_placeholder,
@@ -331,8 +331,8 @@ class Model:
             self.loss_op = tf.reduce_sum(
                 tf.math.maximum(
                     tf.constant(self.params.margin, dtype=tf.float32) - \
-                        self._cosine_similarity(jd_pos_context, code_emb) + \
-                        self._cosine_similarity(jd_neg_context, code_emb),
+                        self._cosine_similarity(jd_pos_context, self.code_embedding) + \
+                        self._cosine_similarity(jd_neg_context, self.code_embedding),
                     tf.constant(0, dtype=tf.float32)
                 )
             )

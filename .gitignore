@@ -6,3 +6,4 @@ log/*
 searches/*
 train_data/*
 validation_data/*
+index/*

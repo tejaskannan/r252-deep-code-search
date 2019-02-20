@@ -39,5 +39,8 @@ translate_dict = {
 	"PLUSPLUS": "++",
 	"MINUS": "-",
 	"MINUSMINUS": "--",
-	"AMP": "&"
+	"AMP": "&",
+	"AMPAMP": "&&",
+	"BAR": "|",
+	"BARBAR": "||"
 }

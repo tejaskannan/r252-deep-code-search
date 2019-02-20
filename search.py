@@ -1,45 +1,56 @@
 import numpy as np
 import redis
 import os
+import heapq
 
 from parser import Parser
-import heapq
 from utils import cosine_similarity
+from annoy import AnnoyIndex
 
 REDIS_KEY_FORMAT = "{0}:{1}"
 METHOD_NAME = "method_name"
 METHOD_API = "method_api"
 METHOD_BODY = "method_body"
 METHOD_TOKENS = "method_tokens"
+INDEX_PATH = "index/{0}_index.ann"
 
 class DeepCodeSearchDB:
 
-    def __init__(self, table, model, host="localhost", port=6379, pwd=0):
+    def __init__(self, table, model, embedding_size, num_trees=16,
+                 host="localhost", port=6379, pwd=0):
         self.redis_db = redis.Redis(host=host, port=port, db=pwd)
         self.data_table = table + "_data"
         self.emb_table = table + "_emb"
+        self.index_path = INDEX_PATH.format(table)
         self.model = model
+        self.embedding_size = embedding_size
+        self.index = AnnoyIndex(embedding_size, metric="euclidean")
+        self.num_trees = num_trees
 
-    def index_dir(self, dir_name, start_index=0):
-        index = start_index
+    def index_dir(self, dir_name):
+        method_id = 0
         count = 0
         for root, _dirs, files in os.walk(dir_name):
             for file_name in files:
                 file_path = root + "/" + file_name
 
-                index += self.index_file(file_path, index)
+                method_id += self.index_file(file_path, method_id)
                 count += 1
                 
                 if count % 100 == 0:
                     print("Indexed {0} files".format(count))
-        return index - start_index
+
+        self.index.build(self.num_trees)
+        self.index.save(self.index_path)
+        return method_id
 
     # Returns the number of methods indexed using this file
     def index_file(self, file_name, start_index=0):
         parser = Parser("filters/tags.txt", "filters/stopwords.txt")
-        method_names, method_apis, method_tokens, javadocs, method_body = parser.parse_file(file_name)
+        method_tokens, method_apis, method_names, javadocs, method_body = parser.parse_file(file_name)
         index = start_index
         for name, api, token, body in zip(method_names, method_apis, method_tokens, method_body):
+
             embedding = self.model.embed_method(name, api, token)
 
             data_key = REDIS_KEY_FORMAT.format(self.data_table, index)
@@ -56,8 +67,12 @@ class DeepCodeSearchDB:
             if self.redis_db.exists(emb_key):
                 self.redis_db.delete(emb_key)
 
+            pipeline = self.redis_db.pipeline()
             for entry in embedding:
-                self.redis_db.rpush(emb_key, str(entry))
+                pipeline.rpush(emb_key, str(entry))
+            pipeline.execute()
+
+            self.index.add_item(index, embedding)
 
             index += 1
         return index - start_index
@@ -71,20 +86,19 @@ class DeepCodeSearchDB:
         embedded_descr = self.model.embed_description(description)
         top_results = []
 
-        for key in self.redis_db.scan_iter(REDIS_KEY_FORMAT.format(self.emb_table, "*")):
-            embedded_code = list(map(lambda x: float(x), self.redis_db.lrange(key, 0, -1)))
-            sim_score = cosine_similarity(embedded_descr, embedded_code)
-            heapq.heappush(top_results, Similarity(str(key), sim_score))
-            if len(top_results) > k:
-                heapq.heappop(top_results)
+        self.index.load(self.index_path)
+        nearest_indices = self.index.get_nns_by_vector(embedded_descr, k)
+
+        search_pipeline = self.redis_db.pipeline()
+        for method_index in nearest_indices:
+            key = REDIS_KEY_FORMAT.format(self.data_table, method_index)
+            search_pipeline.hget(key, METHOD_BODY)
 
         results = []
-        for result in reversed(top_results):
-            key = REDIS_KEY_FORMAT.format(self.data_table, get_index(result.redis_id))
-            method_body = self.redis_db.hget(key, METHOD_BODY)
+        for method_body in search_pipeline.execute():
             results.append(method_body)
-
         return results
+
 
 class Similarity:
     

@@ -105,7 +105,8 @@ def main(argv):
             model.restore(restore_dir)
 
             table_name = value_if_non_empty(table_name, "code")
-            db = DeepCodeSearchDB(table=table_name, model=model)
+            db = DeepCodeSearchDB(table=table_name, model=model,
+                                  embedding_size=params.embedding_size)
 
             written = 0
             if inpt[-1] == "/":
@@ -137,7 +138,8 @@ def main(argv):
             model.restore(restore_dir)
 
             table_name = value_if_non_empty(table_name, "code")
-            db = DeepCodeSearchDB(table=table_name, model=model)
+            db = DeepCodeSearchDB(table=table_name, model=model,
+                                  embedding_size=params.embedding_size)
 
             threshold = try_parse_int(threshold, 10)
             results = db.search(search_query, k=threshold)
