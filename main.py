@@ -125,14 +125,11 @@ def main(argv):
             if restore_dir[-1] != "/":
                 restore_dir += "/"
 
-            if len(outpt) == 0:
-                print("Must specify an output file to use.")
-                sys.exit(0)
-
             train_dir = value_if_non_empty(train_dir, "train_data/")
             valid_dir = value_if_non_empty(valid_dir, "validation_data/")
             save_dir = value_if_non_empty(outpt, "trained_models/")
             log_dir = value_if_non_empty(log_dir, "log/")
+
 
             model = Model(params, train_dir, valid_dir, save_dir, log_dir)
             model.restore(restore_dir)
@@ -144,7 +141,10 @@ def main(argv):
             threshold = try_parse_int(threshold, 10)
             results = db.search(search_query, k=threshold)
             results = list(map(lambda r: str(r.decode("utf-8")), results))
-            write_to_file(outpt, results)
+
+            default_file = "searches/" + search_query.replace(" ", "_") + ".txt"
+            output_file = value_if_non_empty(outpt, default_file)
+            write_to_file(output_file, results)
             
 
 if __name__ == '__main__':

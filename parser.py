@@ -77,7 +77,7 @@ class Parser:
             return len(method_tokens)
         return 0
 
-    def parse_file(self, file_name):
+    def parse_file(self, file_name, only_javadoc=True):
 
         names = []
         apis = []
@@ -95,7 +95,9 @@ class Parser:
 
             code_graph = CodeGraph(g)
 
-            for method in code_graph.methods.values():
+            method_dict = code_graph.methods if only_javadoc else code_graph.all_methods
+
+            for method in method_dict.values():
 
                 # We skip very small methods because these can often be described with
                 # heuristics
@@ -103,6 +105,7 @@ class Parser:
                     continue
 
                 method_name_tokens = self._split_camel_case(method.method_name)
+                method_name_tokens = [token.lower() for token in method_name_tokens]
 
                 method_invocations = self._get_method_invocations(method.method_block, code_graph)
                 api_call_tokens = []
@@ -113,7 +116,11 @@ class Parser:
                 api_call_tokens += obj_init_tokens
                 api_call_tokens = remove_whitespace(api_call_tokens)
 
-                javadoc_tokens = self._clean_javadoc(method.javadoc.contents)
+                javadoc_tokens = []
+
+                # There may be no javadoc on methods which are used during testing
+                if method.javadoc:
+                    javadoc_tokens = self._clean_javadoc(method.javadoc.contents)
 
                 method_tokens = self._get_method_tokens(method.method_block, code_graph)
                 method_tokens = remove_whitespace(method_tokens)
@@ -122,7 +129,7 @@ class Parser:
                 method_str = self._method_to_str(method.method_block, code_graph)
 
                 if len(method_tokens) > 0 and len(api_call_tokens) > 0 and \
-                   len(method_name_tokens) > 0 and len(javadoc_tokens) > 0:
+                   len(method_name_tokens) > 0 and (len(javadoc_tokens) > 0 or not only_javadoc):
                    names.append(" ".join(method_name_tokens))
                    apis.append(" ".join(api_call_tokens))
                    tokens.append(method_tokens)
@@ -252,13 +259,9 @@ class Parser:
         tokens = []
         node = start
         while (node.id != end.id):
+            # We only use identifier tokens in our method tokens
             if node.type == FeatureNode.IDENTIFIER_TOKEN:
-                in_neighbors = code_graph.get_in_neighbors_with_edge_type(node.id, FeatureEdge.ASSOCIATED_TOKEN)
-                for n in in_neighbors:
-                    if not n.contents in (EXPRESSION, MEMBER_SELECT):
-                        tokens += [token.lower() for token in self._split_camel_case(node.contents)]
-            else:
-                tokens.append(node.contents.lower())
+                tokens += [token.lower() for token in self._split_camel_case(node.contents)]
             node = code_graph.get_out_neighbors_with_edge_type(node.id, FeatureEdge.NEXT_TOKEN)[0]
         return list(set(tokens))
 

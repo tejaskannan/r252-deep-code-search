@@ -16,10 +16,10 @@ class TextFilter:
         all_tokens = []
         for token in tokens:
             all_tokens += token.split("_")
-        return list(filter(lambda t: self.filter_single_token(t, use_keywords, use_stopwords),
+        return list(filter(lambda t: self.filter_single_token(t, use_keywords, use_stopwords, use_tags),
                            all_tokens))
 
-    def apply_to_javadoc(self, text, use_stopwords=True, use_tags=True):
+    def apply_to_javadoc(self, text, use_stopwords=False, use_tags=True):
         lines = text.split("\n")
         cleaned_lines = []
 
@@ -28,24 +28,34 @@ class TextFilter:
             tokens = line.strip().split()
             if len(tokens) == 0:
                 continue
+
+            # We omit lines which start with javadoc tags.
             if use_tags and tokens[0] in self.javadoc_tags:
                 continue
-            stripped_tokens = self.apply_to_token_lst(tokens,
-                                                      use_keywords=False,
-                                                      use_stopwords=use_stopwords,
-                                                      use_tags=True)
+            filtered_tokens = list(filter(lambda t: self.filter_single_token(t, False, use_stopwords, use_tags),
+                                          tokens))
+
+
+            stripped_tokens = []
+            for token in filtered_tokens:
+                html_parser.feed(token)
+                stripped_tokens.append(html_parser.get_data().lower())
+                html_parser.reset()
 
             cleaned_tokens = []
             for token in stripped_tokens:
-                html_parser.feed(token)
-                cleaned_tokens.append(html_parser.get_data())
-                html_parser.reset()
+                for tag in self.javadoc_tags:
+                    if tag in token:
+                        token = token.replace(tag, "")
+                        break
+                cleaned_tokens.append(token)
 
             cleaned_lines += cleaned_tokens
         return cleaned_lines
 
     def filter_single_token(self, token, use_keywords=True, use_stopwords=True, use_tags=True):
-        if len(token.strip()) == 0:
+        token = token.strip()
+        if len(token) == 0:
             return False
         if use_keywords and token in self.java_keywords:
             return False

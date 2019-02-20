@@ -15,9 +15,14 @@ class CodeGraph:
             self.adj[src].append(dest)
             self.rev_adj[dest].append(src)
 
+        # Stores methods with javadoc annotations (used during training and validation)
         self.methods = self._create_javadoc_method_dict()
-        if len(self.methods) > 0:
-            self.vars = self._create_variables_dict()
+
+        # Dictionary of variables to their types
+        self.vars = self._create_variables_dict()
+
+        # Stores all methods in a dictionary (used during testing)
+        self.all_methods = self._create_all_methods_dict()
 
         self.class_name_node = self._get_class_name_node()
 
@@ -116,33 +121,46 @@ class CodeGraph:
                 continue
 
             method_node = method_nodes[0]
+            self._add_method(method_node, javadoc_node, method_dict)
 
-            method_assoc_tokens = self.get_out_neighbors_with_edge_type(method_node.id,
-                                                                        edge_type=FeatureEdge.ASSOCIATED_TOKEN)
-            method_name_node = next(filter(lambda n: n.type == FeatureNode.IDENTIFIER_TOKEN,
-                                           method_assoc_tokens))
-
-            method_body = self.get_neighbors_with_type_content(method_node.id,
-                                                               neigh_type=None,
-                                                               neigh_content=BODY)
-
-            if len(method_body) == 0:
-                continue
-
-            method_body = method_body[0]
-            method_block = self.get_neighbors_with_type_content(method_body.id,
-                                                                neigh_type=None,
-                                                                neigh_content=BLOCK)
-
-            if len(method_block) == 0:
-                continue
-
-            method_block = method_block[0]
-            num_lines = method_node.endLineNumber - method_node.startLineNumber
-            method_dict[method_block.id] = JavadocMethod(javadoc_node, method_block,
-                                                         method_name_node.contents,
-                                                         num_lines)
         return method_dict
+
+    def _create_all_methods_dict(self):
+        method_dict = {}
+        method_nodes = self.get_nodes_with_content(METHOD)
+        for method_node in method_nodes:
+            self._add_method(method_node, None, method_dict)
+        return method_dict
+
+    def _add_method(self, method_node, javadoc_node, method_dict):
+        method_assoc_tokens = self.get_out_neighbors_with_edge_type(method_node.id,
+                                                                    edge_type=FeatureEdge.ASSOCIATED_TOKEN)
+        if method_assoc_tokens == None or len(method_assoc_tokens) == 0:
+            return
+
+        method_name_node = next(filter(lambda n: n.type == FeatureNode.IDENTIFIER_TOKEN,
+                                       method_assoc_tokens))
+
+        method_body = self.get_neighbors_with_type_content(method_node.id,
+                                                           neigh_type=None,
+                                                           neigh_content=BODY)
+
+        if len(method_body) == 0:
+            return
+
+        method_body = method_body[0]
+        method_block = self.get_neighbors_with_type_content(method_body.id,
+                                                            neigh_type=None,
+                                                            neigh_content=BLOCK)
+
+        if len(method_block) == 0:
+            return
+
+        method_block = method_block[0]
+        num_lines = method_node.endLineNumber - method_node.startLineNumber
+        method_dict[method_block.id] = Method(javadoc_node, method_block,
+                                              method_name_node.contents,
+                                              num_lines)
 
     def _get_class_name_node(self):
         compilation_unit = self.get_nodes_with_content(COMPILATION_UNIT)
@@ -163,7 +181,7 @@ class Variable:
         self.type_node = type_node
         self.var_node = var_node
 
-class JavadocMethod:
+class Method:
 
     def __init__(self, javadoc, method_block, method_name, num_lines):
         self.javadoc = javadoc

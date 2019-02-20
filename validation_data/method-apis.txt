@@ -1,232 +1,1865 @@
-OneMerge.totalBytesSize
-TopComparator.lessThanTop
-IllegalArgumentException.new BytesRef.new
-Object.get String.new int.new int.new
-MultiPhrasePrefixQuery.getTerms MultiPhrasePrefixQuery.getPositions MultiPhrasePrefixQuery.getSlop List.add CommonTermsQuery.getTerms SpanQuery.new SpanQuery.new SpanMultiTermQueryWrapper.new PrefixQuery.new SpanTermQuery.new SpanOrQuery.new SpanNearQuery.new ArrayList.new TermQuery.new
-BreakIterator.preceding BreakIterator.following BreakIterator.following IllegalArgumentException.new
+LineNumberReader.readLine String.contains String.size super.add String.contains LineNumberReader.getLineNumber String.size super.add String.add LineNumberReader.getLineNumber LineNumberReader.getLineNumber super.matches LineNumberReader.close LineNumberReader.new ArrayList.new SimpleStringContains.new ArrayList.new SimpleStringContains.new
+String.indexOf String.substring.trim String.add BufferedReader.readLine.trim String.substring.trim String.add BufferedReader.readLine.trim String.startsWith IllegalArgumentException.new ArrayList.new
+ImmutableList.addAll.build
+DiagnosticTestHelper.expectErrorMessage
+checker.getAnnotation.name CompilationTestHelper.new
+JavaFileObject.add JavaFileObject.build
+FileSystem.getPath UncheckedIOException.new
+AssertionError.new
+String.startsWith String.substring
+InvalidCommandLineOptionException.new InvalidCommandLineOptionException.new
+ErrorProneOptions.getExcludedPattern Pattern.matcher.matches
+CompilationUnitTree.getTypeDecls Tree.getKind Set.contains
+Context.put Context.new MaskedFileManager.new
+IllegalStateException.new
+Properties.load Properties.new
+StatisticsCollector.new
+String.add StatisticsCollector.new
+String.put
+combinedMaps.putAll HashMap.new
+String.substring String.split
+String.contains String.contains String.contains String.contains IllegalArgumentException.new IllegalArgumentException.new
+typeParams.isEmpty ArrayType.new ClassType.new IllegalArgumentException.new
+VisitorState.new
+JCTree.getStartPosition
+TreePath.getLeaf
+Tree.isInstance TreePath.getParentPath
+VisitorState.new
+VisitorState.new
+Type.get.orNull
+Builder.setIgnoreSuppressionAnnotations Builder.setIgnoreUnknownChecks Builder.setDisableWarningsInGeneratedCode Builder.setDropErrorsToWarnings Builder.setEnableAllChecksAsWarnings Builder.setDisableAllChecks Builder.setTestOnlyTarget String.startsWith Builder.parseSeverity String.startsWith Builder.parseFlag String.startsWith String.substring String.equals Builder.patchingOptionsBuilder.inPlace String.isEmpty Builder.patchingOptionsBuilder.baseDirectory String.startsWith String.substring String.startsWith Builder.patchingOptionsBuilder.customRefactorer Builder.patchingOptionsBuilder.namedCheckers String.startsWith String.substring Builder.patchingOptionsBuilder.importOrganizer String.startsWith String.substring Builder.setExcludedPattern String.add Builder.build Builder.new InvalidCommandLineOptionException.new ObjectInputStream.new RuntimeException.new
+String.startsWith String.startsWith String.startsWith String.startsWith String.startsWith String.equals String.equals String.equals String.equals String.equals String.equals String.equals
+AtomicBoolean.get AtomicBoolean.new SimpleTreeVisitor.new SuppressionInfo.new
+Suppressible.supportsSuppressWarnings
+ImmutableSet.contains Class.add Symbol.getAnnotationMirrors VisitorState.getSymtab Attribute.getValue String.contains String.add HashSet.new HashSet.new RuntimeException.new SuppressionInfo.new
+BugCheckerInfo.new
+Matcher.new
+MethodTree.getModifiers.getFlags.contains Matcher.new
+Matcher.new
+MethodTree.getName.contentEquals Matcher.new
+ClassTree.getMembers methodMatcher.matches Matcher.new
+VisitorState.getPath.getParentPath TreePath.getLeaf Tree.getKind TreePath.getParentPath TreePath.getLeaf Matcher.new
+treeMatcher.matches Matcher.new
+klass.isInstance Matcher.new
+operators.add HashSet.new CompoundAssignment.new
+JavacProcessingEnvironment.getTypeUtils.asElement TypeMirror.toString JavacProcessingEnvironment.getElementUtils.getBinaryName.toString Matcher.new
+Element.getKind Matcher.new
+ExpressionTree.matches Matcher.new
+Matcher.new
+ExpressionTree.getKind Matcher.new
+Symbol.getModifiers.contains Matcher.new
+ParentNode.new
+VisitorState.getTypes.isArray Matcher.new
+Symbol.getKind Symbol.isStatic Matcher.new
+Symbol.isStatic VisitorState.getTypes.unboxedTypeOrType.getTag Symbol.getSimpleName.contentEquals Symbol.getSimpleName.contentEquals Matcher.new
+Matcher.new
+Type.isPrimitiveOrVoid Matcher.new
+T.getKind Matcher.new
+Contains.new
+MethodInvocation.new
+Matcher.new
+CompoundAssignment.new
+Symbol.getModifiers.contains Matcher.new
+MethodInvocationTree.getArguments Matcher.new
+ClassSymbol.getNestingKind Matcher.new
+VariableTree.matches Matcher.matches StatementTree.matches Matcher.new
+Matcher.new
+Matcher.matches Matcher.new
+MethodInvocationTree.getArguments ExpressionTree.size ExpressionTree.get MethodInvocationTree.getMethodSelect Matcher.new
+MethodTree.getParameters.size Matcher.new
+Tree.matches Matcher.matches Matcher.new
+Matcher.new
+VisitorState.getTypes.isArray VisitorState.getTypes.elemtype.isPrimitive Matcher.new
+Matcher.matches super.matches Matcher.new
+VisitorState.findEnclosing BlockTree.getStatements StatementTree.indexOf StatementTree.matches
+Symbol.getKind Symbol.getKind Matcher.new
+matcher.matches Matcher.new
+Matcher.new
+Symbol.getEnclosingElement.getQualifiedName.contentEquals Symbol.isConstructor Matcher.new
+S.isInstance super.matches Matcher.new
+Matcher.new
+MethodTree.getParameters.size List.size eachVariableMatcher.matches Matcher.new
+MethodTree.getName.toString.startsWith Matcher.new
+VisitorState.getTypes.isSameType Matcher.new
+MethodTree.getName.contentEquals Matcher.new
+VariableTree.getInitializer ExpressionTree.matches Matcher.new
+DescendantOf.new
+Matcher.new
+VisitorState.getPath.getParentPath TreePath.getLeaf VisitorState.withPath matcher.matches TreePath.getParentPath Matcher.new
+Matcher.new
+Symbol.isStatic Matcher.new
+innerMatcher.matches Matcher.new
+Matcher.matches Matcher.new
+matcher.matches Matcher.new
+Matcher.new
+Type.isPrimitive Matcher.new
+super.matches Matcher.new
+VisitorState.getTypes.unboxedTypeOrType.isPrimitive Matcher.new
+MethodArgumentMatcher.new
+NullPointerException.new NullPointerException.new
+Kind.contains Kind.name IllegalArgumentException.new
 IllegalArgumentException.new
-BoundedBreakIteratorScanner.new
-CollapsingTopDocsCollector.new CollapsingDocValuesSource.new
-Sort.getSort T.size T.size Sort.getSort SortField.getType Sort.getSort CollectedSearchGroup.hasNext CollectedSearchGroup.next Sort.getSort CollapseTopFieldDocs.new ScoreDoc.new Object.new FieldDoc.new Object.new FieldDoc.new CollapseTopFieldDocs.new
-CollapsingTopDocsCollector.new CollapsingDocValuesSource.new
-String.equals ShardRef.add ShardRef.size ShardRef.top Object.contains ShardRef.updateTop ShardRef.pop Object.add List.add List.add ShardRef.updateTop ShardRef.pop List.toArray List.toArray Sort.getSort IllegalArgumentException.new MergeSortQueue.new ShardRef.new ScoreDoc.new Object.new ArrayList.new ArrayList.new HashSet.new ScoreDoc.new Object.new CollapseTopFieldDocs.new
-ShardRef.getShardIndex ShardRef.getShardIndex
-TreeNode.add TreeNode.add TreeNode.add TreeNode.add
-DocWriteResponse.setShardInfo DocWriteResponse.setForcedRefresh DocWriteResponse.toXContent DocWriteResponse.setForcedRefresh DocWriteResponse.toXContent DocWriteResponse.new ShardId.new ShardInfo.new
-XContentParser.currentToken XContentParser.currentName XContentParser.nextToken Token.isValue String.equals Builder.setShardId String.equals Builder.setType String.equals Builder.setId String.equals Builder.setVersion String.equals XContentParser.text Result.getLowercase.equals Builder.setResult String.equals Builder.setForcedRefresh String.equals Builder.setSeqNo String.equals Builder.setPrimaryTerm String.equals Builder.setShardInfo XContentParser.skipChildren XContentParser.skipChildren ShardId.new Index.new
-String.length String.length String.length String.length String.length StringBuilder.append.append StringBuilder.append.append StringBuilder.append.append StringBuilder.append.append StringBuilder.toString AssertionError.new StringBuilder.new
-CheckedConsumer.accept Consumer.accept ActionListener.new
-Response.onFailure exceptionList.add ArrayList.new
-listener.onResponse listener.onFailure
-Response.onResponse Response.onFailure List.add ArrayList.new
-Failure.getIndex GetResponse.getIndex
-Failure.getType GetResponse.getType
-Failure.getId GetResponse.getId
-FetchSourceContext.new
-FetchSourceContext.new
-String.new String.new
-GetResult.getIndex GetResult.getType GetResult.getId XContentParser.getTokenLocation ParsingException.new GetResponse.new
-StreamInput.readBoolean StreamInput.readException WriteableIngestDocument.new
-StreamInput.readString StreamInput.readBoolean StreamInput.readException WriteableIngestDocument.new
-StreamInput.readVInt processorResults.add ArrayList.new SimulateProcessorResult.new
-AnalyzeRequest.text AnalyzeRequest.analyzer AnalyzeResponse.getTokens AnalyzeRequest.text AnalyzeRequest.tokenizer AnalyzeRequest.addTokenFilter AnalyzeResponse.getTokens AnalyzeRequest.text AnalyzeRequest.tokenizer AnalyzeRequest.addCharFilter AnalyzeResponse.getTokens AnalyzeRequest.text AnalyzeRequest.tokenizer AnalyzeRequest.addCharFilter AnalyzeRequest.text AnalyzeResponse.getTokens AnalyzeRequest.new AnalyzeRequest.new AnalyzeRequest.new AnalyzeRequest.new
-StringBuilder.append StringBuilder.append StringBuilder.toString AnalyzeRequest.text AnalyzeRequest.analyzer StringBuilder.new AnalyzeRequest.new
-StringBuilder.append StringBuilder.append StringBuilder.toString AnalyzeRequest.text AnalyzeRequest.analyzer AnalyzeRequest.text AnalyzeRequest.analyzer AnalyzeRequest.explain StringBuilder.new AnalyzeRequest.new AnalyzeRequest.new
-ByteSizeValue.new
-IndicesSegmentsRequest.new
-EnumSet.add
-Settings.get Settings.hasValue Settings.get Settings.get Settings.get
-String.containsKey String.put IllegalStateException.new UncheckedIOException.new
-ElasticsearchParseException.new
-Entry.getKey ParseField.match ParseField.match Entry.getValue mappings.entrySet ParseField.match Map.put String.entrySet ElasticsearchParseException.new ElasticsearchParseException.new
-String.containsKey Map.size Map.containsKey XContentBuilder.map IllegalStateException.new ElasticsearchGenerationException.new
-XContentBuilder.map ElasticsearchGenerationException.new
-XContentBuilder.map ElasticsearchGenerationException.new
-String.values.toArray InternalClusterInfoService.refresh ClusterRerouteResponse.getState.routingTable.index.shard.getShards.get.getExpectedShardSize TermsQueryBuilder.new
-CreateIndexRequestBuilder.setSource XContentBuilder.close CreateIndexRequestBuilder.setSource XContentBuilder.close CreateIndexRequestBuilder.setSource settingsMap.put CreateIndexRequestBuilder.setSettings CreateIndexRequestBuilder.new ByteArrayOutputStream.new HashMap.new
-CreateIndexRequestBuilder.setSettings CreateIndexRequestBuilder.setSettings CreateIndexRequestBuilder.setSettings CreateIndexRequestBuilder.setSettings Map.put CreateIndexRequestBuilder.setSettings XContentBuilder.close CreateIndexRequestBuilder.setSettings CreateIndexRequestBuilder.new HashMap.new
-ClusterState.routingTable.allShards String.isEmpty PrimaryMissingActionException.new
-ClusterState.routingTable RoutingTable.index IndexRoutingTable.allPrimaryShardsActive indices.add HashSet.new
+Optional.ifPresent
+Builder.new
+Fix.isEmpty Fix.add
+Type.getTypeArguments List.size List.get VisitorState.getSymbolFromString Matcher.new
+TreeScanner.new
+AnnotationTree.getArguments ExpressionTree.getKind AssignmentTree.getVariable.toString.equals AssignmentTree.getExpression
+Pattern.matcher.matches
+String.isEmpty String.isEmpty
+String.length String.length String.charAt String.charAt int.new int.new int.new
+String.length String.length String.charAt String.charAt int.new
+super.apply Builder.add Builder.build ScannerSupplierImpl.new
+ScannerSupplier.getAllChecks.forEach ScannerSupplier.severities.forEach IllegalArgumentException.new LinkedHashMap.new IllegalArgumentException.new ScannerSupplierImpl.new
+ErrorProneOptions.getSeverityMap Severity.isEmpty ErrorProneOptions.getFlags.isEmpty ErrorProneOptions.isEnableAllChecksAsWarnings ErrorProneOptions.isDropErrorsToWarnings ErrorProneOptions.isDisableAllChecks ErrorProneOptions.isEnableAllChecksAsWarnings disabled.forEach disabled.clear ErrorProneOptions.isDropErrorsToWarnings ErrorProneOptions.isDisableAllChecks Severity.forEach String.putAll LinkedHashMap.new HashSet.new HashMap.new InvalidCommandLineOptionException.new InvalidCommandLineOptionException.new InvalidCommandLineOptionException.new IllegalStateException.new ScannerSupplierImpl.new
+BugCheckerInfo.put BugCheckerInfo.build ScannerSupplierImpl.new
+BugCheckerInfo.add
+Suppressible.canonicalName TreePath.getLeaf TreePath.getCompilationUnit.getSourceFile ErrorProneError.new
+ErrorProneOptions.disableWarningsInGeneratedCode SuppressionInfo.suppressedState
+SuppressionInfo.forCompilationUnit SuppressionInfo.withExtendedSuppressions
+ExpressionTree.get VisitorState.getSymtab Supplier.new
+VisitorState.getPath.getLeaf Supplier.new
+VisitorState.getPath.getLeaf Supplier.new
+Supplier.new
+VisitorState.getTypeFromString Supplier.new
+typeSupplier.get Type.getTypeArguments.size VisitorState.getSymtab Type.getTypeArguments.get Supplier.new
+TreePath.getLeaf TreePath.getLeaf
+UncheckedExecutionException.getCause UncheckedExecutionException.getCause ControlFlowGraph.getUnchecked Analysis.getUnchecked Result.new
+Constant.isConstant Constant.getValue
+JCMethodInvocation.getMethodSelect JCMethodInvocation.getArguments.isEmpty
+FieldAccessNode.getTree pathBuilder.add pathBuilder.add Tree.getKind Tree.getKind Tree.getKind
+Element.put
+contents.get
+AssertionError.new
+LocalVariableValues.valueOfLocalVariable
+FieldAccessNode.isStatic
+ClassAndMethod.name Updates.set Updates.set Updates.set Updates.set Updates.set Updates.set
+ImmutableSetMultimap.get Updates.set
+SubNodeValues.valueOfSubNode SubNodeValues.valueOfSubNode Nullness.greatestLowerBound Updates.set Updates.set Updates.set Updates.set
+Context.get Context.put NullnessAnalysis.new
+NullnessPropagationTransfer.setContext.setCompilationUnit NullnessPropagationTransfer.setContext.setCompilationUnit
+Context.get Context.put TrustingNullnessAnalysis.new
+TrustingNullnessPropagation.setContext.setCompilationUnit TrustingNullnessPropagation.setContext.setCompilationUnit
+ImmutableGraph.nodes.contains Nullness.build
+ExpressionTree.getKind InferenceVariable.putEdge InferenceVariable.putEdge InferenceVariable.putEdge InferenceVariable.putEdge ArrayDeque.new
+AutoValue_Replacement.new
+Symbol.getKind Symbol.getSimpleName.toString String.addFirst String.addFirst SuggestedFix.addImport ArrayDeque.new
+MethodTree.getBody VisitorState.getEndPosition ErrorProneToken.kind ErrorProneToken.name.equals ErrorProneToken.pos ErrorProneToken.endPos AssertionError.new
+String.equals VisitorState.getTypeFromString String.lastIndexOf String.substring Builder.addImport whitelistLocation.map
+VariableTree.getName.toString VisitorState.getEndPosition VisitorState.getSourceForNode.indexOf Builder.build TreeScanner.new
+ErrorProneToken.kind
+VisitorState.getEndPosition StringBuilder.append.append StringBuilder.append StringBuilder.new
+TreePath.getLeaf TreePath.getParentPath.getLeaf ClassTree.getMembers Tree.equals VisitorState.getEndPosition VisitorState.getEndPosition VisitorState.getEndPosition VisitorState.getSourceCode.subSequence.toString tokens.isEmpty tokens.get.comments.isEmpty Comment.getSourcePos String.substring String.chars.filter.count Comment.getSourcePos
+Type.accept DefaultTypeVisitor.new StringBuilder.new StringBuilder.new
+MethodTree.getThrows ExpressionTree.size ExpressionTree.size Function.new
+String.indexOf String.indexOf String.length String.substring Builder.addImport Symbol.getQualifiedName.contentEquals String.indexOf
+VisitorState.getTokensForNode Set.contains Builder.replace
+URI.getScheme.equals UncheckedIOException.new
+MethodInvocationTree.getMethodSelect VisitorState.getEndPosition VisitorState.getEndPosition
+ModifiersTree.getFlags.isEmpty Map.put VisitorState.getTokensForNode Map.put Map.keySet Map.get Modifier.add Modifier.isEmpty Builder.replace Modifier.clear Modifier.addAll TreeSet.new ArrayList.new TreeMap.new
+AnnotationTree.getArguments.isEmpty String.equals ExpressionTree.isPresent ExpressionTree.get
+TypeMirror.accept SimpleTypeVisitor8.new StringBuilder.new
+AnnotationTree.getArguments.isEmpty String.equals ExpressionTree.isPresent ExpressionTree.get ExpressionTree.getKind.equals NewArrayTree.getInitializers.isEmpty
+VisitorState.getTreeMaker.Literal.toString SuppressWarnings.value Builder.merge String.ifPresent String.orElse Builder.prefixWith
+DocTreePath.getLeaf DocTreePath.getDocComment Builder.replace
+DocTreePath.getLeaf DCReference.toString String.indexOf String.substring Symbol.getQualifiedName.toString
+Builder.isEmpty Builder.build
+Fix.isEmpty VisitorState.getPath.getCompilationUnit JCCompilationUnit.getSourceFile Arguments.getFileObjects List.get JavaFileObject.toUri.equals DescriptionBasedDiff.handleFix JavaFileObject.getName JavaFileObject.getCharContent DescriptionBasedDiff.applyDifferences List.set List.size Options.keySet Options.get String.equals String.startsWith Options.put JavacTask.analyze IllegalArgumentException.new ArrayList.new SourceFile.new SimpleJavaFileObject.new DiagnosticCollector.new Context.new UncheckedIOException.new
+Replacement.forEach Replacements.descending Replacements.new
+StringBuilder.replace CharSequence.toString LineNumberReader.skip Integer.add Integer.isEmpty StringBuilder.toString LineNumberReader.readLine Integer.contains LineNumberReader.readLine String.trim String.contains String.substring.trim String.isEmpty StringBuilder.new HashSet.new LineNumberReader.new StringReader.new LineNumberReader.new StringReader.new AppliedFix.new
+ReplacementFix.new AdjustedPosition.new
+String.isEmpty SuggestedFix.getShortDescription FixOperation.addAll List.addAll importsToRemove.addAll
+String.isEmpty FixOperation.addAll List.addAll importsToRemove.addAll
+AssertionError.new
+Type.getTag VisitorState.getSymtab AssertionError.new
 IllegalArgumentException.new
-AliasActions.validate AliasActions.add
-IllegalArgumentException.new IllegalArgumentException.new IllegalArgumentException.new
-IllegalArgumentException.new IllegalArgumentException.new
-IllegalArgumentException.new String.new
-IllegalArgumentException.new IllegalArgumentException.new String.new
-StreamInput.readStringArray StreamInput.readStringArray StreamInput.readOptionalString StreamInput.readOptionalString StreamInput.readOptionalString StreamInput.readOptionalString StreamInput.getVersion.onOrAfter StreamInput.readOptionalBoolean StreamInput.getVersion.onOrAfter StreamInput.readStringArray
-Alias.readFrom Alias.new
-QueryBuilder.toXContent XContentBuilder.close ElasticsearchGenerationException.new
-String.isEmpty XContentBuilder.map ElasticsearchGenerationException.new
-XContentParser.currentName XContentParser.nextToken XContentParser.currentName ParseField.match XContentParser.mapOrdered Alias.filter ParseField.match Alias.routing ParseField.match Alias.indexRouting ParseField.match Alias.searchRouting ParseField.match Alias.writeIndex XContentParser.nextToken Alias.new IllegalArgumentException.new
-GetAliasesRequest.getOriginalAliases GetAliasesRequest.getOriginalAliases ImmutableOpenMap.get String.put String.build
-Map.put UncheckedIOException.new
-Entry.getKey String.equals Entry.getValue DeprecationLogger.deprecated String.equals Entry.getValue Entry.getValue String.equals Entry.getValue String.equals Entry.getValue String.equals Entry.getValue Object.getValue Object.getKey Object.entrySet String.equals customs.put String.entrySet IllegalArgumentException.new IllegalArgumentException.new IllegalArgumentException.new IllegalArgumentException.new ElasticsearchParseException.new
-XContentBuilder.map ElasticsearchGenerationException.new
-String.size String.containsKey XContentBuilder.map ElasticsearchGenerationException.new
+ExpressionTree.getKind ExpressionTree.getKind ExpressionTree.getKind ExpressionTree.getKind ExpressionTree.getKind ExpressionTree.getKind Symbol.equals ExpressionTree.getKind ExpressionTree.getKind Symbol.equals ExpressionTree.getKind ExpressionTree.toString.equals Symbol.equals IllegalStateException.new IllegalStateException.new
+VisitorState.getPath
+Class.isInstance Class.cast
+Optional.isPresent Optional.get.getElementValues.entrySet.stream.filter.map.findAny values.isPresent values.get.accept String.build SimpleAnnotationValueVisitor8.new
+MethodInvocationTree.getClass IllegalArgumentException.new
+MethodSymbol.getModifiers.contains MethodSymbol.isStatic MethodSymbol.isPrivate MethodSymbol.isConstructor ClassSymbol.isAnonymous
+VisitorState.getSymtab
+SUBTYPE_UNDEFINED.contains SUBTYPE_UNDEFINED.contains VisitorState.getTypes Types.isSubtype
+IllegalStateException.new
+Symbol.getAnnotationMirrors AnnotationMirror.getAnnotationType.asElement.getSimpleName.contentEquals
+VisitorState.getTypes Types.isSameType
+Type.getKind VisitorState.getTypes.isSameType
+Predicate.apply Types.closure TypeSymbol.members Scope.getSymbolsByName MethodSymbol.add HashSet.new
+Symbol.attribute Symbol.getRawTypeAttributes
+VisitorState.getPath NullnessAnalysis.getNullness TreePath.new
+VisitorState.getPath.getLeaf VisitorState.getPath TreePath.getLeaf TreePath.getParentPath TreePath.getLeaf.getKind TargetTypeVisitor.new
 IllegalArgumentException.new
-XContentBuilder.map ElasticsearchGenerationException.new
-ElasticsearchParseException.new
-XContentBuilder.startObject XContentBuilder.startObject String.contains XContentBuilder.startObject XContentBuilder.field XContentBuilder.endObject XContentBuilder.startObject String.contains XContentBuilder.startObject XContentBuilder.field XContentBuilder.endObject XContentBuilder.endObject XContentBuilder.endObject XContentBuilder.endObject IllegalArgumentException.new IllegalArgumentException.new IllegalArgumentException.new IllegalArgumentException.new
-UncheckedIOException.new
-XContentBuilder.map ElasticsearchGenerationException.new
-PutMappingRequest.type PutMappingRequest.source PutMappingRequest.new
-mappings.get indexMapping.get String.get
-TokenStream.reflectWith TreeMap.new
-XContentBuilder.map ElasticsearchGenerationException.new
-indexToSettings.get Settings.hasValue Settings.get Settings.get Settings.get
-IndexTemplateMetaData.aliases.containsKey IllegalArgumentException.new
-MaxDocsCondition.new IllegalArgumentException.new
-MaxSizeCondition.new IllegalArgumentException.new
-MaxAgeCondition.new IllegalArgumentException.new
-ActiveShardCount.equals
-IllegalArgumentException.new
-GetTaskResponse.getTask.getTask
-Iterable.apply future.get TestTaskPlugin.new TestTaskPlugin.new
-T.apply CountDownLatch.await ActionFuture.get Consumer.accept NodesResponse.get TestTaskPlugin.new CountDownLatch.new MockTaskManagerListener.new TestTaskPlugin.new
-task.get.getTaskId
-DiscoveryNode.getId String.split Tuple.put RecordingTaskManagerListener.new Tuple.new
-Thread.start GetTaskResponse.getTask.getTask ListTasksResponse.getTasks CountDownLatch.countDown Thread.join CountDownLatch.new CountDownLatch.new MockTaskManagerListener.new RuntimeException.new Thread.new
-RecordingTaskManagerListener.getKey.v2.equals Boolean.apply TaskInfo.add RecordingTaskManagerListener.getValue.getEvents Tuple.entrySet ArrayList.new
-RecordingTaskManagerListener.getKey.v2.equals RecordingTaskManagerListener.getValue.reset Tuple.entrySet
-String.contains List.add List.toArray listener.onResponse TestTasksRequest.setActions TestTaskResponse.getStatus CountDownLatch.countDown future.get CountDownLatch.new String.new HashSet.new TestTasksAction.new TestTasksAction.new ArrayList.new String.new TestTaskResponse.new TestTaskResponse.new TestTasksRequest.new
-tasks.stream.collect
-XContentBuilder.startArray XContentBuilder.startObject TaskInfo.toXContent XContentBuilder.endObject XContentBuilder.endArray
-XContentBuilder.startObject DiscoveryNodes.get XContentBuilder.startObject XContentBuilder.field XContentBuilder.field XContentBuilder.field XContentBuilder.field XContentBuilder.startArray XContentBuilder.value DiscoveryNode.getRoles XContentBuilder.endArray DiscoveryNode.getAttributes.isEmpty XContentBuilder.startObject XContentBuilder.field DiscoveryNode.getAttributes.entrySet XContentBuilder.endObject XContentBuilder.startObject XContentBuilder.startObject TaskInfo.toXContent XContentBuilder.endObject String.getValue XContentBuilder.endObject XContentBuilder.endObject XContentBuilder.endObject
-XContentBuilder.startObject XContentBuilder.field TaskGroup.toXContent XContentBuilder.endObject
-ActionListener.new GetTaskResponse.new TaskResult.new
-GetTaskRequest.getTaskId.toString GetRequest.setParentTask Client.get GetRequest.new ActionListener.new ResourceNotFoundException.new
-GetResponse.isExists GetTaskResponse.onFailure GetResponse.isSourceEmpty GetTaskResponse.onFailure GetTaskResponse.onResponse ResourceNotFoundException.new ElasticsearchException.new GetTaskResponse.new
-GetTaskRequest.getTimeout Builder.withTimeout Builder.withCompress ClusterService.state.nodes.get GetTaskRequest.nodeRequest TransportService.sendRequest ResourceNotFoundException.new TransportResponseHandler.new GetTaskResponse.new
-GetTaskRequest.getWaitForCompletion ThreadPool.generic.execute Task.taskInfo ActionListener.onResponse AbstractRunnable.new GetTaskResponse.new TaskResult.new
-XContentBuilder.map ElasticsearchGenerationException.new
-String.getKey String.equals String.getValue String.getValue String.equals String.equals String.getValue String.equals String.equals String.equals String.getValue String.equals String.getValue String.equals String.getValue String.equals String.getValue String.getValue Map.entrySet IllegalArgumentException.new IllegalArgumentException.new IllegalArgumentException.new IllegalArgumentException.new IllegalArgumentException.new IllegalArgumentException.new IllegalArgumentException.new
-XContentBuilder.map ElasticsearchGenerationException.new
-XContentBuilder.map ElasticsearchGenerationException.new
-Entry.getKey String.equals Entry.getValue Entry.getValue String.equals String.equals Entry.getValue String.equals String.entrySet IllegalArgumentException.new IllegalArgumentException.new
-SnapshotInfo.status
-IllegalArgumentException.new
-SnapshotStatus.readFrom SnapshotStatus.new
-indices.add SnapshotIndexShardStatus.getIndex.equals SnapshotIndexShardStatus.add indicesStatus.put HashMap.new HashSet.new ArrayList.new SnapshotIndexStatus.new
-XContentBuilder.map ElasticsearchGenerationException.new
-XContentBuilder.map ElasticsearchGenerationException.new
-Settings.filter Settings.filter ClusterSettings.archiveUnknownOrInvalidSettings
-Settings.hasValue Settings.get Settings.hasValue Settings.get Settings.hasValue Settings.get
-RetryHandler.execute RetryHandler.new
-BulkItemResponse.new
-DocWriteRequest.opType DocWriteRequest.type DocWriteRequest.id BulkItemResponse.new BulkItemResponse.new
-BulkShardRequest.shardId BulkShardResponse.new RPAREN.new
-Engine.getResultType Engine.getOperationType IndexShard.shardId DocWriteRequest.type DocWriteRequest.id Engine.getSeqNo Engine.getTerm IndexResult.getVersion IndexResult.isCreated Engine.getOperationType IndexShard.shardId DocWriteRequest.type DocWriteRequest.id DeleteResult.getSeqNo Engine.getTerm DeleteResult.getVersion DeleteResult.isFound Engine.getResultType BulkItemRequest.id BulkItemRequest.request.opType BulkItemResponse.getResponse.setShardInfo BulkItemRequest.id DocWriteRequest.opType BulkShardRequest.index DocWriteRequest.type DocWriteRequest.id Engine.getFailure Engine.getSeqNo Engine.getResultType IndexResponse.new DeleteResponse.new AssertionError.new BulkItemResponse.new ReplicationResponse.new BulkItemResponse.new BulkItemResponse.new AssertionError.new
-BulkItemResponse.getItemId BulkItemResponse.getItemId BulkItemResponse.getItemId BulkItemResponse.isFailed BulkShardRequest.items BulkItemRequest.new
-BulkRequest.numberOfActions Runnable.run
-BulkRequest.add
-BulkRequest.numberOfActions
+URI.getScheme.equals URI.getPath CharMatcher.replaceFrom String.startsWith
+Log.popDiagnosticHandler Resolve.resolveInternalMethod DeferredDiagnosticHandler.new
+BinaryTree.getLeftOperand BinaryTree.getRightOperand Matcher.get.matches Matcher.get.matches Matcher.get.matches Matcher.get.matches
+Tree.accept SimpleTreeVisitor.new
+VisitorState.getTypes Types.isCastable
+ClassTree.getMembers constructors.add ArrayList.new
+VisitorState.getPath.getCompilationUnit Symbol.packge PackageSymbol.getQualifiedName.equals
+Symbol.getAnnotation
+TreePath.getParentPath klass.isInstance
+Class.cast
+Type.hasTag Types.wildUpperBound Type.hasTag Types.cvarUpperBound Type.getUpperBound Type.getUpperBound
+Type.constValue Type.hasTag
+TypeTag.contains VisitorState.getSymtab TypeTag.contains VisitorState.getSymtab TypeTag.contains VisitorState.getSymtab VisitorState.getSymtab
+String.replace VisitorState.getName
+CaseTree.getStatements StatementTree.isEmpty
+Visitor.new
+Visitor.new
+Symbol.getKind COMMA.new
+Visitor.new
+SimpleAnnotationValueVisitor8.new
+Compound.getElementValues.entrySet.stream.filter.map.findFirst
+Comment.getStyle Comment.getText.replaceAll Comment.getText.replaceAll Comment.getText
+VisitorState.getEndPosition VisitorState.getEndPosition
+VisitorState.getEndPosition
+iterable.iterator T.next.equals T.hasNext T.hasNext T.next
+VisitorState.getPath TreePath.getLeaf TreePath.getParentPath TreePath.getLeaf TreePath.getLeaf VisitorState.getPath.getParentPath.getLeaf TreePath.getLeaf
+Commented.add Commented.add Commented.build
+VisitorState.getTypes.closure.stream.flatMap.collect RPAREN.new
+VisitorState.getPath.getLeaf VisitorState.getPath.getParentPath Tree.getKind StatementTree.equals ImmutableSet.add ImmutableSet.add Tree.equals VisitorState.getTypes.closure List.size List.subList Scope.getSymbols VarSymbol.add ImmutableSet.addAll ImmutableSet.add TryTree.getResources Tree.equals TryTree.getResources Tree.equals TryTree.getBlock.equals ImportTree.isStatic ImportTree.getQualifiedIdentifier.getKind ImportTree.getQualifiedIdentifier VisitorState.getTypes.membersClosure Scope.getSymbols ImmutableSet.add ImmutableSet.build.stream.filter.collect ImmutableSet.new RPAREN.new
+TreePath.getLeaf TreePath.getParentPath ClassSymbol.getSuperclass Tree.getKind VarSymbol.getKind VarSymbol.isStatic MethodSymbol.isConstructor
+VisitorState.getPath.getLeaf VisitorState.getPath.getParentPath Tree.getKind StatementTree.equals ForLoopTree.getInitializer.stream.forEach
+TreePath.getParentPath TreePath.getLeaf TreePath.getParentPath Tree.test Tree.test
+VisitorState.findEnclosing ReflectiveOperationException.getMessage Method.setAccessible Method.invoke Symbol.exists LinkageError.new
+Tree.equals Builder.add Builder.build Symbol.add TreeScanner.new
+builder.build
+SigGen.assembleSig SigGen.toString SigGen.new
+StringBuilder.append.append StringBuilder.append.append StringBuilder.append StringBuilder.append StringBuilder.toString StringBuilder.new
+SigGen.assembleClassSig SigGen.toString SigGen.new
+String.length String.charAt CharMatcher.matches String.charAt Character.get StringBuilder.append StringBuilder.append CharMatcher.matches StringBuilder.append StringBuilder.append StringBuilder.new
+ExpressionTree.accept SideEffectAnalysis.new
+AssertionError.new
+StringBuilder.replace IndexOutOfBoundsException.new
+String.addAll String.add String.size ArrayList.new
+String.startsWith String.substring String.substring AutoValue_ImportOrganizer_Import.new
+Map.get
+Import.isEmpty StringBuilder.length StringBuilder.append Import.size Import.forEach
+Set.isEmpty StringBuilder.append Set.stream.map.collect ImportOrganizer.organizeImports ImportOrganizer.size ImportOrganizer.getImportCount StringBuilder.append StringBuilder.toString StringBuilder.new IllegalStateException.new
+protobuf.toStringUtf8
+everythingDiffBuilder_.getMessageOrBuilder
+com.setMessage NullPointerException.new
+member_.get google.getMessageOrBuilder
+classDiff_.remove RepeatedFieldBuilderV3.remove
+google.addAllMessages
+member_.set google.setMessage
+classDiff_.add RepeatedFieldBuilderV3.addMessage NullPointerException.new
+ByteString.toStringUtf8
 NullPointerException.new
-Failure.getMessage
-Failure.getType DocWriteResponse.getType
-XContentParser.nextToken XContentParser.currentName XContentParser.nextToken XContentParser.currentName String.equals String.equals IOException.accept XContentParser.nextToken XContentParser.nextToken DocWriteResponse.getShardId.getIndexName DocWriteResponse.getType DocWriteResponse.getId DocWriteResponse.build IndexResponse.new UpdateResponse.new DeleteResponse.new Failure.new BulkItemResponse.new BulkItemResponse.new
-DocWriteResponse.getVersion
-StreamInput.readString StreamInput.readString StreamInput.readOptionalString StreamInput.readException StreamInput.getVersion.onOrAfter StreamInput.readZLong StreamInput.readBoolean
-Failure.getIndex DocWriteResponse.getIndex
-Failure.getId DocWriteResponse.getId
-DocWriteRequest.type DocWriteRequest.id BulkItemResponse.isFailed BulkItemResponse.getFailure.isAborted BulkItemResponse.isFailed BulkItemResponse.getFailure.isAborted BulkItemResponse.getFailure.getCause.addSuppressed BulkItemResponse.new BulkItemResponse.new IllegalStateException.new
-IndexRequest.routing IndexRequest.source Alias.new Alias.new Alias.new IndexRequest.new
-BytesReference.get BytesReference.slice
-indices.add IllegalArgumentException.new
-BulkPrimaryExecutionContext.getCurrent.opType BulkPrimaryExecutionContext.getCurrent UpdateHelper.prepare UpdateRequest.version BulkPrimaryExecutionContext.setRequestToExecute BulkPrimaryExecutionContext.markOperationAsExecuted BulkPrimaryExecutionContext.markAsCompleted UpdateHelper.getResponseResult UpdateHelper.action BulkPrimaryExecutionContext.getPrimary.indexSettings.getIndexMetaData IndexMetaData.mappingOrDefault IndexRequest.process BulkPrimaryExecutionContext.setRequestToExecute BulkPrimaryExecutionContext.setRequestToExecute BulkPrimaryExecutionContext.markOperationAsNoOp BulkPrimaryExecutionContext.markAsCompleted UpdateHelper.getResponseResult BulkPrimaryExecutionContext.setRequestToExecute BulkPrimaryExecutionContext.getRequestToExecute BulkPrimaryExecutionContext.getRequestToExecute.opType BulkPrimaryExecutionContext.requiresWaitingForMappingUpdate CheckedRunnable.run BulkPrimaryExecutionContext.resetForExecutionForRetry BulkPrimaryExecutionContext.failOnMappingUpdate BulkPrimaryExecutionContext.isOperationExecuted BulkPrimaryExecutionContext.getExecutionResult.isFailed BulkPrimaryExecutionContext.getCurrent BulkPrimaryExecutionContext.getRetryCounter UpdateRequest.retryOnConflict BulkPrimaryExecutionContext.resetForExecutionForRetry Engine.new IllegalStateException.new
-BulkItemRequest.getPrimaryResponse BulkItemRequest.request BulkItemResponse.isFailed BulkItemResponse.getFailure.getSeqNo BulkItemResponse.getResponse.getResult
-UpdateHelper.getResponseResult BulkItemResponse.isFailed BulkItemResponse.getItemId BulkItemResponse.getFailure UpdateHelper.action BulkItemResponse.getResponse IndexResponse.getShardInfo IndexResponse.getShardId IndexResponse.getType IndexResponse.getId IndexResponse.getSeqNo IndexResponse.getPrimaryTerm IndexResponse.getVersion IndexResponse.getResult UpdateRequest.fetchSource UpdateRequest.fetchSource.fetchSource IndexRequest.source UpdateResponse.setGetResult BulkItemResponse.getResponse DeleteResponse.getShardInfo DeleteResponse.getShardId DeleteResponse.getType DeleteResponse.getId DeleteResponse.getSeqNo DeleteResponse.getPrimaryTerm DeleteResponse.getVersion DeleteResponse.getResult UpdateResponse.setGetResult BulkItemResponse.getItemId BulkItemResponse.new UpdateResponse.new UpdateResponse.new IllegalArgumentException.new BulkItemResponse.new
-BulkPrimaryExecutionContext.getRequestToExecute BulkPrimaryExecutionContext.getPrimary
-BulkItemResponse.isFailed
-IndicesOptions.ignoreUnavailable IndicesOptions.allowNoIndices IndicesOptions.expandWildcardsOpen IndicesOptions.expandWildcardsClosed IndicesOptions.allowAliasesToMultipleIndices IndicesOptions.forbidClosedIndices IndicesOptions.ignoreAliases
-IllegalArgumentException.new IllegalArgumentException.new IllegalArgumentException.new
-IndexNameExpressionResolver.hasIndexOrAlias AutoCreate.getKey expression.v1 expression.v2 AutoCreate.getKey AutoCreate.getKey IndexNotFoundException.new IndexNotFoundException.new IndexNotFoundException.new IndexNotFoundException.new
-Boolean.accept ClusterService.state ThreadPool.getThreadContext ActiveShardCount.enoughShardsActive Boolean.accept ActiveShardCount.enoughShardsActive Boolean.accept Exception.accept Boolean.accept ClusterStateObserver.waitForNextChange ClusterStateObserver.new ClusterStateObserver.new NodeClosedException.new
-IndexShardRoutingTable.activeShards.size IndexShardRoutingTable.replicaShards.size
-ClusterState.metaData.index ClusterState.routingTable.index IndexRoutingTable.allPrimaryShardsActive ActiveShardCount.enoughShardsActive IndexRoutingTable.getShards
-String.equals IllegalArgumentException.new
-IllegalArgumentException.new
-IllegalStateException.new IllegalArgumentException.new
-Request.validate Response.onFailure Request.getShouldStoreResult Request.proceed TaskResultStoringActionListener.new RequestFilterChain.new
-TaskManager.register ActionListener.new
-TaskManager.register ActionListener.new
-AtomicArray.new CountDown.new
-RefreshPolicy.getValue.equals IllegalArgumentException.new
-Result.getFailure Result.getFailure
-AtomicInteger.decrementAndGet Exception.get RespondingWriteResult.onFailure RespondingWriteResult.onSuccess
-Empty.onFailure
-listener.onFailure
-Request.routingEntry.shardId Request.waitForActiveShards Request.getReplicationGroup.getRoutingTable ActiveShardCount.enoughShardsActive ActiveShardCount.toString Logger.trace IndexShardRoutingTable.activeShards.size
-TransportService.sendRequest ActionListenerResponseHandler.new RPAREN.new
-ReplicationTask.setPhase
-IndexShard.routingEntry.primary IndexShard.shardId IndexShard.routingEntry IndexShard.routingEntry.allocationId.getId String.equals IndexShard.getPendingPrimaryTerm PrimaryShardReference.onResponse PrimaryShardReference.onFailure IndexShard.acquirePrimaryOperationPermit ReplicationOperation.new ShardNotFoundException.new ShardNotFoundException.new ActionListener.new PrimaryShardReference.new
-Request.waitForActiveShards Request.waitForActiveShards
-ClusterState.metaData.index TestAction.resolveRequest TestAction.resolveRequest ShardId.new Request.new Request.new
-listener.onResponse listener.onResponse listener.onFailure TransportChannel.new
-ClusterState.getRoutingTable.shardRoutingTable.primaryShard.relocatingNodeId TestAction.run TestAction.run ClusterService.state.getRoutingTable.shardRoutingTable.shardsWithState.get AllocationService.applyStartedShards ClusterService.state.routingTable.index.shard IndexShardRoutingTable.primaryShard.currentNodeId CapturingTransport.getCapturedRequestsByTargetNodeAndClear.get ShardId.new Request.new PlainActionFuture.new ReroutePhase.new Request.new PlainActionFuture.new ReroutePhase.new
-ClusterState.routingTable.shardRoutingTable.replicaShards.get listener.get ExecutionException.getCause TestAction.retryPrimaryException ShardId.new PlainActionFuture.new Request.new ReplicaOperationTransportHandler.new TransportReplicationAction.new AssertionError.new
-ClusterService.state.routingTable.shardRoutingTable.primaryShard ClusterService.state.metaData.index.primaryTerm TestResponse.get ExecutionException.getCause ShardId.new PlainActionFuture.new Request.new PrimaryOperationTransportHandler.new TransportReplicationAction.new
-ClusterState.getRoutingTable.shardRoutingTable.replicaShards.get ClusterState.metaData.index.primaryTerm AtomicBoolean.get TestAction.messageReceived TestResponse.isDone TestResponse.get CapturingTransport.getCapturedRequestsByTargetNodeAndClear.get AtomicBoolean.set CapturingTransport.getCapturedRequestsByTargetNodeAndClear.get CapturingTransport.get ShardId.new AtomicBoolean.new TestAction.new RetryOnReplicaException.new ReplicaResult.new ReplicaOperationTransportHandler.new PlainActionFuture.new Request.new TransportReplicationAction.new
-Builder.add nodes.add Builder.localNodeId Builder.masterNodeId Builder.addAsNew IndexMetaData.getIndex Builder.addShard Builder.addIndexShard Builder.nodes Builder.metaData Builder.routingTable Builder.build HashSet.new RoutingTable.new ShardId.new IndexShardRoutingTable.new ClusterName.new
-DiscoveryNodes.add String.add DiscoveryNodes.localNodeId DiscoveryNodes.masterNodeId Builder.addAsNew IndexMetaData.getIndex Builder.addShard nodesList.size IndexRoutingTable.addIndexShard Builder.put Builder.add ClusterState.nodes ClusterState.metaData ClusterState.routingTable ClusterState.build HashSet.new ArrayList.new RoutingTable.new ShardId.new IndexShardRoutingTable.new ClusterName.new
-ShardRoutingState.new
-DiscoveryNodes.add DiscoveryNodes.masterNodeId DiscoveryNodes.localNodeId Builder.nodes Builder.metaData Builder.build ClusterName.new
-Builder.add Builder.localNodeId Builder.masterNodeId ClusterState.nodes ClusterState.metaData RoutingTable.addAsNew Builder.addShard Builder.addShard Builder.addIndexShard ClusterState.routingTable ClusterState.build ClusterName.new RoutingTable.new ShardId.new IndexShardRoutingTable.new
-Builder.add String.add Builder.localNodeId Builder.masterNodeId Builder.addAsNew String.remove unassignedNodesExecludingPrimary.remove String.remove IndexShardRoutingTable.addShard IndexShardRoutingTable.addShard IndexShardRoutingTable.build IndexMetaData.putInSyncAllocationIds ClusterState.nodes ClusterState.metaData ClusterState.routingTable ClusterState.build ShardId.new HashSet.new RoutingTable.new IndexShardRoutingTable.new HashSet.new UnassignedInfo.new UnassignedInfo.new IndexMetaData.new ClusterName.new
-DiscoveryNodes.localNodeId DiscoveryNodes.masterNodeId Builder.nodes Builder.metaData Builder.routingTable Builder.build ClusterName.new
-DiscoveryNodes.add DiscoveryNodes.localNodeId DiscoveryNodes.masterNodeId Builder.nodes MetaData.put.generateClusterUuidIfNeeded Builder.addShard Builder.addShard Builder.addIndexShard Builder.add Builder.metaData Builder.routingTable Builder.build ClusterName.new ShardId.new IndexShardRoutingTable.new
-NodesRequest.concreteNodes ClusterState.nodes.resolveNodes NodesRequest.setConcreteNodes RPAREN.new
-AtomicReferenceArray.get List.add NodeResponse.add AtomicReferenceArray.length ArrayList.new ArrayList.new
-TNodeResponse.put HashMap.new
-ElasticsearchException.new TaskId.new
-Response.checkBlock Response.masterOperation
-CyclicBarrier.await Thread.setName Thread.start CyclicBarrier.await otherNodes.remove NetworkDisruption.startDisrupting NetworkDisruption.stopDisrupting Thread.join CyclicBarrier.new Thread.new Runnable.new HashSet.new NetworkDisruption.new TwoPartitions.new NetworkDisconnect.new
-XContentParser.currentToken XContentParser.currentName String.equals Builder.setGetResult
-Tuple.v1 Tuple.v2 GetResult.getIndex GetResult.getType GetResult.getId GetResult.getVersion GetResult.isExists shardInfos.v1 shardInfos.v2 GetResult.isExists UpdateResponse.setGetResult GetResult.isExists UpdateResponse.setGetResult UpdateResponse.setForcedRefresh UpdateResponse.setForcedRefresh ShardId.new ShardId.new UpdateResponse.new UpdateResponse.new UpdateResponse.new UpdateResponse.new
-Object.put Script.getParams Object.put Object.put HashMap.new HashMap.new
-FetchSourceContext.fetchSource String.new String.new FetchSourceContext.new
-Script.new
+classDiff_.get RepeatedFieldBuilderV3.getMessage
+everythingDiffBuilder_.setMessage NullPointerException.new
+classDiff_.add RepeatedFieldBuilderV3.addMessage
+member_.add google.addMessage NullPointerException.new
+NullPointerException.new
+ByteString.toStringUtf8
+NullPointerException.new
+google.getMessageOrBuilderList
+ByteString.toStringUtf8
+google.getMessageList
+google.clear
+com.clear
+Builder.build com.setMessage
+member_.add google.addMessage
+classDiff_.set RepeatedFieldBuilderV3.setMessage NullPointerException.new
+com.new
+member_.add google.addMessage
+classDiff_.add RepeatedFieldBuilderV3.addMessage NullPointerException.new
+everythingDiffBuilder_.clear
+member_.size google.getCount
+classDiff_.get RepeatedFieldBuilderV3.getMessageOrBuilder
+com.getMessage
+EverythingDiff.build everythingDiffBuilder_.setMessage
+ByteString.toStringUtf8
+RepeatedFieldBuilderV3.addAllMessages
+com.new
+NullPointerException.new
+ByteString.toStringUtf8
+ByteString.toStringUtf8
+member_.add google.addMessage NullPointerException.new
+NullPointerException.new
+everythingDiffBuilder_.getMessage
+com.mergeFrom com.setMessage
+member_.get google.getMessage
+NullPointerException.new
+RepeatedFieldBuilderV3.getMessageOrBuilderList
+RepeatedFieldBuilderV3.getMessageList
+RepeatedFieldBuilderV3.clear
+classDiff_.set RepeatedFieldBuilderV3.setMessage
+member_.remove google.remove
+everythingDiffBuilder_.mergeFrom everythingDiffBuilder_.setMessage
+classDiff_.add RepeatedFieldBuilderV3.addMessage
+protobuf.toStringUtf8
+com.getMessageOrBuilder
+NullPointerException.new
+NullPointerException.new
+classDiff_.size RepeatedFieldBuilderV3.getCount
+member_.set google.setMessage NullPointerException.new
+MethodTree.matches MethodTree.matches
+ConstructorMatcher.matches
+Name.contains
+SuggestedFix.addImport VisitorState.getSourceForNode AssertionError.new
+Builder.addStaticImport Builder.addStaticImport Builder.addImport Builder.addStaticImport Builder.addStaticImport
+Builder.addImport AssertionError.new
+Builder.build
+Matcher.new
+typeSet.contains Matcher.new
+VisitorState.getSymtab Symtab.enterPackage typeParameters.stream.map.filter.collect Symbol.isEmpty Builder.setMessage Symbol.stream.filter.map.forEach Builder.addFix Builder.build
+VisitorState.getTypeFromString VisitorState.getTypeFromString Type.getKind Type.getKind VisitorState.getPath
+VisitorState.getTypeFromString
+VisitorState.getTypeFromString Type.add VisitorState.getTypeFromString handles.entrySet T.getKey Type.put Type.isUnion Type.removeIf Type.build LinkedHashSet.new UnhandledResult.new
+VisitorState.findEnclosing.accept TreeScanner.new
+MethodTree.getName.toString String.startsWith String.startsWith
+possibleTestMethod.matches MethodTree.getModifiers.getAnnotations List.isEmpty
+VisitorState.getSourceCode JCLiteral.getStartPosition Pattern.matcher Matcher.lookingAt Matcher.group
+VisitorState.getSourceForNode VisitorState.getSourceForNode CompoundAssignmentTree.getKind CompoundAssignmentTree.getExpression CompoundAssignmentTree.getExpression OperatorPrecedence.isHigher
+Type.isPrimitive Types.isConvertible
+Tree.getKind
+BinaryTree.getLeftOperand ExpressionTree.getKind VisitorState.getSymtab VisitorState.getPath.getParentPath.getLeaf SuggestedFix.replace SuggestedFix.build
+TryTree.getCatches.size TryTree.getCatches.iterator.next.getParameter.getType Type.isUnion VisitorState.getSourceForNode
+TryTree.getCatches catchTrees.size List.isEmpty CatchTree.getBlock.getStatements Builder.addStaticImport StatementTree.isEmpty StringBuilder.append StringBuilder.append List.size StringBuilder.append Builder.replace Builder.postfixWith Builder.postfixWith StatementTree.isEmpty Builder.replace Builder.replace Builder.replace StringBuilder.new
+MethodSymbol.getKind
+List.get List.get VisitorState.getTypes.isSameType BinaryTree.getKind IllegalStateException.new
+VisitorState.getName VisitorState.getTypes.closure Scope.getSymbolsByName Symbol.overrides
+TreePath.getParentPath TreePath.getLeaf
+MethodInvocationTree.getMethodSelect.getKind MethodInvocationTree.getMethodSelect MemberSelectTree.getExpression.getKind MemberSelectTree.getExpression IdentifierTree.getName.contentEquals MemberSelectTree.getExpression.getKind MemberSelectTree.getExpression MemberSelectTree.getIdentifier.contentEquals
+MethodSymbol.isStatic MethodSymbol.add VisitorState.getTypes.supertype MethodSymbol.add VisitorState.getTypes.supertype MethodSymbol.iterator iter.next MethodSymbol.overrides iter.remove iter.hasNext IllegalArgumentException.new LinkedList.new
+VisitorState.getPath TreePath.getLeaf.getKind TreePath.getLeaf.getKind TreePath.getLeaf.getKind TreePath.getParentPath
+VarSymbol.getModifiers.contains InitializationContext.contains VarSymbol.isStatic InitializationContext.contains InitializationContext.contains VarSymbol.flags
+Symbol.getKind
+EXEMPTING_METHOD_ANNOTATIONS.contains
+ExpressionTree.getKind NON_NULL_MATCHER.matches MethodInvocationTree.getArguments.get
+VisitorState.getPath.getParentPath.getLeaf AssignmentTree.getVariable AssignmentTree.getExpression AssignmentTree.getExpression.getKind ExpressionTree.getKind ExpressionTree.getKind ImmutableList.isEmpty
+Symbol.getModifiers.contains
+String.contains
+ImportTree.isStatic ImportTree.getQualifiedIdentifier ImportTree.getQualifiedIdentifier JCFieldAccess.getIdentifier Name.contentEquals VisitorState.getTypes Types.erasure VisitorState.getPath.getCompilationUnit Symbol.isEmpty Types.erasure Types.isSubtype Symbol.size
+Type.getTag ExpressionTree.getKind VisitorState.getTypes.unboxedTypeOrType.getTag
+ExpressionTree.matches Matcher.new
+exprMatcher.matches Matcher.new
+exprMatcher.matches Matcher.new
+Symbol.flags Symbol.attribute
+TreeScanner.new
+TreePath.getLeaf TreeScannerInstanceOfWrongType.scan TreeScannerInstanceOfWrongType.getRelevantTree IfTree.getElseStatement VisitorState.getTypes InstanceOfTree.getType TreeScannerInstanceOfWrongType.scan Types.isCastable TreeScannerInstanceOfWrongType.new
+ExpressionTree.getKind.equals ExpressionTree.getKind.equals ExpressionTree.getKind.equals ExpressionTree.getKind LiteralTree.getValue.equals
+VisitorState.getTypes.findDescriptorType.getReturnType.getKind
+VisitorState.getTypes.isAssignable VisitorState.getPath.getParentPath.getLeaf IllegalStateException.new
+JCMethodInvocation.getMethodSelect ExpressionTree.matches
+StatementTree.matches
+BugChecker.buildDescription.addFix
+BugChecker.buildDescription.addFix
+MethodInvocationTree.getArguments Type.add ArrayList.new
+VisitorState.getEndPosition
+List.size List.get List.get Type.isPrimitive Type.isPrimitive
+List.size VisitorState.getTypes List.get Types.isSameType List.remove
+List.get List.get
+MethodSymbol.attribute Compound.member
+TEMPLATE_ANNOTATION.matches Pattern.matcher Matcher.find
+MethodInvocationTree.getArguments MethodNameMatcher.matches args.size
+String.contains
+BinaryTree.getLeftOperand BinaryTree.getRightOperand ExpressionTree.getKind ExpressionTree.getKind
+Tree.accept assertTrees.build TreeScanner.new
+Matcher.matches MethodSymbol.getModifiers.contains
+MethodSymbol.getModifiers.contains AnnotationType.simpleName MethodTree.getName.toString Boolean.scan FindSuperTreeScanner.new
+Symbol.enclClass ClassSymbol.isInterface Types.closure MethodSymbol.isStatic Symbol.overrides
+Matcher.matches
+VarSymbol.attribute Compound.getElementValues.entrySet e.getKey.getSimpleName.contentEquals e.getValue.getValue.toString String.contains
+VisitorState.getTypes MethodInvocationTree.matches ExpressionTree.matches MethodInvocationTree.matches MethodInvocationTree.getArguments.size MethodInvocationTree.getArguments.get Types.elemtype Type.isPrimitive Types.isArray MethodInvocationTree.getArguments Types.isArray SuggestedFix.replace SuggestedFix.addImport
+VisitorState.getTypes Types.isArray VisitorState.getSourceForNode VisitorState.getSourceForNode
+Matcher.matches ExpressionTree.matches
+Type.getReturnType VisitorState.getPath.getParentPath.getLeaf AssertionError.new
+MethodSymbol.getModifiers.contains MethodTree.getParameters.stream.filter.filter.collect params.isEmpty
+Matcher.matches
+VisitorState.getPath.getParentPath Tree.getKind
+List.indexOf List.size Builder.replace Builder.replace
+VisitorState.getTypeFromString JCAnnotation.getArguments JCExpression.hasTag JCExpression.size Builder.replace
+Tree.equals ClassTree.getSimpleName
+ClassTree.matches ClassTree.getMembers
+MethodInvocationTree.getArguments arguments.size arguments.get arguments.get Builder.addFix Builder.build
+IS_COLLECTION_MODIFIED_WITH_ITSELF.matches
+MethodTree.getModifiers.getAnnotations Symbol.getSimpleName.contentEquals Builder.prefixWith
+VisitorState.getPath.getParentPath.getLeaf Tree.getKind IfTree.getThenStatement IfTree.getElseStatement VisitorState.getPath.getParentPath.getLeaf.getKind VisitorState.getPath.getParentPath.getLeaf
+List.add List.add List.add Builder.delete Builder.delete Builder.replace.replace annotations.stream.map.filter.map.map.collect String.stream.collect String.size ArrayList.new ArrayList.new
+JCMethodDecl.getBody VisitorState.getEndPosition JCMethodDecl.getBody.getStartPosition JCClassDecl.getMembers.isEmpty VisitorState.getEndPosition JCClassDecl.getMembers.get.getStartPosition AssertionError.new
+ExpressionTree.matches ExpressionTree.matches
+MethodTree.accept TreeScanner.new
+LOOKS_LIKE_TEST_CASE.matches MethodTree.getName.toString Pattern.matcher Matcher.lookingAt Matcher.replaceFirst String.substring fixes.add ArrayList.new
+ExpressionTree.matches VisitorState.getSourceForNode
+StringBuilder.append.append MethodSymbol.isStatic StringBuilder.append MethodSymbol.params.stream.map.forEachOrdered StringBuilder.append StringBuilder.toString StringBuilder.new
+ImportTree.getQualifiedIdentifier MemberSelectTree.getIdentifier.contentEquals ImportTree.add ImportTree.build
+Builder.addImport VisitorState.getPath.getCompilationUnit TreePathScanner.new
+typesToImport.stream.collect ImportTree.getQualifiedIdentifier.toString ImportTree.isStatic Builder.removeStaticImport Builder.removeImport Symbol.entrySet List.getKey List.getKey.getKind List.getValue.size List.getValue TypeToImport.addFix Builder.build
+defaultStatements.isEmpty VisitorState.getSourceCode.subSequence.toString String.substring.trim String.isEmpty
+StatementTree.isEmpty StatementTree.size
+VisitorState.getTypes.asSuper Type.getTypeArguments.isEmpty String.contains
+unhandled.size unhandled.size StringBuilder.append unhandled.size StringBuilder.append StringBuilder.toString StringBuilder.new
+TryTree.getFinallyBlock TryTree.getFinallyBlock.equals
+Tree.getKind Name.equals
+VisitorState.getPath Tree.getKind
+SuggestedFix.build TreeScanner.new
+CanBeStaticAnalyzer.new
+Symbol.hasOuterInstance Symbol.isMemberOf
+ExpressionTree.getKind
+ExpressionTree.matches
+ExpressionTree.accept ExpressionTree.stream.allMatch SimpleTreeVisitor.new
+JCTree.getStartPosition VisitorState.getEndPosition VisitorState.getSourceForNode CharSequence.charAt CharSequence.length CharSequence.charAt
+MethodInvocationTree.getArguments MethodInvocationTree.getArguments.get Tree.getKind VisitorState.getSourceForNode VisitorState.getSourceForNode args.size VisitorState.getSourceForNode VisitorState.getSourceForNode.substring Builder.addFix args.size ExpressionTree.matches Builder.addFix VisitorState.getPath.getParentPath.getLeaf Tree.getKind Builder.addFix Builder.addFix
+Matcher.matches VisitorState.getSourceForNode VisitorState.getSourceForNode staticEqualsMatcher.matches VisitorState.getSourceForNode VisitorState.getSourceForNode
+MethodInvocationTree.getMethodSelect.getKind Builder.addStaticImport StringBuilder.append StringBuilder.append.append StringBuilder.append Builder.replace Builder.build StringBuilder.new
+ArrayList.new TreeScanner.new
+MethodInvocationTree.getArguments.get VisitorState.getPath.getParentPath.getLeaf Tree.getKind ExpressionTree.getKind ExpressionTree.getKind BinaryTree.getLeftOperand.getKind BinaryTree.getRightOperand.getKind ExpressionTree.getKind ExpressionTree.getKind VisitorState.getSymtab
+Symbol.isLocal Symbol.add TreePath.getParentPath TreePath.getLeaf TreePath.getLeaf MethodTree.getParameters Symbol.contains HashSet.new IllegalStateException.new
+Symbol.getParameters ExpressionTree.hasNext ExpressionTree.next compileTimeConstExpressionMatcher.matches Symbol.flags ExpressionTree.next compileTimeConstExpressionMatcher.matches ExpressionTree.hasNext
+String.contains String.contains Description.build
+String.get.stream.anyMatch String.get.stream.noneMatch
+ClassTree.accept String.build TreeScanner.new
+VisitorState.getTypes TryTree.getCatches.stream.anyMatch
+SuggestedFix.prefixWith.build
+Tree.getKind
+Diff.getClassDiffList ApiDiffProto.getDiffCase unsupportedClasses.add ApiDiffProto.getMemberDiff MemberDiff.getMemberList ClassMemberKey.put ApiDiffProto.getDiffCase unsupportedClasses.build ClassMemberKey.build AssertionError.new AutoValue_ApiDiff.new
+Builder.addClassDiff Builder.addMember Builder.addClassDiff Builder.build
+Symbol.isStatic Symbol.enclClass ExpressionTree.getKind
+MethodTree.getModifiers.getAnnotations Matcher.matches SuggestedFix.replace BINDING_ANNOTATION_MATCHER.matches SuggestedFix.delete
+types.addAll
+Function.new
+ClassTree.getModifiers.getAnnotations
+flags.addAll flags.remove flags.add ClassTree.getKind.equals ClassTree.getModifiers.getAnnotations Builder.add Builder.addAll ClassTree.getModifiers Builder.prefixWith Builder.replace HAS_GENERATED_CONSTRUCTOR.matches Builder.merge
+Symbol.getKind TreePath.getParentPath TreePath.getLeaf.accept IllegalStateException.new TreeScanner.new
+VarSymbol.indexOf VarSymbol.subList ImmutableList.add ImmutableList.build VisitorState.getTypes Type.add Type.build ownerFormatArgTypes.size Type.size Type.size
+VisitorState.getSymtab MethodSymbol.getParameters
+VisitorState.getSymtab MethodSymbol.getParameters params.get params.size
+ExpressionTree.getKind MemberSelectTree.getIdentifier.toString String.equals Symbol.getSimpleName.toString String.equals IdentifierTree.getName.contentEquals
+MethodInvocationTree.getMethodSelect.getKind MethodInvocationTree.getMethodSelect Symbol.isEnum ImmutableBiMap.containsValue MethodInvocationTree.getArguments.size
+words.get words.get ImmutableMap.containsKey out.add out.add words.size words.size out.add out.build
+words.size String.contains ImmutableMap.containsKey
+String.size String.get.equals ImmutableMap.containsKey
+ExpressionTree.matches Symbol.equals Tree.isEmpty Void.scan TreeScanner.new ArrayList.new ArrayList.new
+Parameter.add List.clear
+Parameter.tree.isVarArgs Parameter.remove List.add
+Parameter.isEmpty Parameter.first Parameter.remove List.add Parameter.tree.isVarArgs ParameterTrie.new
+List.get Parameter.position ParameterTree.add ParameterTree.add List.size
+ClassTree.getMembers List.stream.filter.map.filter.collect
+Types.asSuper Type.getTypeArguments tyargs.size tyargs.get
+String.charAt String.length
+DCDocComment.getFullBody.stream.anyMatch
+DocTreePath.getTreePath.getLeaf
+GuardedByExpression.type VisitorState.getSymbolFromString VisitorState.getTypes.isSubtype
+HeldLockSet.allLocks.size StringBuilder.append StringBuilder.append StringBuilder.append StringBuilder.toString StringBuilder.append GuardedByExpression.kind StringBuilder.append StringBuilder.toString StringBuilder.append StringBuilder.append StringBuilder.toString StringBuilder.new
+GuardedByValidationResult.isValid
+ClassSymbol.members Symbol.getKind Symbol.isStatic ClassTree.isPresent ClassTree.get.getMembers Tree.put Violation.isPresent Filter.new HashMap.new
+Violation.isPresent VisitorState.getTypes.interfaces ThreadSafety.checkSuperInstantiation Violation.isPresent Violation.plus ClassType.asElement.isEnum Violation.isPresent ThreadSafety.mutableEnclosingInstance Violation.plus
+BugChecker.isSuppressed VarSymbol.getModifiers.contains Tree.isPresent VisitorState.reportMatch VisitorState.getTypes.memberType ThreadSafety.isThreadSafeType Violation.isPresent Violation.plus Tree.isPresent VisitorState.reportMatch
+Symbol.flatName.toString WellKnownMutability.getKnownImmutableClasses.get ThreadSafety.getInheritedAnnotation
+ImmutableAnalysis.areFieldsImmutable Violation.isPresent ViolationReporter.new
+Symbol.getKind ImmutableAnalysis.getImmutableAnnotation Symbol.getTypeParameters TypeVariableSymbol.getSimpleName.toString AnnotationInfo.containerOf.contains ImmutableSet.add Symbol.isStatic ImmutableSet.build
+VisitorState.getTypes.closure String.stream.anyMatch
+Symbol.equals EnclosingInstanceSymbol.new
+JCExpressionStatement.getStartPosition JCExpressionStatement.getExpression JCExpressionStatement.getExpression VarSymbol.getKind
+VarSymbol.getModifiers.contains Builder.addFix Builder.build
+Type.getKind String.contains
+TreePath.getLeaf TreePath.getParentPath
+StatementTree.accept SimpleTreeVisitor.new
+BinaryTree.getLeftOperand.getKind BinaryTree.getRightOperand BinaryTree.getRightOperand.getKind BinaryTree.getLeftOperand
+lockOperationMatcher.matches node.isPresent Set.add MethodInvocationTree.getMethodSelect READ_WRITE_ACCESSOR_MATCHER.matches Set.add
+LockScanner.new
+GuardedByExpression.isPresent
+GuardedByExpression.kind GuardedByExpression.kind
+UnlockMethod.value GuardedByExpression.isPresent GuardedByExpression.isPresent Set.add
+Symbol.isStatic GuardedByExpression.typeLiteral GuardedByExpression.kind Symbol.isMemberOf GuardedByExpression.thisliteral GuardedByExpression.qualifiedThis IllegalGuardedBy.new
+Symbol.isMemberOf
+IllegalGuardedBy.new
+IllegalGuardedBy.new
+ClassSymbol.getSimpleName.contentEquals
+Symbol.getKind Symbol.getTypeParameters TypeVariableSymbol.getSimpleName.toString AnnotationInfo.containerOf.contains result.add Symbol.isStatic result.build
+Symbol.getTypeParameters TypeVariableSymbol.stream.noneMatch TypeVariableSymbol.stream.filter.collect
+Violation.isPresent
+Symbol.getSimpleName.isEmpty Symbol.getSimpleName.toString Symbol.getKind VisitorState.getTypes.supertype VisitorState.getTypes.isSameType
+Symbol.flatName.toString KnownTypes.getKnownSafeClasses.get
+TypeVariableSymbol.getAnnotationMirrors.stream.anyMatch
+AnnotationInfo.containerOf.isEmpty Type.getTypeArguments.size AnnotationInfo.containerOf.contains Type.getTypeArguments.get Type.getAnnotationMirrors.stream.anyMatch Violation.isPresent Violation.plus
+TypeVariableSymbol.add TypeVariableSymbol.remove TypeVariableSymbol.getBounds
+Optional.isPresent ClassType.getEnclosingType Type.getEnclosingType
+Type.accept ThreadSafeTypeVisitor.new
+InvocationInfo.formalParameters.size InvocationInfo.actualParameters.size InvocationInfo.formalParameters.size Costs.viablePairs.filter.filter.forEach Costs.viablePairs.noneMatch Costs.viablePairs.forEach Costs.computeAssignments Changes.isEmpty Heuristic.isAcceptableChange Costs.new
+Parameter.index Parameter.index Parameter.index
+formals.stream.flatMap.filter
+Parameter.name.matches
+Changes.changedPairs.stream.allMatch
+Changes.changedPairs.stream.noneMatch
+ParameterPair.formal.isNullLiteral ParameterPair.actual.isNullLiteral ParameterPair.formal.isUnknownName ParameterPair.actual.isUnknownName ParameterPair.formal.index ParameterPair.actual.index Function.new
+Parameter.kind Parameter.type TypeSymbol.getKind
+ParameterPair.formal ParameterPair.actual Parameter.name Parameter.name String.equals Parameter.constant String.startsWith String.equals Parameter.constant String.startsWith Parameter.index Parameter.index Function.new
+List.build TreeScanner.new
+ParameterPair.stream.anyMatch
+Changes.changedPairs.size Changes.totalOriginalCost Changes.totalAssignmentCost
+Optional.isPresent Pattern.matcher Matcher.matches approximateMatchComment.isPresent
+VisitorState.getTypes.isSameType VisitorState.getTypes.isSameType VisitorState.getTypes.isAssignable
+ExpressionTree.getKind IdentifierTree.getName.contentEquals IdentifierTree.getName.toString MethodSymbol.getSimpleName.toString String.contains List.size String.substring
+unifier.isPresent Unifier.new ExpressionTemplateMatch.new
+ExpressionTemplateMatch.createInliner Inliner.getContext Logger.log Builder.replace StringWriter.new RuntimeException.new
+Context.get
+T.isSupertypeOf ClassCastException.new
+UTemplater.template UForAll.getTypeVars UForAll.getQuantifiedType MethodTree.getBody.getStatements StatementTree.size Context.get List.add SubContext.new UTemplater.new IllegalArgumentException.new ArrayList.new
+MirroredTypeException.getTypeMirror Matches.value RuntimeException.new TypeToken.new RuntimeException.new
+MirroredTypeException.getTypeMirror NotMatches.value RuntimeException.new TypeToken.new RuntimeException.new
+Inliner.asName Key.new
+ExpressionTree.accept State.or
+choice1.apply.transform
+Choice.new
+RuntimeException.new InterruptedException.new Choice.new RuntimeException.new InterruptedException.new
+Choice.new
+Choice.new
+Choice.new
+T.apply Choice.apply Choice.new
+U.size T.size U.size T.size U.get Unifier.condition.thenOption T.size Unifier.thenChoose U.size T.size Function.new ArrayList.new
+Class.getName.equals Class.getEnumConstants Object.toString.equals
+String.get Inliner.getOptionalBinding JCExpression.isPresent ArrayList.add Inliner.getOptionalBinding java.isPresent java.get.isEmpty java.get.size java.get.get java.get.size ArrayList.add ArrayList.add ArrayList.new UFreeIdent.new URepeated.new Type.new
+Unifier.getBinding builder.add builder.build
+String.get Inliner.getOptionalBinding Optional.isPresent Inliner.getOptionalBinding exprs.isPresent exprs.get.isEmpty ArrayList.add String.size ArrayList.add ArrayList.new UFreeIdent.new URepeated.new
+Inliner.symtab Type.isEmpty Inliner.enter Inliner.asName Enter.getTopLevelEnv ReflectiveOperationException.getMessage Field.setAccessible Field.set ReflectiveOperationException.getMessage Class.getDeclaredConstructor resultInfoCtor.setAccessible resultInfoCtor.newInstance DeferredDiagnosticHandler.getDiagnostics.isEmpty DeferredDiagnosticHandler.getDiagnostics MethodType.new ForAll.new MethodSymbol.new LinkageError.new LinkageError.new Log.new InferException.new
+InvocationTargetException.getCause InvocationTargetException.getMessage InvocationTargetException.getCause ReflectiveOperationException.getMessage Method.setAccessible Method.invoke InferException.new LinkageError.new LinkageError.new
+StringWriter.toString StringWriter.new AssertionError.new
+StringWriter.toString StringWriter.new AssertionError.new
+JCBlock.getStatements.isEmpty
+LinkedList.new
+AtomicBoolean.compareAndSet ServerBootstrap.group ServerBootstrap.channel ServerBootstrap.childOption ServerBootstrap.childOption ServerBootstrap.childHandler ServerBootstrap.bind.sync Logger.info Logger.error NioEventLoopGroup.new DefaultThreadFactory.new NioEventLoopGroup.new DefaultThreadFactory.new ServerBootstrap.new ChannelInitializer.new QosProcessHandler.new
+Logger.info EventLoopGroup.shutdownGracefully EventLoopGroup.shutdownGracefully
+Callback.callback Node.isLeaf
+Node.isRoot Node.markEnd IllegalStateException.new
+Node.markBegin Node.new
+Border.has StringBuilder.append Border.has StringBuilder.append StringBuilder.append Border.has StringBuilder.append StringBuilder.toString StringBuilder.new
+Scanner.new StringReader.new
+MetricName.new MetricName.new
+String.put IllegalArgumentException.new HashMap.new
+String.putAll HashMap.new MetricName.new
+MetricName.getKey String.isEmpty StringBuilder.append StringBuilder.append MetricName.getTags.isEmpty String.putAll MetricName.getMetricLevel StringBuilder.toString StringBuilder.new HashMap.new MetricName.new
+String.isEmpty String.isEmpty MetricName.new MetricName.new
+Class.getMethod Method.invoke Class.getMethod Method.invoke
+String.add String.addAll ArrayList.new
+ZookeeperClient.get ZookeeperClient.isConnected ZookeeperClient.isConnected
+ZookeeperClient.put
+ZookeeperClient.isConnected Logger.info ZookeeperClient.isConnected Logger.info Logger.info
+URL.getParameter parameterMap.put URL.getParameter parameterMap.put URL.getProtocol URL.getUsername URL.getPassword URL.getHost URL.getPort HashMap.new URL.new
+Request.getId Request.getVersion Response.setStatus Response.setErrorMessage Response.new
+String.length String.indexOf StringBuffer.append StringBuffer.toString StringBuffer.append StringBuffer.append StringBuffer.append StringBuffer.append StringBuffer.append StringBuffer.toString StringBuffer.toString FormattingTuple.new FormattingTuple.new StringBuffer.new FormattingTuple.new FormattingTuple.new HashMap.new HashMap.new FormattingTuple.new FormattingTuple.new
+DefaultFuture.new
+Channel.equals DefaultFuture.isDone DefaultFuture.getId Response.setStatus Response.setErrorMessage Long.entrySet Response.new
+NullPointerException.new
+LoggerContext.getLogger Logger.detachAndStopAllAppenders ILoggingEvent.setContext ILoggingEvent.setName ILoggingEvent.setFile ILoggingEvent.setAppend TimeBasedRollingPolicy.setContext TimeBasedRollingPolicy.setMaxHistory TimeBasedRollingPolicy.setFileNamePattern TimeBasedRollingPolicy.setParent TimeBasedRollingPolicy.start ILoggingEvent.setRollingPolicy PatternLayoutEncoder.setContext PatternLayoutEncoder.setPattern PatternLayoutEncoder.start ILoggingEvent.setEncoder ILoggingEvent.start Logger.addAppender Logger.setLevel Logger.setAdditive RollingFileAppender.new TimeBasedRollingPolicy.new PatternLayoutEncoder.new
+invoker.getUrl.getParameter invoker.getInterface.getName invoker.getUrl.getParameter invoker.getUrl.getParameter invoker.getUrl.getAddress invoker.getUrl.getPort Invocation.getAttachment Invocation.getAttachment Result.getAttachment Result.getAttachment URL.new
+Invoker.getUrl.hasParameter RpcContext.getRemoteHost Invoker.invoke Invoker.invoke
+Invoker.getUrl.getUrlParameter MonitorFactory.getMonitor Monitor.collect Logger.warn
+DemoService.setApplication DemoService.setRegistry DemoService.setInterface DemoService.get DemoService.sayHello ReferenceConfig.new ApplicationConfig.new RegistryConfig.new
+ServiceConfig.setApplication ServiceConfig.setRegistry ServiceConfig.setInterface ServiceConfig.setRef ServiceConfig.export ServiceConfig.new ApplicationConfig.new RegistryConfig.new DemoServiceImpl.new
+AnnotationConfigApplicationContext.start AnnotationConfigApplicationContext.new
+AnnotationConfigApplicationContext.start AnnotationConfigApplicationContext.getBean DemoService.sayHello AnnotationConfigApplicationContext.new
+ClassPathXmlApplicationContext.start ClassPathXmlApplicationContext.new
+ClassPathXmlApplicationContext.start ClassPathXmlApplicationContext.getBean DemoService.sayHello ClassPathXmlApplicationContext.new
+Invoker.destroy Logger.warn localUrlInvokerMap.values localUrlInvokerMap.clear ArrayList.new
+Invoker.size Invoker.values Invoker.contains deleted.add Invoker.entrySet Invoker.remove invoker.destroy Logger.isDebugEnabled Logger.debug Logger.warn ArrayList.new
+List.isEmpty URL.getParameter String.length URL.setProtocol RouterFactory.getRouter Router.contains Router.add Logger.error ArrayList.new
+URL.isEmpty String.length String.split URL.getProtocol.equals Logger.error URL.toFullString String.contains String.add localUrlInvokerMap.get URL.hasParameter URL.getParameter URL.getParameter Protocol.refer Logger.error Map.put Map.put String.clear HashMap.new HashSet.new IllegalStateException.new InvokerDelegate.new
+URL.addParameter URL.getPath URL.getPath.length URL.getParameter String.indexOf String.substring String.lastIndexOf String.substring URL.setPath
+originInvoker.getUrl.getParameterAndDecoded String.length originInvoker.getUrl IllegalArgumentException.new
+URL.removeParameters.toFullString
+Logger.debug Logger.debug URL.isEmpty
+bounds.get Logger.warn ExporterChangeableWrapper.setExporter IllegalStateException.new InvokerDelegate.new
+URL.getParameter URL.removeParameters.removeParameters String.new
+Logger.warn Logger.isInfoEnabled Logger.info URL.getParameter List.computeIfAbsent URL.add List.size notified.computeIfAbsent String.getKey String.getValue Map.put NotifyListener.notify List.entrySet IllegalArgumentException.new IllegalArgumentException.new HashMap.new ArrayList.new ConcurrentHashMap.new
+Logger.warn MulticastSocket.leaveGroup MulticastSocket.close Logger.warn
+Logger.isWarnEnabled Logger.warn received.values HashSet.new HashSet.new
+Invocation.getMethodName.startsWith Validation.getValidator Validator.validate invoker.invoke RpcResult.new
+URL.addParameter URL.toFullString ConcurrentMap.get ConcurrentMap.put ConcurrentMap.get
+Thread.interrupt
+Thread.start
+ThreadLocal.new HashMap.new
+CacheFactory.getCache Cache.get invoker.invoke Result.hasException Cache.put invoker.invoke RpcResult.new RpcResult.new ValueWrapper.new
+Calendar.getTimeInMillis Calendar.set Calendar.set Calendar.set Calendar.set Calendar.getTimeInMillis
+Gson.toJson Gson.new
+ServiceDefinition.new
+clazz.getProtectionDomain ProtectionDomain.getCodeSource clazz.getProtectionDomain.getCodeSource CodeSource.getLocation CodeSource.getLocation.toExternalForm String.endsWith String.contains String.substring
+Class.getDeclaredFields Field.getModifiers List.add Class.getSuperclass ArrayList.new
+clazz.getMethods Method.getModifiers Method.add ArrayList.new
+Optional.orElseGet
+listeners.computeIfAbsent ApolloListener.addListener Config.addChangeListener
+URL.getParameter.equals Config.getProperty Config.getProperty
+String.replace.replaceAll
+TreeCache.getListenable.addListener TreeCache.start CountDownLatch.await TreeCache.new
+List.size Configurator.clear URL.getParameters Map.remove Map.size Configurator.clear Configurator.add ArrayList.new HashMap.new
+Configurator.getUrl.getParameter
+CopyOnWriteArrayList.new
+Router.addAll Router.addAll CopyOnWriteArrayList.new
+T.isArray T.getComponentType mergerCache.get mergerCache.get Class.isPrimitive mergerCache.get mergerCache.get IllegalArgumentException.new
+invoker.getUrl.getMethodParameter invoker.getUrl.getParameter invoker.getUrl.getParameter
+invokers.get.getUrl.getServiceKey Invocation.getMethodName ConcurrentMap.get String.keySet
+URL.getParameter Invocation.getAttachment
+URL.getParameterAndDecoded IllegalStateException.new
+ScriptEngine.createBindings Bindings.put Bindings.put Bindings.put ArrayList.new
+URL.getParameter ScriptEngine.computeIfAbsent ScriptEngineManager.new IllegalStateException.new
+List.size List.size List.size T.isAvailable List.contains List.add List.isEmpty LoadBalance.select Invoker.isAvailable List.contains List.add List.isEmpty LoadBalance.select ArrayList.new
+Invocation.getMethodName invokers.get.getUrl.getMethodParameter invokers.contains Invoker.contains Invoker.isAvailable
+T.list Logger.isInfoEnabled Logger.info
+LinkedList.new ReflectionUtils.new ReferenceMethodElement.new
+Reference.url Reference.version Reference.group ApplicationContext.getEnvironment Environment.resolvePlaceholders
+LinkedList.new ReflectionUtils.new ReferenceFieldElement.new
+ReferenceInjectionMetadata.getMethodElements InjectionMetadata.put injectionMetadataCache.values LinkedHashMap.new
+ReferenceInjectionMetadata.getFieldElements ReferenceBean.put injectionMetadataCache.values LinkedHashMap.new
+SingletonBeanRegistry.getSingleton Logger.isInfoEnabled Logger.info Logger.info AnnotationBeanNameGenerator.new
+DubboClassPathBeanDefinitionScanner.setBeanNameGenerator DubboClassPathBeanDefinitionScanner.addIncludeFilter DubboClassPathBeanDefinitionScanner.scan Logger.isInfoEnabled Logger.info Logger.isWarnEnabled Logger.warn DubboClassPathBeanDefinitionScanner.new AnnotationTypeFilter.new
+BeanDefinitionHolder.getBeanName DubboClassPathBeanDefinitionScanner.checkCandidate BeanDefinitionRegistry.registerBeanDefinition Logger.isInfoEnabled Logger.warn Logger.isWarnEnabled Logger.warn
+StringBuilder.append.append interfaceClass.getName StringBuilder.append.append Service.version StringBuilder.append.append Service.group StringBuilder.append.append StringBuilder.toString StringBuilder.new
+ClassPathBeanDefinitionScanner.findCandidateComponents beanDefinitions.size BeanNameGenerator.generateBeanName BeanDefinitionHolder.add LinkedHashSet.new BeanDefinitionHolder.new
+BeanDefinitionBuilder.addConstructorArgValue BeanDefinitionBuilder.setRole BeanDefinitionBuilder.getBeanDefinition
+Element.getAttribute BeanDefinitionBuilder.addConstructorArgValue BeanDefinitionBuilder.setRole
+DefaultDubboConfigBinder.setEnvironment DefaultDubboConfigBinder.new
+BeanDefinitionHolder.getBeanName DubboClassPathBeanDefinitionScanner.checkCandidate BeanDefinitionRegistry.registerBeanDefinition Logger.isInfoEnabled Logger.info Logger.isWarnEnabled Logger.warn
+ServiceBeanNameBuilder.build
+ClassPathBeanDefinitionScanner.findCandidateComponents Set.size BeanNameGenerator.generateBeanName Set.add LinkedHashSet.new BeanDefinitionHolder.new
+SingletonBeanRegistry.getSingleton Logger.isInfoEnabled Logger.info Logger.info AnnotationBeanNameGenerator.new
+DubboClassPathBeanDefinitionScanner.setBeanNameGenerator DubboClassPathBeanDefinitionScanner.addIncludeFilter DubboClassPathBeanDefinitionScanner.scan Logger.isInfoEnabled Logger.info Logger.isWarnEnabled Logger.warn DubboClassPathBeanDefinitionScanner.new AnnotationTypeFilter.new
+Log.isInfoEnabled Log.info
+AnnotatedInjectionMetadata.getMethodElements Object.put injectionMetadataCache.values LinkedHashMap.new
+LinkedList.new ReflectionUtils.new AnnotationInjectedBeanPostProcessor.new
+Object.get Object.putIfAbsent
+LinkedList.new ReflectionUtils.new AnnotationInjectedBeanPostProcessor.new
+AnnotatedInjectionMetadata.getFieldElements Object.put injectionMetadataCache.values LinkedHashMap.new
+BeanDefinitionBuilder.addConstructorArgValue BeanDefinitionBuilder.setRole BeanDefinitionBuilder.getBeanDefinition
+Element.getAttribute BeanDefinitionBuilder.addConstructorArgValue BeanDefinitionBuilder.setRole
+Map.get
+beans.add ArrayList.new
+Log.isDebugEnabled Log.debug AnnotatedBeanDefinitionReader.register AnnotatedBeanDefinitionReader.new
+BeanDefinitionRegistry.containsBeanDefinition RootBeanDefinition.setRole BeanDefinitionRegistry.registerBeanDefinition RootBeanDefinition.new
+Object.getKey Object.getValue String.contains actualAttributes.put String.entrySet HashSet.new LinkedHashMap.new
+ElementType.isEmpty
+Class.getAnnotation Retention.value Class.getAnnotation Target.value Method.getParameterAnnotations Class.equals A.add A.add Method.getDeclaringClass A.add A.isEmpty List.put LinkedHashMap.new LinkedList.new
+AbstractEnvironment.getPropertySources MutablePropertySources.addLast AbstractEnvironment.new
+ConfigurableEnvironment.getPropertySources Object.containsKey String.startsWith String.substring Object.containsKey source.getProperty ConfigurableEnvironment.resolvePlaceholders Object.put LinkedHashMap.new
+RegistryConfig.getAddress map.put map.containsKey map.put URL.addParameter URL.setProtocol URL.getParameter URL.getParameter List.add ArrayList.new HashMap.new
+RegistryConfig.isValid IllegalStateException.new
+interfaceClass.isInterface MethodConfig.setService MethodConfig.setServiceId MethodConfig.refresh MethodConfig.getName interfaceClass.getName interfaceClass.getName IllegalStateException.new IllegalStateException.new IllegalStateException.new IllegalStateException.new
+map.put map.put MonitorConfig.getAddress String.length map.containsKey map.put map.put URL.setProtocol.addParameter.addParameterAndEncoded HashMap.new IllegalArgumentException.new
+String.startsWith String.substring.trim String.startsWith String.substring.trim IllegalStateException.new IllegalStateException.new
+RegistryConfig.stream.filter.findFirst.ifPresent ConfigCenterConfig.new
+Method.getName Method.getAnnotation Parameter.key.length Parameter.useKeyAsProperty Parameter.key Method.getReturnType Map.put Method.invoke String.length Map.put Map.put Method.getParameterTypes Method.getReturnType Method.invoke Map.size Map.put Map.entrySet Exception.getMessage HashMap.new Object.new IllegalStateException.new
+InmemoryConfiguration.addProperties CompositeConfiguration.addConfiguration CompositeConfiguration.addConfiguration CompositeConfiguration.getString Method.invoke Logger.info Logger.error InmemoryConfiguration.new
+String.split String.startsWith String.substring type.getName IllegalStateException.new
+ClassNotFoundException.getMessage IllegalStateException.new IllegalStateException.new
+String.length ProtocolConfig.getHost ProviderConfig.getHost URL.getHost URL.getPort Map.put String.length Map.put IllegalArgumentException.new Socket.new InetSocketAddress.new IllegalArgumentException.new
+ProtocolConfig.getPort ProviderConfig.getPort Map.put
+loader.getLoadedExtension Protocol.destroy Logger.warn loader.getLoadedExtensions
+AtomicBoolean.compareAndSet
+AtomicBoolean.get AtomicBoolean.compareAndSet
+AtomicBoolean.get AtomicBoolean.compareAndSet
+String.get String.putIfAbsent String.get ReferenceConfigCache.new
+cache.keySet HashSet.new
+URL.nextElement URL.getFile String.length String.add URL.hasMoreElements HashSet.new
+Pattern.matcher Matcher.find Matcher.group
+String.substring String.lastIndexOf String.substring String.indexOf String.substring String.indexOf String.substring String.length
+String.indexOf String.substring.split String.trim String.length String.indexOf String.put String.put String.substring String.indexOf String.substring String.substring String.indexOf String.substring String.substring String.indexOf String.substring String.substring String.lastIndexOf String.substring String.indexOf String.substring String.substring String.substring String.lastIndexOf String.length String.lastIndexOf String.substring String.length IllegalArgumentException.new HashMap.new IllegalStateException.new IllegalStateException.new URL.new
+String.replaceFirst
+String.getValue String.equals Map.entrySet map.putAll HashMap.new URL.new
+JSONWriter.arrayBegin JSONWriter.valueNull JSONConverter.writeValue JSONWriter.arrayEnd
+mArray.add
+JSONWriter.objectBegin String.getKey JSONWriter.objectItem String.getValue JSONWriter.valueNull JSONConverter.writeValue Object.entrySet JSONWriter.objectEnd
+Object.put Object.entrySet
+Object.put
+Writer.write Writer.write Writer.write Writer.write
+Writer.write State.push State.new
+Writer.write
+Writer.write State.push State.new
+Writer.write
+Writer.write Writer.write Writer.write
+Writer.write
+Writer.write State.pop
+Writer.write
+Writer.write
+Writer.write State.pop
+Writer.write
+String.charAt String.charAt char.new
+Error.new
+StringBuffer.append StringBuffer.append StringBuffer.append StringBuffer.append StringBuffer.append StringBuffer.append Exception.getMessage StringBuffer.append StringBuffer.append StringBuffer.append StringBuffer.toString StringBuffer.append StringBuffer.append JSONToken.new JSONToken.new JSONToken.new JSONToken.new JSONToken.new StringBuffer.new JSONToken.new JSONToken.new JSONToken.new ParseException.new JSONToken.new JSONToken.new JSONToken.new ParseException.new JSONToken.new JSONToken.new StringBuffer.new
+io.read io.read char.new
+io.close
+StringWriter.getBuffer.toString StringWriter.close StringWriter.new
+IOException.getMessage StringReader.close StringReader.new ParseException.new
+StringWriter.getBuffer.toString StringWriter.close StringWriter.new
+Writer.write JSONWriter.new
+IOException.getMessage StringReader.close StringReader.new ParseException.new
+IOException.getMessage StringReader.close StringReader.new ParseException.new
+IOException.getMessage StringReader.close StringReader.new ParseException.new
+InputStream.close FileInputStream.new
+String.length IllegalArgumentException.new IndexOutOfBoundsException.new IndexOutOfBoundsException.new IndexOutOfBoundsException.new byte.new
+IndexOutOfBoundsException.new IndexOutOfBoundsException.new IndexOutOfBoundsException.new char.new String.new
+OutputStream.write OutputStream.close UnsafeByteArrayOutputStream.close UnsafeByteArrayOutputStream.toByteArray UnsafeByteArrayOutputStream.new DeflaterOutputStream.new
+String.length String.charAt String.charAt IndexOutOfBoundsException.new IndexOutOfBoundsException.new IndexOutOfBoundsException.new IllegalArgumentException.new IllegalArgumentException.new IllegalArgumentException.new byte.new
+UnsafeByteArrayOutputStream.toByteArray InputStream.close UnsafeByteArrayInputStream.close UnsafeByteArrayOutputStream.close UnsafeByteArrayInputStream.new UnsafeByteArrayOutputStream.new InflaterInputStream.new
+IndexOutOfBoundsException.new IndexOutOfBoundsException.new IndexOutOfBoundsException.new IllegalArgumentException.new char.new String.new
+String.length String.length String.length String.charAt String.charAt String.charAt String.charAt String.charAt String.charAt String.charAt String.charAt String.charAt String.charAt String.charAt String.charAt IndexOutOfBoundsException.new IndexOutOfBoundsException.new IndexOutOfBoundsException.new IllegalArgumentException.new IllegalArgumentException.new IllegalArgumentException.new byte.new
+String.length IllegalArgumentException.new
+byte.new
+String.contains Map.containsKey Map.get String.new
+ClassPool.appendClassPath ClassPool.makeClass imports.stream.forEach CtClass.addInterface CtClass.addConstructor CtClass.addField CtClass.addMethod ClassPool.new LoaderClassPath.new
+String.lastIndexOf String.substring
+String.containsKey String.get String.substring String.substring int.new
+EagerThreadPoolExecutor.isShutdown RejectedExecutionException.new
+CompositeConfiguration.addConfiguration CompositeConfiguration.addConfiguration CompositeConfiguration.addConfiguration CompositeConfiguration.addConfiguration CompositeConfiguration.new
+LoggerAdapter.getLogger Logger.info FailsafeLogger.getValue.setLogger ConcurrentMap.entrySet
+Method.getParameterTypes Method.getName String.startsWith String.length Method.getParameterTypes Method.getReturnType type.getName Method.getName IllegalStateException.new
+Method.getParameterTypes
+Method.getAnnotation StringBuilder.append StringBuilder.append StringBuilder.append StringBuilder.append StringBuilder.append StringBuilder.append StringBuilder.append StringBuilder.toString StringBuilder.new
+Method.getExceptionTypes
+StringBuilder.append StringBuilder.append StringBuilder.append StringBuilder.toString StringBuilder.new
+Method.getReturnType.getCanonicalName Method.getName
+Method.getParameterTypes
+Adaptive.value String.new
+type.getName StringBuilder.append StringBuilder.append StringBuilder.append type.getMethods StringBuilder.append StringBuilder.append Logger.isDebugEnabled Logger.debug StringBuilder.toString IllegalStateException.new StringBuilder.new
+Method.getParameterTypes
+Method.getReturnType.equals
+Method.getName.startsWith Method.getParameterTypes
+clazz.getConstructor
+Class.add ConcurrentHashSet.new
+clazz.getAnnotation Map.put clazz.getAnnotation Map.put
+Class.isAssignableFrom clazz.isInterface clazz.isAnnotationPresent String.get.containsKey String.put String.get.put Object.remove Object.set IllegalStateException.new IllegalStateException.new IllegalStateException.new IllegalStateException.new IllegalStateException.new
+Object.get IllegalArgumentException.new
+Class.getAnnotation SPI.value Pattern.split Class.getName IllegalStateException.new
+Holder.get Holder.get Holder.set IllegalArgumentException.new
+String.contains Object.getKey Object.getValue String.contains String.contains exts.add Map.entrySet exts.sort String.get String.startsWith String.contains T.isEmpty exts.addAll T.clear T.add String.size T.isEmpty exts.addAll ArrayList.new ArrayList.new ArrayList.new
+cachedAdaptiveClass.equals cachedAdaptiveClass.getClass.getName Class.getClass.getName IllegalStateException.new
+String.containsKey String.put
+Class.isAssignableFrom Class.isInterface Class.isAnnotationPresent String.get.containsKey String.put String.get.put IllegalStateException.new IllegalStateException.new IllegalStateException.new IllegalStateException.new IllegalStateException.new
+Map.get Map.put Class.getName Class.getName Class.getName IllegalStateException.new
+clazz.getClassLoader
+String.length primitiveTypeNameMap.get
+String.endsWith String.substring String.indexOf String.endsWith String.substring String.startsWith String.substring ClassLoader.loadClass
+String.equals
+Inet6Address.isReachable
+Inet6Address.getHostAddress String.lastIndexOf Logger.debug
+StringBuilder.append StringBuilder.toString StringBuilder.new
+clazz.getName String.get Method.getName.equals finded.add clazz.getMethods finded.isEmpty finded.size finded.get clazz.getMethod String.put ArrayList.new NoSuchMethodException.new IllegalStateException.new Class.new
+c.getParameterTypes StringBuilder.append StringBuilder.append.append StringBuilder.toString StringBuilder.new
+CtMethod.getParameterTypes StringBuilder.append StringBuilder.append.append StringBuilder.toString StringBuilder.new
+Method.getParameterTypes StringBuilder.append StringBuilder.append.append StringBuilder.toString StringBuilder.new
+CtConstructor.getParameterTypes StringBuilder.append StringBuilder.append.append StringBuilder.toString StringBuilder.new
+String.charAt String.substring.replace String.replace DESC_CLASS_CACHE.get DESC_CLASS_CACHE.put ClassNotFoundException.new
+String.indexOf String.length String.substring StringBuilder.append StringBuilder.append StringBuilder.append StringBuilder.append StringBuilder.append StringBuilder.append StringBuilder.append StringBuilder.append StringBuilder.append StringBuilder.append StringBuilder.append.append.append StringBuilder.toString String.get String.put StringBuilder.new
+String.lastIndexOf String.length String.charAt StringBuilder.append StringBuilder.append StringBuilder.append StringBuilder.append StringBuilder.append StringBuilder.append StringBuilder.append StringBuilder.append StringBuilder.append StringBuilder.append StringBuilder.append StringBuilder.toString StringBuilder.new RuntimeException.new
+Object.getClass Class.getInterfaces itf.getName.equals Class.equals Class.getSuperclass
+String.length Pattern.matcher cs.add Matcher.find cs.toArray ArrayList.new
+c.isPrimitive Object.getClass c.isInstance
+StringBuilder.append c.getComponentType c.isArray c.isPrimitive c.getName StringBuilder.append StringBuilder.append StringBuilder.append StringBuilder.append StringBuilder.append StringBuilder.append StringBuilder.append StringBuilder.append StringBuilder.append StringBuilder.append StringBuilder.append StringBuilder.append StringBuilder.toString StringBuilder.new
+Constructor.getParameterTypes StringBuilder.append StringBuilder.append StringBuilder.append StringBuilder.toString StringBuilder.new
+c.isArray StringBuilder.append c.getComponentType c.isArray c.getName StringBuilder.toString c.getName StringBuilder.new
+StringBuilder.append.append StringBuilder.append.append Method.getParameterTypes StringBuilder.append StringBuilder.append StringBuilder.append StringBuilder.toString StringBuilder.new
+String.indexOf String.length String.substring StringBuilder.append StringBuilder.append StringBuilder.append StringBuilder.append StringBuilder.append StringBuilder.append StringBuilder.append StringBuilder.append StringBuilder.append StringBuilder.append StringBuilder.append.append.append StringBuilder.toString StringBuilder.new
+CtClass.isArray StringBuilder.append StringBuilder.append CtClass.isPrimitive CtClass.getName StringBuilder.append StringBuilder.append StringBuilder.append StringBuilder.append StringBuilder.append StringBuilder.append StringBuilder.append StringBuilder.append StringBuilder.append StringBuilder.append StringBuilder.append StringBuilder.append StringBuilder.toString StringBuilder.new
+StringBuilder.append CtMethod.getParameterTypes StringBuilder.append StringBuilder.append.append StringBuilder.toString StringBuilder.new
+StringBuilder.append Method.getParameterTypes StringBuilder.append StringBuilder.append.append StringBuilder.toString StringBuilder.new
+Writer.write Reader.read char.new
+PrintWriter.println PrintWriter.flush PrintWriter.close PrintWriter.new OutputStreamWriter.new
+IOException.new FileOutputStream.new
+IOException.new FileOutputStream.new
+Reader.close StringReader.new
+StringWriter.getBuffer.toString StringWriter.close StringWriter.new
+InputStream.read OutputStream.write InputStream.available byte.new
+File.exists File.canRead String.new FileInputStream.new
+String.add BufferedReader.readLine String.toArray BufferedReader.close ArrayList.new BufferedReader.new InputStreamReader.new String.new
+mElements.get EmptyStackException.new
+mElements.set EmptyStackException.new
+mElements.remove IndexOutOfBoundsException.new
+mElements.size mElements.set mElements.add
+mElements.set IndexOutOfBoundsException.new
+mElements.get mElements.get IndexOutOfBoundsException.new
+String.length String.charAt List.add List.add List.toArray ArrayList.new
+StringBuilder.append StringBuilder.toString StringBuilder.new
+StringBuilder.append StringBuilder.append StringBuilder.toString StringBuilder.new
 String.length
-FetchSourceContext.fetchSource FetchSourceContext.new
-Script.new
-FetchSourceContext.includes FetchSourceContext.excludes FetchSourceContext.new
-UpdateRequest.fetchSource UpdateRequest.fetchSource.fetchSource UpdateRequest.fetchSource.includes UpdateRequest.fetchSource.excludes SourceLookup.setSource SourceLookup.filter XContentType.xContent UpdateRequest.type UpdateRequest.id SourceLookup.new BytesStreamOutput.new XContentBuilder.new ElasticsearchException.new GetResult.new
-UpdateRequest.doc sourceAndContent.v1 sourceAndContent.v2 GetResult.getType GetResult.getId GetResult.getVersion UpdateResponse.setGetResult UpdateResponse.new Result.new Result.new
-UpdateRequest.doc XContentType.v1 XContentType.v2 Object.put Object.put Object.put Object.put Object.put Object.put Object.put Object.put Object.get GetResult.getType GetResult.getId GetResult.getVersion UpdateResponse.setGetResult HashMap.new Result.new Result.new UpdateResponse.new Result.new
-UpdateRequest.versionType UpdateRequest.versionType UpdateRequest.version GetResult.getVersion
-GetResult.isExists GetResult.internalSourceRef UpdateRequest.type UpdateRequest.id UpdateRequest.script UpdateRequest.doc DocumentSourceMissingException.new
-IndexRequest.sourceAsMap Object.put Object.put Object.put Object.get HashMap.new Tuple.new
-IndexRequest.routing IndexRequest.routing GetResult.getFields.containsKey GetResult.field.getValue.toString
-UpdateRequest.upsertRequest UpdateRequest.docAsUpsert UpdateRequest.type UpdateRequest.id UpdateRequest.docAsUpsert UpdateRequest.doc UpdateRequest.upsertRequest UpdateRequest.scriptedUpsert UpdateRequest.script UpdateRequest.upsertRequest Tuple.v1 IndexRequest.source GetResult.getType GetResult.getId GetResult.getVersion UpdateResponse.setGetResult Tuple.v2 Tuple.v1 IndexRequest.index.type.id.setRefreshPolicy.routing.timeout.waitForActiveShards.create UpdateRequest.versionType IndexRequest.version.versionType DocumentMissingException.new UpdateResponse.new Result.new IllegalArgumentException.new Result.new
-IndexShard.getService.getForUpdate
+String.indexOf String.length String.length String.length StringBuilder.append.append String.indexOf StringBuilder.append StringBuilder.toString StringBuilder.new
+StringBuilder.append StringBuilder.append StringBuilder.toString StringBuilder.new
+String.length String.charAt String.charAt StringBuilder.append StringBuilder.toString char.new String.new StringBuilder.new
+String.length String.charAt String.indexOf StringBuilder.append StringBuilder.append String.length StringBuilder.append StringBuilder.toString StringBuilder.new
+String.endsWith String.substring
+HashMap.new
+char.new String.new
+String.split Pattern.matcher Matcher.matches String.put HashMap.new
+String.length String.isEmpty String.indexOf String.substring
+ParameterizedType.getActualTypeArguments
+ExecutorService.shutdown ExecutorService.awaitTermination ExecutorService.shutdownNow ExecutorService.shutdownNow
+URL.getParameter URL.getAddress URL.addParameter
+Class.isAssignableFrom String.length String.charAt Class.isEnum Date.getTime Date.getTime Date.getTime ParseException.getMessage ClassNotFoundException.getMessage String.length String.getChars Number.byteValue Number.shortValue Number.intValue Number.longValue Number.floatValue Number.doubleValue Number.longValue Class.isArray Collection.size Class.isInterface Class.newInstance Collection.addAll Object.getClass.isArray Class.isInterface Class.newInstance Collection.add IllegalArgumentException.new BigInteger.new BigDecimal.new Short.new Integer.new Long.new Double.new Float.new Byte.new Boolean.new SimpleDateFormat.new java.new java.new java.new IllegalStateException.new RuntimeException.new char.new Date.new ArrayList.new HashSet.new ArrayList.new HashSet.new ArrayList.new
+Properties.load FileInputStream.close Logger.warn list.add net.hasMoreElements Logger.warn list.isEmpty Logger.warn list.size Logger.warn Properties.load Logger.warn Logger.info URL.openStream Properties.load Properties.putAll InputStream.close Logger.warn Properties.new FileInputStream.new ArrayList.new ArrayList.new Properties.new
+List.add String.trim.length String.trim.length names.add names.contains names.indexOf names.addAll names.addAll names.remove names.remove String.startsWith names.remove names.remove ArrayList.new ArrayList.new String.new ArrayList.new
+c.getSuperclass Wrapper.get Wrapper.put
+String.equals
 IllegalArgumentException.new
-StreamInput.readVInt StreamInput.readString StreamInput.readOptionalString StreamInput.readOptionalString StreamInput.readOptionalWriteable StreamInput.readOptionalWriteable StreamInput.readStringArray StreamInput.readOptionalBoolean StreamInput.readVInt StreamInput.getVersion.onOrAfter StreamInput.readVInt StreamInput.readVInt StreamInput.getVersion.onOrAfter StreamInput.readOptionalBoolean String.new RPAREN.new RPAREN.new
+Object.new
+StringBuilder.append.append StringBuilder.toString Map.computeIfAbsent Object.get Object.wait Object.put AtomicLong.getAndIncrement String.equals ClassGenerator.addInterface Set.contains Set.add Method.size Method.getReturnType Method.getParameterTypes StringBuilder.append.append.append.append.append StringBuilder.append.append.append StringBuilder.append.append.append Method.add ClassGenerator.addMethod ClassGenerator.setClassName ClassGenerator.addField ClassGenerator.addField ClassGenerator.addConstructor ClassGenerator.addDefaultConstructor ClassGenerator.toClass clazz.getField.set ClassGenerator.setClassName ClassGenerator.addDefaultConstructor ClassGenerator.setSuperClass ClassGenerator.addMethod ClassGenerator.toClass Class.newInstance Exception.getMessage ClassGenerator.release ClassGenerator.release Object.remove Object.put Object.notifyAll IllegalArgumentException.new StringBuilder.new RuntimeException.new IllegalArgumentException.new HashMap.new HashSet.new ArrayList.new IllegalArgumentException.new StringBuilder.new Class.new Class.new Method.new RuntimeException.new WeakReference.new
+AtomicLong.getAndIncrement String.equals ClassGenerator.addField StringBuilder.append.append.append.append.append.append.append StringBuilder.append.append.append ClassGenerator.addConstructor String.equals ClassGenerator.addInterface String.contains String.add Method.getReturnType Method.getName ClassGenerator.addMethod ClassGenerator.addMethod ClassGenerator.setClassName ClassGenerator.toClass ClassGenerator.setClassName ClassGenerator.addDefaultConstructor ClassGenerator.setSuperClass ClassGenerator.addMethod ClassGenerator.toClass mixin.newInstance Exception.getMessage ClassGenerator.release ClassGenerator.release StringBuilder.new IllegalArgumentException.new Class.new HashSet.new IllegalArgumentException.new RuntimeException.new RuntimeException.new
+HashedWheelTimer.get HashedWheelTimer.compareAndSet Thread.start CountDownLatch.await IllegalStateException.new Error.new
+HashedWheelTimeout.expire HashedWheelTimeout.isCancelled IllegalStateException.new
+TimeUnit.toNanos ThreadFactory.newThread AtomicInteger.incrementAndGet AtomicBoolean.compareAndSet NullPointerException.new NullPointerException.new IllegalArgumentException.new IllegalArgumentException.new IllegalArgumentException.new
+HashedWheelTimeout.isExpired HashedWheelTimeout.isCancelled set.add
+HashedWheelTimer.get
+InternalThreadLocalMap.indexedVariable InternalThreadLocal.toArray tlv.remove InternalThreadLocal.new
+InternalThreadLocalMap.size
+InternalThreadLocalMap.removeIndexedVariable RuntimeException.new
+InternalThreadLocalMap.indexedVariable
+InternalThreadLocalMap.setIndexedVariable
+Class.put IllegalArgumentException.new
+registrations.add IllegalStateException.new
+RpcContext.setAttachments RpcContext.setAttachments
+InetSocketAddress.getHostName
+String.size
+callable.call RpcException.getCause RpcException.new CompletableFuture.new ExecutionException.new
+String.remove String.put
+InetSocketAddress.getAddress InetSocketAddress.getHostName
+InetSocketAddress.getAddress InetSocketAddress.getHostName String.length
+Runnable.run Throwable.getMessage RpcException.new
+Object.remove Object.put
+String.trim String.length String.startsWith String.substring.trim String.startsWith String.substring.trim String.startsWith String.startsWith String.replace
+HashMap.new
+invoker.getUrl.getParameter Logger.warn invoker.invoke
+Map.put ConsumerMethodModel.new
+String.contains String.contains
+AtomicLong.get Logger.warn AtomicLong.incrementAndGet IllegalStateException.new
+URL.addParameter.addParameter.addParameter.addParameter.addParameter.addParameter ExchangeClient.isClosed ExchangeClient.getExchangeHandler LazyConnectExchangeClient.new
+String.put String.put URL.getParameter String.length String.put String.put URL.getParameters tmpMap.putAll tmpMap.remove tmpMap.put Channel.getLocalAddress.getAddress.getHostAddress Channel.getLocalAddress.getPort Class.getName Channel.hasAttribute ProxyFactory.getInvoker DubboProtocol.export Channel.setAttribute Logger.info Channel.hasAttribute Channel.getAttribute exporter.unexport Channel.removeAttribute HashMap.new HashMap.new URL.new
+Channel.getAttribute URL.addParametersIfAbsent.removeParameter ProxyFactory.getProxy Channel.setAttribute Channel.setAttribute Channel.getAttribute Invoker.add Channel.setAttribute Logger.info Channel.getAttribute Channel.getAttribute Invoker.remove invoker.destroy Logger.error Channel.removeAttribute Channel.removeAttribute ChannelWrappedInvoker.new ConcurrentHashSet.new
+ReferenceCountExchangeClient.new
+ReferenceCountExchangeClient.incrementAndGetCount
+URL.getAddress referenceClientMap.get locks.putIfAbsent locks.get referenceClientMap.get referenceClientMap.put ReferenceCountExchangeClient.get ReferenceCountExchangeClient.isClosed ReferenceCountExchangeClient.set ReferenceCountExchangeClient.incrementAndGetCount ReferenceCountExchangeClient.size locks.remove Object.new
+URL.getParameter URL.addParameter URL.addParameterIfAbsent String.length URL.getParameter RemotingException.getMessage RpcException.new LazyConnectExchangeClient.new RpcException.new
+ReferenceCountExchangeClient.add CopyOnWriteArrayList.new
+ReferenceCountExchangeClient.close
+ReferenceCountExchangeClient.isClosed
+String.lastIndexOf StringBuilder.new StringBuffer.new
+CommonHiddenStreamToken.setLine CommonHiddenStreamToken.setColumn CommonHiddenStreamToken.new
+BitSet.member BitSet.member BitSet.member BitSet.member BitSet.member BitSet.member ASTPair.new NoViableAltException.new NoViableAltException.new NoViableAltException.new NoViableAltException.new
+DetailAST.getText.length DetailAST.getText.length
+AST.getFirstChild AST.getFirstChild ASTPair.advanceChildToEnd ASTPair.new
+AST.getFirstChild AST.getFirstChild ASTPair.advanceChildToEnd ASTPair.new ASTArray.new ASTArray.new
+File.exists Properties.load Properties.getProperty String.equals File.new
+MessageDigest.update ByteArrayOutputStream.new IllegalStateException.new
+Set.stream.anyMatch
+BufferedInputStream.new CheckstyleException.new
+Set.add Set.add HashSet.new ExternalResource.new ExternalResource.new
+Path.getParent Properties.store
+ObjectOutputStream.writeObject ObjectOutputStream.new
+IllegalArgumentException.new IllegalArgumentException.new
+AuditListener.fileStarted AuditEvent.new
+UnsupportedEncodingException.new
+FilterSet.accept AuditListener.addError PropertyCacheFile.remove AuditEvent.new
+AuditListener.auditStarted AuditEvent.new
+AuditListener.fileFinished AuditEvent.new
+FileSetCheck.stream.filter.forEach FilterSet.getFilters.stream.filter.forEach HashSet.new
+File.getPath File.getPath File.getAbsolutePath File.lastModified PropertyCacheFile.isInCache PropertyCacheFile.put CheckstyleException.new Error.new
+String.new
+PropertyCacheFile.reset
+AuditListener.auditFinished AuditEvent.new
+Configuration.getName CheckstyleException.getMessage ModuleFactory.createModule AutomaticBean.contextualize AutomaticBean.configure FileSetCheck.init CheckstyleException.new CheckstyleException.new
+PropertyCacheFile.load PropertyCacheFile.new
+Log.debug LocalizedMessage.add Log.debug Exception.printStackTrace LocalizedMessage.add File.getAbsoluteFile LocalizedMessage.addAll TreeSet.new FileText.new LocalizedMessage.new String.new StringWriter.new PrintWriter.new LocalizedMessage.new String.new
+PrintWriter.new OutputStreamWriter.new IllegalArgumentException.new
+PrintWriter.print AuditEvent.getColumn PrintWriter.print PrintWriter.print PrintWriter.print PrintWriter.print AuditEvent.getModuleId PrintWriter.print PrintWriter.print PrintWriter.println
+FileMessages.getErrors FileMessages.getExceptions
+PrintWriter.println PrintWriter.println Throwable.printStackTrace PrintWriter.println PrintWriter.println PrintWriter.println StringWriter.new PrintWriter.new
+String.charAt String.charAt String.charAt String.substring String.equals
+PrintWriter.new OutputStreamWriter.new
+String.charAt StringBuilder.append StringBuilder.append StringBuilder.append StringBuilder.append StringBuilder.append StringBuilder.append StringBuilder.append StringBuilder.append StringBuilder.append StringBuilder.append String.length StringBuilder.toString StringBuilder.new
+Token.getType
+File.getAbsoluteFile FileText.new
+DetailAST.setType DetailAST.setText DetailAST.setColumnNo DetailAST.setLineNo DetailAST.setType DetailAST.setColumnNo DetailAST.setLineNo DetailAST.setText DetailAST.addChild DetailAST.new DetailAST.new
+DetailAST.getHiddenBefore DetailAST.addPreviousSibling CommonHiddenStreamToken.getHiddenBefore DetailAST.getFirstChild DetailAST.getNextSibling DetailAST.getParent DetailAST.getHiddenAfter DetailAST.addNextSibling CommonHiddenStreamToken.getHiddenAfter
+FileContents.getText.getFullText.toString GeneratedJavaLexer.setCommentListener GeneratedJavaLexer.setTokenObjectClass TokenStreamHiddenTokenFilter.hide TokenStreamHiddenTokenFilter.hide GeneratedJavaRecognizer.setFilename GeneratedJavaRecognizer.setASTNodeClass GeneratedJavaRecognizer.compilationUnit GeneratedJavaRecognizer.getAST StringReader.new GeneratedJavaLexer.new TokenStreamHiddenTokenFilter.new GeneratedJavaRecognizer.new CheckstyleException.new
+FileContents.new
+XpathQueryGenerator.generate List.stream.collect XpathQueryGenerator.new
+Pattern.matcher Matcher.matches File.getAbsoluteFile FileText.new IllegalStateException.new
+AuditEvent.getFileName.length AuditEvent.getMessage.length
+AuditEvent.getSourceName String.lastIndexOf String.endsWith String.substring String.endsWith String.substring String.substring
+DetailAST.getFirstChild DetailAST.findFirstToken String.accept DetailAST.getNextSibling
+DetailAST.getFirstChild DetailAST.getType DetailAST.getType DetailAST.getNextSibling
+PrintWriter.new CheckstyleException.new
+DetailNode.getChildren DetailNode.getType Pattern.matcher Matcher.find StringBuilder.append.toString StringBuilder.append DetailNode.getType StringBuilder.new
+DetailNode.getType StringBuilder.append DetailNode.getChildren
+DetailNode.getChildren DetailNode.getType StringBuilder.append.append.append StringBuilder.append CheckstyleException.new
+DetailAST.getType DetailAST.findFirstToken DetailAST.getFirstChild.getType DetailAST.findFirstToken DetailAST.findFirstToken DetailAST.findFirstToken DetailAST.findFirstToken
+DetailAST.getNextSibling DetailAST.getType DetailAST.findFirstToken
+ParameterException.getCommandLine.usage CommandLine.parseArgs ParseResult.isUsageHelpRequested CommandLine.usage CliOptions.new CommandLine.new
+SAXParserFactory.setFeature SAXParserFactory.setFeature
+SAXParserFactory.setValidating SAXParserFactory.newSAXParser.getXMLReader XMLReader.setContentHandler XMLReader.setEntityResolver XMLReader.setErrorHandler HashMap.new
+ConfigurationLoader.parseInputSource ConfigurationLoader.new CheckstyleException.new CheckstyleException.new
+Configuration.getAttributeNames result.isPresent
+InternalLoader.new
+ConfigurationLoader.parseInputSource ConfigurationLoader.new CheckstyleException.new CheckstyleException.new
+String.iterator propertyRefs.iterator Iterator.next String.next PropertyResolver.resolve StringBuilder.replace StringBuilder.append Iterator.hasNext StringBuilder.toString ArrayList.new ArrayList.new StringBuilder.new CheckstyleException.new
+String.indexOf String.add String.length String.add String.charAt String.indexOf String.substring String.add String.add String.charAt String.add String.add String.indexOf String.length String.add CheckstyleException.new
+InputSource.new
+URI.toString InputSource.new
+URI.toString InputSource.new
+String.put String.put String.put String.put String.put String.put String.put String.put HashMap.new
+AbstractCheck.stream.filter.forEach HashSet.new
+AbstractCheck.leaveToken
+AbstractCheck.visitToken
+String.get String.get
+TreeWalkerFilter.accept LocalizedMessage.remove TreeSet.new TreeWalkerAuditEvent.new
+AbstractCheck.isCommentNodesRequired String.computeIfAbsent.add String.computeIfAbsent.add HashSet.new CheckstyleException.new HashSet.new
+AbstractCheck.getTokenNames checkTokens.isEmpty AbstractCheck.getDefaultTokens AbstractCheck.getRequiredTokens AbstractCheck.getAcceptableTokens AbstractCheck.isCommentNodesRequired Set.add AbstractCheck.add CheckstyleException.new
+AbstractCheck.finishTree SortedSet.addAll
+Configuration.getName ModuleFactory.createModule AutomaticBean.contextualize AutomaticBean.configure AbstractCheck.init TreeWalkerFilter.add CheckstyleException.new
+AbstractCheck.getDefaultTokens AbstractCheck.getRequiredTokens CheckstyleException.new
+TreeWalkerFilter.stream.filter.forEach HashSet.new
+AbstractCheck.setFileContents AbstractCheck.clearMessages AbstractCheck.beginTree
+DetailAST.getFirstChild DetailAST.getNextSibling DetailAST.getParent
+DetailAST.getParent String.substring
+DetailAST.getNextSibling DetailAST.getParent DetailAST.getParent StringBuilder.append StringBuilder.append DetailAST.getNextSibling StringBuilder.insert StringBuilder.insert DetailAST.getParent StringBuilder.toString StringBuilder.new
+StringBuilder.append.append.append.append DetailAST.getNextSibling StringBuilder.toString StringBuilder.new
+Pattern.matcher.replaceAll Pattern.matcher.replaceAll Pattern.matcher.replaceAll
+StringBuilder.append.append.append DetailAST.getType StringBuilder.append StringBuilder.append DetailAST.getNextSibling StringBuilder.toString StringBuilder.new
+DetailAST.getLineNo DetailAST.getColumnNo
+String.descendingIterator String.next StringBuilder.append String.hasNext StringBuilder.append String.hasNext StringBuilder.toString StringBuilder.new
+ClassLoader.getResources packageFiles.hasMoreElements PackageNamesLoader.new CheckstyleException.new CheckstyleException.new
+URL.openStream PackageNamesLoader.parseInputSource BufferedInputStream.new InputSource.new CheckstyleException.new
+Map.put Map.put HashMap.new
+AuditEventDefaultFormatter.new
+OutputStreamWriter.new PrintWriter.new OutputStreamWriter.new PrintWriter.new
+PrintWriter.flush PrintWriter.close PrintWriter.flush PrintWriter.close
+IllegalArgumentException.new IllegalArgumentException.new OutputStreamWriter.new PrintWriter.new OutputStreamWriter.new PrintWriter.new
+AuditEvent.getSeverityLevel AuditEventFormatter.format PrintWriter.println
+AuditEventDefaultFormatter.new
+attributeMap.get attributeMap.put attributeMap.put
+String.size String.stream.sorted.collect LocalizedMessage.getMessage LocalizedMessage.new String.new CheckstyleException.new
+Set.contains IllegalArgumentException.new IllegalArgumentException.new LinkedHashSet.new
+String.get String.get
+String.put String.put String.put String.put String.put String.put String.put String.put String.put String.put String.put String.put
+String.stream.map.flatMap.collect
+String.get String.get
+String.put String.put String.put String.put String.put String.put String.put String.put String.put String.put String.put String.put String.put String.put String.put String.put
+String.put String.put String.put String.put String.put String.put String.put String.put String.put String.put String.put String.put String.put
+String.put String.put String.put String.put String.put
+String.put String.put String.put String.put String.put String.put String.put String.put String.put String.put String.put
+String.put String.put String.put String.put String.put String.put String.put String.put String.put
+String.put String.put String.put String.put String.put String.put
+String.put String.put String.put String.put String.put String.put String.put String.put
+String.put String.put
+String.put String.put String.put String.put String.put String.put String.put String.put String.put String.put String.put String.put String.put String.put String.put String.put
+String.put String.put String.put String.put String.put String.put String.put String.put
+String.put String.put String.put String.put String.put String.put
+IllegalArgumentException.new IllegalArgumentException.new
+String.entrySet.stream.filter.map.findFirst.orElse
+String.put String.put String.put String.put
+String.contains String.contains LocalizedMessage.getMessage LocalizedMessage.new String.new CheckstyleException.new
+String.put String.put String.put String.put String.put String.put String.put
+String.stream.collect
+clazz.getDeclaredConstructor Constructor.setAccessible Constructor.newInstance CheckstyleException.new
+String.put String.put
+List.get List.get List.get List.get List.get ConsoleHandler.setLevel ConsoleHandler.setFilter Logger.addHandler Logger.setLevel Log.isDebugEnabled Log.debug Log.debug ConsoleHandler.new OnlyCheckstyleLoggersFilter.new
+CliOptions.getExclusions File.addAll LinkedList.new
+File.forEach Pattern.addAll ArrayList.new
+File.getAbsolutePath LocalizedMessage.getMessage Properties.load Properties.new LocalizedMessage.new String.new CheckstyleException.new
+CommandLine.setUsageHelpWidth CommandLine.setCaseInsensitiveEnumValuesAllowed CheckstyleException.printStackTrace CommandLine.parseArgs ParseResult.isVersionHelpRequested ParseResult.isUsageHelpRequested CommandLine.usage CliOptions.new CommandLine.new LocalizedMessage.new String.new
+Configuration.getChildren
+File.canRead File.isDirectory File.listFiles result.addAll File.isFile result.add LinkedList.new
+CliOptions.validateCli String.isEmpty String.forEach
+XMLLogger.new DefaultLogger.new
+Pattern.matcher.find
+ModuleFactory.createModule PackageObjectFactory.new
+OutputFormat.createListener
+RootModule.destroy DefaultConfiguration.addAttribute RootModule.setModuleClassLoader RootModule.configure RootModule.addListener RootModule.process ThreadModeSettings.new PropertiesExpander.new DefaultConfiguration.new XpathFileGeneratorAuditListener.new
+ParseTree.getChild JavadocNodeImpl.setChildren
+JavadocParser.removeErrorListeners JavadocParser.addErrorListener JavadocParser.setErrorHandler JavadocLexer.new CommonTokenStream.new JavadocParser.new JavadocParserErrorStrategy.new
+DetailAST.getLineNo DescriptiveErrorListener.setOffset IllegalArgumentException.getCause IllegalArgumentException.getCause IllegalArgumentException.getCause RecognitionException.getCtx Token.getLine Token.getCharPositionInLine Token.getText DescriptiveErrorListener.getErrorMessage ParseStatus.setParseErrorMessage JavadocParser.javadoc ParseStatus.setTree DescriptiveErrorListener.new ParseStatus.new ParseErrorMessage.new
+CommonToken.setLine CommonToken.new
+String.equals RecognitionException.getCtx.getRuleIndex Recognizer.getRuleNames ParseErrorMessage.new IllegalArgumentException.new ParseErrorMessage.new
+ParseTree.getChildCount
+JavadocNodeImpl.getType JavadocNodeImpl.setChildren JavadocNodeImpl.getChildren ParseTree.getChild JavadocNodeImpl.getParent ParseTree.getParent
+ParseTree.getChildCount JavadocNodeImpl.new
+RecognitionException.getCtx.getSourceInterval Token.getType Deque.push Deque.isEmpty Deque.peek.getText.equals Deque.pop Deque.pop Deque.pop ArrayDeque.new
+DetailNode.getLineNumber DetailNode.getChildren
+ParseTree.getParent ParseTree.getParent ParseTree.getChild ParseTree.equals ParseTree.getChild
+ParseTree.getClass.getSimpleName String.substring
+Object.clone
+ParseTree.getChildCount JavadocNodeImpl.setText JavadocNodeImpl.setText JavadocNodeImpl.setColumnNumber JavadocNodeImpl.setLineNumber JavadocNodeImpl.setIndex JavadocNodeImpl.setType JavadocNodeImpl.setParent JavadocNodeImpl.setChildren JavadocNodeImpl.new JavadocNodeImpl.new
+ParseTree.getChildCount JavadocNodeImpl.getChildren JavadocNodeImpl.setChildren
+PrintWriter.new OutputStreamWriter.new
+PrintWriter.println PrintWriter.println PrintWriter.println PrintWriter.println PrintWriter.println
+DetailNode.getParent DetailNode.getParent StringBuilder.append StringBuilder.append StringBuilder.insert StringBuilder.insert DetailNode.getParent StringBuilder.toString StringBuilder.new
+DetailNode.getType StringBuilder.append StringBuilder.append StringBuilder.append.append.append.append.append.append.append.append.append.append.append StringBuilder.toString StringBuilder.new
+File.getAbsoluteFile FileText.new
+ParseErrorMessage.getLineNumber ParseErrorMessage.getMessageKey ParseErrorMessage.getMessageArguments ParseErrorMessage.getLineNumber LocalizedMessage.getMessage LocalizedMessage.new
+JavadocDetailNodeParser.parseJavadocAsDetailNode ParseStatus.getParseErrorMessage ParseStatus.getTree JavadocDetailNodeParser.new IllegalArgumentException.new
+Properties.size Properties.propertyNames e.nextElement String.put e.hasMoreElements IllegalArgumentException.new HashMap.new
+String.equals String.equals IllegalArgumentException.new IllegalArgumentException.new
+Path.list File.isFile List.add DirectoryScanner.setBasedir DirectoryScanner.scan List.addAll ArrayList.new File.new DirectoryScanner.new
+DirectoryScanner.getIncludedFiles RPAREN.new
+fileSets.get FileSet.getDirectoryScanner File.addAll fileSets.size ArrayList.new
+DefaultLogger.new LogOutputStream.new LogOutputStream.new DefaultLogger.new
+Path.get List.addAll Path.size ArrayList.new
+List.add List.addAll List.addAll ArrayList.new File.new
+BuildException.new
+Formatter.isEmpty Formatter.get Formatter.createListener AuditListener.new LogOutputStream.new LogOutputStream.new DefaultLogger.new BuildException.new
+ModuleFactory.createModule RootModule.setModuleClassLoader RootModule.configure PropertiesExpander.new PackageObjectFactory.new AntClassLoader.new BuildException.new
+RootModule.destroy RootModule.addListener RootModule.addListener SeverityLevelCounter.new
+RootModule.process SeverityLevelCounter.getCount BuildException.new BuildException.new
+Path.createPath Path.new
+String.equals
+XMLLogger.new LogOutputStream.new XMLLogger.new
+Properties.load String.entrySet Properties.setProperty Properties.setProperty Properties.new BuildException.new
+JTextArea.setEditable MainFrameModel.getParseTreeTableModel TreeTable.setEditor TreeTable.setLinePositionMap JSplitPane.setResizeWeight BorderLayout.new JTextArea.new JScrollPane.new TreeTable.new JScrollPane.new JSplitPane.new
+MainFrameModel.openFile ReloadAction.setEnabled JTextArea.setText TreeTable.setLinePositionMap
+JButton.setMnemonic JButton.setText ReloadAction.setEnabled JButton.setMnemonic JButton.setText JComboBox.setSelectedIndex JComboBox.addActionListener JLabel.setBorder JPanel.setLayout JPanel.add JPanel.add JPanel.add JPanel.add JPanel.setLayout JPanel.add JPanel.add JButton.new FileSelectionAction.new JButton.new JComboBox.new JLabel.new JPanel.new GridLayout.new JPanel.new JPanel.new BorderLayout.new
+EventListenerList.getListenerList TreeModelEvent.new
+ParseTreeTablePresentation.setParseTree ParseTreeTablePresentation.getRoot
+CodeSelectorPresentation.new ArrayList.new CodeSelectorPresentation.new ArrayList.new
+CodeSelectorPresentation.findSelectionPositions JTextArea.setSelectedTextColor JTextArea.requestFocusInWindow JTextArea.setCaretPosition JTextArea.moveCaretPosition
+DetailNode.getChildren List.get DetailNode.getColumnNumber DetailNode.getText.length DetailNode.getChildren DetailNode.getChildren
+List.get DetailNode.getColumnNumber
+DetailAST.getChildCount List.get DetailAST.getColumnNo DetailAST.getText.length
+List.get DetailAST.getColumnNo DetailAST.getChildCount
+File.getName ParseTreeTableModel.setParseTree ParseTreeTableModel.setParseMode Integer.add Integer.add StringBuilder.append.append StringBuilder.toString IllegalArgumentException.new ArrayList.new StringBuilder.new CheckstyleException.new
+File.getParent File.new
+EventListenerList.getListenerList ChangeEvent.new
+EventListenerList.getListenerList ChangeEvent.new
+FontMetrics.stringWidth FontMetrics.stringWidth
+TreeTableCellRenderer.updateUI
+MouseEvent.getID MouseEvent.getWhen MouseEvent.getModifiersEx MouseEvent.getX MouseEvent.getY MouseEvent.getClickCount MouseEvent.isPopupTrigger TreeTableCellRenderer.dispatchEvent MouseEvent.new
+TreeTableCellRenderer.getSelectionPath TreeTableCellRenderer.isExpanded TreeTableCellRenderer.collapsePath TreeTableCellRenderer.expandPath TreeTableCellRenderer.setSelectionPath
+TreeTableCellRenderer.getRowHeight TreeTableCellRenderer.setRowHeight
+TreeTableCellRenderer.setSelectionModel TreeTableCellRenderer.getRowHeight TreeTableCellRenderer.new TreeTableModelAdapter.new ListToTreeSelectionModelWrapper.new TreeTableCellEditor.new Dimension.new AbstractAction.new MouseAdapter.new
+DetailAST.get DetailAST.put JavadocDetailNodeParser.new
+DetailAST.getType DetailAST.getFirstChild DetailAST.getNextSibling
+DetailAST.getLineNo DetailAST.getColumnNo DetailAST.getText IllegalStateException.new
+DetailNode.getLineNumber DetailNode.getColumnNumber DetailNode.getText IllegalStateException.new
+ASTFactory.setASTNodeClass ASTFactory.create ASTFactory.new
+MainFrame.new File.new
+DefaultTreeCellRenderer.setTextSelectionColor DefaultTreeCellRenderer.setBackgroundSelectionColor
+Graphics.translate
+TreeTable.getRowHeight TreeTable.setRowHeight
+JTree.addTreeExpansionListener ParseTreeTableModel.addTreeModelListener UpdatingTreeExpansionListener.new UpdatingTreeModelListener.new
+TreeTable.getTree.getPathForRow
+Navigator.new
+DetailAST.getFirstChild DetailAST.getNextSibling ElementNode.new
+DetailAST.findFirstToken DetailAST.getText AbstractNode.new AttributeNode.new
+Navigator.new Navigator.new ArrayIterator.new ArrayIterator.new Navigator.new Navigator.new
+String.equals
+ArrayIterator.new Navigator.new Navigator.new
+GenericTreeInfo.new
+DetailAST.getNextSibling ElementNode.new
+StringBuilder.append.append DetailAST.findFirstToken StringBuilder.append.append.append StringBuilder.insert DetailAST.getParent StringBuilder.toString StringBuilder.new StringBuilder.new
+DetailAST.getLineNo DetailAST.getType
+DetailAST.add DetailAST.getFirstChild DetailAST.getNextSibling DetailAST.getParent DetailAST.getLineNo ArrayList.new
+DetailAST.getParent DetailAST.getPreviousSibling DetailAST.getType DetailAST.getType DetailAST.getPreviousSibling DetailAST.getNextSibling DetailAST.getType DetailAST.getType DetailAST.getNextSibling DetailAST.getParent.getChildCount
+String.lastIndexOf String.substring
+DetailAST.getType FullIdent.append DetailAST.getType FullIdent.append FullIdent.append
+FullIdent.new
+String.add
+LocalizedMessage.new
+String.clone
+Integer.get
+cppComments.get TextBlock.intersects
+List.containsKey List.get entries.add TextBlock.add List.put String.contains String.contains Integer.put Comment.new ArrayList.new
+List.values TextBlock.intersects
+String.new String.new
+FileText.new File.new
+String.substring String.length cppComments.put Comment.new
+DetailAST.setNextSibling
+DetailAST.clearBranchTokenTypes DetailAST.getNextSibling
+DetailAST.getNextSibling DetailAST.getLineNo
+BitSet.set DetailAST.getBranchTokenTypes BitSet.or DetailAST.getNextSibling BitSet.new
+DetailAST.getType DetailAST.getNextSibling
+DetailAST.setNextSibling DetailAST.setFirstChild DetailAST.setNextSibling
+AST.getNextSibling
+AST.getType AST.getNextSibling
+DetailAST.getNextSibling DetailAST.getColumnNo
+DetailAST.getNextSibling DetailAST.getNextSibling
 IllegalArgumentException.new
+SortedSet.get SortedSet.get.clear MessageDispatcher.fireErrors TreeSet.new
+IllegalArgumentException.new String.new
+StringBuilder.append.append StringBuilder.toString String.toArray StringBuilder.new
+Charset.newDecoder CharsetDecoder.onMalformedInput CharsetDecoder.onUnmappableCharacter String.add String.toArray IllegalStateException.new BufferedReader.new StringReader.new ArrayList.new
+LineColumn.new
+File.exists File.getPath StringBuilder.append StringBuilder.toString FileNotFoundException.new StringBuilder.new InputStreamReader.new char.new
+Pattern.matcher Matcher.end Matcher.find String.length int.new
+LocalizedMessage.getSeverityLevel
+BeanUtilsBean.copyProperty CheckstyleException.new CheckstyleException.new CheckstyleException.new
+Configuration.getName Configuration.getName CheckstyleException.new
+ConvertUtilsBean.register ConvertUtilsBean.register ConvertUtilsBean.register ConvertUtilsBean.register ConvertUtilsBean.register ConvertUtilsBean.register ConvertUtilsBean.register ConvertUtilsBean.register ConvertUtilsBean.register ConvertUtilsBean.register ConvertUtilsBean.register ConvertUtilsBean.register ConvertUtilsBean.register ConvertUtilsBean.register ConvertUtilsBean.register ConvertUtilsBean.register ConvertUtilsBean.register ConvertUtilsBean.register ConvertUtilsBean.register ConvertUtilsBean.register ConvertUtilsBean.register ConvertUtilsBean.register ConvertUtilsBean.register ConvertUtilsBean.register ConvertUtilsBean.register BooleanConverter.new BooleanConverter.new ArrayConverter.new BooleanConverter.new ByteConverter.new ByteConverter.new ArrayConverter.new ByteConverter.new CharacterConverter.new CharacterConverter.new ArrayConverter.new CharacterConverter.new DoubleConverter.new DoubleConverter.new ArrayConverter.new DoubleConverter.new FloatConverter.new FloatConverter.new ArrayConverter.new FloatConverter.new IntegerConverter.new IntegerConverter.new ArrayConverter.new IntegerConverter.new LongConverter.new LongConverter.new ArrayConverter.new LongConverter.new ShortConverter.new ShortConverter.new ArrayConverter.new ShortConverter.new RelaxedStringArrayConverter.new
+ConvertUtilsBean.new BeanUtilsBean.new PropertyUtilsBean.new
+Configuration.getAttributeNames Configuration.getAttribute Configuration.getChildren
+Context.getAttributeNames Context.get
+ConvertUtilsBean.register ConvertUtilsBean.register ConvertUtilsBean.register ConvertUtilsBean.register ConvertUtilsBean.register PatternConverter.new SeverityLevelConverter.new ScopeConverter.new UriConverter.new RelaxedAccessModifierArrayConverter.new
+MessageFormat.format ResourceBundle.getString MessageFormat.format MessageFormat.new MessageFormat.new
+MessageFormat.format MessageFormat.new
+XPathEvaluator.createExpression XPathEvaluator.new IllegalArgumentException.new
+TreeWalkerAuditEvent.getRootAst TreeWalkerAuditEvent.getRootAst XPathExpression.createDynamicContext XPathExpression.evaluate RootNode.new IllegalStateException.new
+Pattern.pattern Pattern.pattern Pattern.pattern XPathEvaluator.createExpression XPathEvaluator.new IllegalArgumentException.new
+TreeWalkerAuditEvent.getFileName Pattern.matcher.find TreeWalkerAuditEvent.getLocalizedMessage String.equals Pattern.matcher.find
+AbstractNode.getTokenType TreeWalkerAuditEvent.getTokenType AbstractNode.getLineNumber TreeWalkerAuditEvent.getLine AbstractNode.getColumnNumber TreeWalkerAuditEvent.getColumnCharIndex
+Tag.isMatch
+Pattern.matcher Matcher.find
+TreeWalkerAuditEvent.getLine Pattern.matcher Matcher.find TreeWalkerAuditEvent.getModuleId Pattern.matcher Matcher.find Pattern.matcher Matcher.find
+String.substring IllegalArgumentException.new
+Tag.clear FileContents.getBlockComments.values TextBlock.forEach
+TextBlock.getStartLineNo TextBlock.getText
 IllegalArgumentException.new
+AuditEvent.getFileName Pattern.matcher.find AuditEvent.getLocalizedMessage String.equals Pattern.matcher.find
+CsvFilter.accept CsvFilter.accept
+CsvFilter.new CsvFilter.new
+FileText.get Pattern.matcher Pattern.matcher Matcher.find Matcher.group Matcher.start Matcher.find Matcher.group Matcher.start Suppression.new Suppression.new
 IllegalArgumentException.new
-SearchRequestSlot.poll NodeClient.search ActionListener.new MultiSearchResponse.new MultiSearchResponse.new MultiSearchResponse.new MultiSearchResponse.new
-SearchProfileShardResults.getShardResults
-SearchRequest.source SearchRequest.scroll SearchSourceBuilder.aggregations SearchSourceBuilder.size SearchSourceBuilder.trackTotalHits SearchRequest.getBatchedReduceSize SearchRequest.getBatchedReduceSize QueryPhaseResultConsumer.new InitialSearchPhase.new
-IntArrayList.add IntArrayList.new IntArrayList.new
-IllegalArgumentException.new IllegalArgumentException.new IllegalArgumentException.new InternalAggregations.new TopDocs.new
-SearchPhaseResult.isEmpty SearchHits.getHits CompletionSuggestion.getOptions resultsLookup.apply SearchPhaseResult.fetchResult FetchSearchResult.counterGetAndIncrement FetchSearchResult.hits.getHits FetchSearchResult.hits.getHits FetchSearchResult.hits.getHits suggestionOptions.get SearchHit.score SearchHit.shard Option.setHit suggestionOptions.size suggestionOptions.size ReducedQueryPhase.buildResponse
-queryResults.isEmpty queryResults.stream.findFirst.get.queryResult QuerySearchResult.suggest QuerySearchResult.hasProfileResults QuerySearchResult.hasAggs QuerySearchResult.hasAggs queryResults.size queryResults.size SearchPhaseResult.queryResult QuerySearchResult.from QuerySearchResult.size QuerySearchResult.searchTimedOut QuerySearchResult.terminatedEarly QuerySearchResult.terminatedEarly QuerySearchResult.terminatedEarly QuerySearchResult.suggest List.computeIfAbsent Suggestion.add QuerySearchResult.suggest InternalAggregations.add QuerySearchResult.getSearchShardTarget.toString profileResults.put List.isEmpty Function.apply InternalAggregations.isEmpty profileResults.isEmpty QuerySearchResult.sortValueFormats ReducedQueryPhase.new ArrayList.new HashMap.new HashMap.new ArrayList.new Suggest.new SearchProfileShardResults.new ReducedQueryPhase.new
-Collection.isEmpty SearchPhaseResult.queryResult QuerySearchResult.hasConsumedTopDocs QuerySearchResult.consumeTopDocs TopDocsStats.add TopDocs.add QuerySearchResult.hasSuggestHits QuerySearchResult.suggest CompletionSuggestion.setShardIndex List.computeIfAbsent List.add Suggest.filter List.isEmpty TopDocs.isEmpty List.isEmpty List.size CompletionSuggestion.getOptions.size List.add List.values CompletionSuggestion.getDoc CompletionSuggestion.getOptions Suggest.filter ArrayList.new HashMap.new ArrayList.new ArrayList.new ScoreDoc.new Suggest.new SortedTopDocs.new
-Function.apply InternalAggregations.isEmpty
-CountDown.isCountedDown CountDown.countDown Runnable.run
-Consumer.accept
-SearchPhaseContext.onShardFailure
-SearchPhaseContext.getRequest.scroll QuerySearchResult.hasSearchContext QuerySearchResult.getSearchShardTarget SearchPhaseContext.getConnection SearchPhaseContext.sendReleaseSearchContext SearchPhaseContext.getLogger.trace
-ScrollIdForNode.getClusterAlias clusters.add clusters.isEmpty BiFunction.onResponse SearchTransportService.getRemoteClusterService RemoteClusterService.collectNodes HashSet.new
-results.getSuccessfulResults.forEach SearchResponse.onFailure
-SearchResponse.onResponse SearchResponse.new
-SearchRequest.indicesOptions SearchRequest.indicesOptions
-SearchRequestBuilder.request.indicesOptions SearchRequestBuilder.request.indicesOptions
-XContentParser.nextToken XContentParser.currentName XContentParser.nextToken IllegalArgumentException.new Scroll.new IllegalArgumentException.new
-SearchPhaseContext.getRequest SearchRequest.source SearchRequest.source.collapse SearchRequest.source.collapse.getInnerHits.isEmpty
+Object.getClass
+File.isDirectory File.new FileText.new IllegalStateException.new
+Suppression.ifPresent FileText.size ArrayList.new
+Pattern.matcher Matcher.find Pattern.matcher.find AuditEvent.getModuleId Pattern.matcher.find
+Suppression.stream.filter.reduce.filter.orElse
+SuppressionsLoader.parseInputSource SuppressionsLoader.new CheckstyleException.new CheckstyleException.new CheckstyleException.new CheckstyleException.new
+Attributes.getValue Attributes.getValue Attributes.getValue Attributes.getValue Attributes.getValue Attributes.getValue SAXException.new SuppressElement.new SAXException.new
+Map.put Map.put Map.put Map.put Map.put Map.put Map.put Map.put Map.put Map.put HashMap.new
+URI.toString InputSource.new
+URI.toString InputSource.new
+Attributes.getValue Attributes.getValue Attributes.getValue Attributes.getValue Attributes.getValue SAXException.new XpathFilter.new SAXException.new
+Tag.clear FileContents.getBlockComments.values List.forEach
+Pattern.matcher Matcher.find Pattern.matcher Matcher.find
+Pattern.matcher Matcher.find Pattern.matcher Matcher.find TreeWalkerAuditEvent.getModuleId Pattern.matcher Matcher.find
+TextBlock.getStartLineNo TextBlock.getText
+Object.getClass
 IllegalArgumentException.new
+Tag.getLine TreeWalkerAuditEvent.getLine Tag.getLine TreeWalkerAuditEvent.getLine Tag.getColumn TreeWalkerAuditEvent.getColumn Tag.isMatch
+IntFilter.accept
+StringTokenizer.nextToken.trim String.indexOf StringTokenizer.hasMoreTokens StringTokenizer.new IntMatchFilter.new IntRangeFilter.new
+DetailAST.getParent DetailAST.getParent DetailAST.getType DetailAST.getType DetailAST.getParent.getType DetailAST.getPreviousSibling.getChildCount
+DetailAST.getParent DetailAST.getParent.getType DetailAST.getParent.getParent.getType DetailAST.getParent.getParent.getParent.getType
+DetailAST.getParent DetailAST.getParent.getType
+DetailAST.getNextSibling DetailAST.getNextSibling DetailAST.getType DetailAST.getType
+DetailAST.getParent DetailAST.getParent.getType DetailAST.getParent.getParent.getType
+DetailAST.getParent DetailAST.getParent.getType DetailAST.getParent DetailAST.getParent.getType DetailAST.getParent.getParent.getParent.getType
+DetailAST.getPreviousSibling DetailAST.getPreviousSibling DetailAST.getType DetailAST.getType
+Path.relativize.toString
+Pattern.matcher Matcher.find String.replaceAll Matcher.groupCount
+String.isEmpty String.split
+Constructor.newInstance IllegalStateException.new
+String.isEmpty String.length
+targetClass.getConstructor IllegalStateException.new
+DetailAST.setType DetailAST.setText DetailAST.setLineNo DetailAST.setColumnNo DetailAST.setType DetailAST.setText DetailAST.setLineNo DetailAST.setColumnNo DetailAST.setType DetailAST.setText DetailAST.setFirstChild DetailAST.setNextSibling DetailAST.new DetailAST.new DetailAST.new
+String.charAt
 IllegalArgumentException.new
+String.isEmpty String.length
+String.lastIndexOf String.substring File.new
+File.getName String.endsWith String.new
+String.lastIndexOf String.substring
+URL.toURI File.exists File.toURI URL.toURI URL.new File.new CheckstyleException.new CheckstyleException.new
+String.toCharArray AbstractMap.new
+Closeable.close IllegalStateException.new
+String.lastIndexOf String.substring
+String.length
+DetailAST.initialize DetailAST.setColumnNo DetailAST.setLineNo DetailAST.setType DetailAST.setColumnNo DetailAST.setLineNo DetailAST.setText DetailAST.initialize DetailAST.setLineNo DetailAST.setColumnNo DetailAST.addChild DetailAST.addChild DetailAST.new DetailAST.new DetailAST.new
+DetailNode.getParent DetailNode.getIndex DetailNode.getChildren
+IllegalArgumentException.new IllegalArgumentException.new
+DetailNode.getType
+DetailNode.getType
+DetailNode.getParent DetailNode.getType
+DetailAST.getNextSibling DetailAST.getType DetailAST.getNextSibling DetailAST.getType DetailAST.getNextSibling
+DetailNode.getIndex DetailNode.getParent DetailNode.getChildren
+DetailNode.getType
+Pattern.matcher.replaceAll Pattern.matcher.replaceAll Pattern.matcher.replaceAll
+String.get IllegalArgumentException.new
+String.isEmpty String.charAt
+TagInfo.addAll TagInfo.addAll TagInfo.getPosition.getColumn TextBlock.getStartLineNo TagInfo.getPosition.getLine JavadocTag.add invalidTags.add ArrayList.new ArrayList.new ArrayList.new JavadocTag.new InvalidJavadocTag.new JavadocTags.new
+DetailNode.getChildren DetailNode.getChildren
+clazz.getDeclaredConstructors constructor.getParameterCount
+packages.stream.flatMap.map.filter.collect
+Integer.containsKey ResourceBundle.getString IllegalArgumentException.new
+DetailAST.getFirstChild Predicate.test DetailAST.getNextSibling
+Integer.get IllegalArgumentException.new
+int.new
+DetailAST.getFirstChild DetailAST.getType Consumer.accept DetailAST.getNextSibling
+String.entrySet Entry.getValue Entry.getKey String.new
+Field.getInt IllegalStateException.new
+IllegalArgumentException.new IllegalArgumentException.new
+DetailAST.getFirstChild DetailAST.getType DetailAST.test DetailAST.getNextSibling
+IllegalArgumentException.new IllegalArgumentException.new IllegalArgumentException.new
+List.isEmpty IllegalArgumentException.new IllegalArgumentException.new
+DetailAST.findFirstToken IllegalArgumentException.new
+DetailAST.getType DetailAST.getType DetailAST.findFirstToken DetailAST.findFirstToken IllegalArgumentException.new
+DetailAST.getParent DetailAST.getType DetailAST.getParent
+DetailAST.getType DetailAST.getParent DetailAST.getType DetailAST.getType DetailAST.getParent DetailAST.getType DetailAST.getType
+DetailAST.getParent DetailAST.getType DetailAST.getType DetailAST.getType DetailAST.getType DetailAST.getParent
+DetailAST.getParent DetailAST.getType DetailAST.getParent
+DetailAST.getParent DetailAST.getType DetailAST.findFirstToken Scope.isIn DetailAST.getParent
+DetailAST.getFirstChild AST.getNextSibling
+DetailAST.getParent DetailAST.getType DetailAST.getParent
+Pattern.matcher.replaceAll String.startsWith String.startsWith String.substring String.startsWith String.startsWith String.substring String.substring
+DetailAST.findFirstToken DetailAST.findFirstToken
+String.add String.lastIndexOf String.length String.substring String.add HashSet.new
+DetailAST.getType DetailAST.getChildCount
+DetailAST.getType DetailAST.findFirstToken DetailAST.findFirstToken DetailAST.findFirstToken DetailAST.findFirstToken DetailAST.getText DetailAST.findFirstToken DetailAST.getChildCount
+DetailAST.getType DetailAST.getFirstChild AST.getType AST.getNextSibling IllegalArgumentException.new
+DetailAST.getType DetailAST.findFirstToken DetailAST.findFirstToken
+DetailAST.getFirstChild DetailAST.getLineNo DetailAST.getLineNo DetailAST.getLineNo DetailAST.getLineNo DetailAST.getColumnNo DetailAST.getColumnNo DetailAST.getNextSibling
+DetailAST.findFirstToken DetailAST.findFirstToken typeParameterNames.add DetailAST.getNextSibling DetailAST.getType typeParameterNames.add DetailAST.getNextSibling ArrayList.new
+DetailAST.getParent DetailAST.getType
+DetailAST.getType DetailAST.getChildCount DetailAST.findFirstToken DetailAST.getNextSibling.getText Pattern.matcher.matches DetailAST.findFirstToken DetailAST.findFirstToken DetailAST.getChildCount DetailAST.findFirstToken DetailAST.getChildCount DetailAST.getFirstChild DetailAST.getFirstChild.getType
+String.substring String.isEmpty String.charAt
+DetailAST.findFirstToken DetailAST.findFirstToken DetailAST.add DetailAST.getNextSibling DetailAST.getType DetailAST.add DetailAST.getNextSibling ArrayList.new
+DetailAST.getType DetailAST.getChildCount DetailAST.findFirstToken DetailAST.getNextSibling.getText Pattern.matcher.matches DetailAST.findFirstToken DetailAST.findFirstToken DetailAST.getChildCount DetailAST.findFirstToken DetailAST.getChildCount DetailAST.getFirstChild DetailAST.getType
+Pattern.matcher Matcher.find
+Pattern.matcher.replaceAll Pattern.matcher.find
+Pattern.matcher.find
+DetailAST.getLineNo singlelineComments.containsKey TextBlock.get List.get
+RandomAccessFile.new
+LineSeparatorOption.length RandomAccessFile.length RandomAccessFile.seek RandomAccessFile.read LineSeparatorOption.matches byte.new IOException.new
+int.new int.new
+AST.getType AST.getFirstChild AST.getNextSibling
+TextBlock.getStartLineNo TextBlock.getEndLineNo TextBlock.getText String.substring String.endsWith String.substring String.trim Pattern.matcher.find
+DetailAST.getFirstChild DetailAST.getType valueList.add DetailAST.getNextSibling LinkedList.new
+DetailAST.getParent DetailAST.getType
+Entry.getFirstLine Entry.getFirstLine Entry.getFirstColumn
+DetailAST.findFirstToken DetailAST.getNextSibling DetailAST.getType IllegalArgumentException.new
+String.startsWith String.substring
+DetailAST.getFirstChild DetailAST.getType DetailAST.getText String.substring DetailAST.getText DetailAST.getLastChild.getText
+Entry.getLastLine Entry.getLastLine Entry.getLastColumn
+DetailAST.getType IllegalArgumentException.new
+String.length String.endsWith String.length String.lastIndexOf String.substring.toLowerCase
+DetailAST.getFirstChild DetailAST.getNextSibling
+ThreadLocal.get AuditEvent.getSourceName AuditEvent.getLine AuditEvent.getColumn String.equals Entry.getCheckName.equalsIgnoreCase AuditEvent.getModuleId AuditEvent.getModuleId.equals
+DetailAST.getType DetailAST.getText IllegalArgumentException.new
+String.get
+String.indexOf String.isEmpty IllegalArgumentException.new
+DetailAST.getParent DetailAST.getType IllegalArgumentException.new
+MessageDispatcher.fireFileStarted MessageDispatcher.fireFileFinished
+ResourceBundle.getBaseName.equals ResourceBundle.getExtension.equals ResourceBundle.getPath.equals
+fileKeys.entrySet Entry.getKey.getPath MessageDispatcher.fireFileStarted Entry.getValue String.stream.filter.collect MessageDispatcher.fireFileFinished
+Exception.getMessage messages.add Log.debug String.new LocalizedMessage.new TreeSet.new
+HashSet.new
+String.isPresent
+LocalizedMessage.new Object.new IllegalArgumentException.new
+ResourceBundle.getFiles String.addAll File.put HashSet.new HashMap.new
+String.equals
+String.isPresent
+File.getName Pattern.matcher Matcher.matches bundle.isPresent bundle.get.addFile ResourceBundle.addFile resourceBundles.add HashSet.new ResourceBundle.new
+Pattern.matcher Pattern.matcher Pattern.matcher Matcher.matches Pattern.pattern Matcher.matches Pattern.pattern Matcher.matches Pattern.pattern String.substring String.replaceAll
+Properties.load Properties.stringPropertyNames HashSet.new Properties.new
+ResourceBundle.getExtension ResourceBundle.getBaseName ResourceBundle.containsFile
+String.substring Pattern.matcher.replaceAll
+DetailAST.findFirstToken DetailAST.getChildCount DetailAST.getFirstChild.findFirstToken Optional.isPresent DetailAST.isPresent
+DetailAST.findFirstToken.getFirstChild DetailAST.getType
+DetailAST.findFirstToken FullIdent.getText DetailAST.getText
+DetailAST.findFirstToken DetailAST.findFirstToken DetailAST.findFirstToken
+DetailAST.findFirstToken.getFirstChild Integer.contains
+DetailAST.findFirstToken DetailAST.findFirstToken DetailAST.findFirstToken DetailAST.findFirstToken DetailAST.getFirstChild DetailAST.getType DetailAST.getNextSibling
+DetailAST.findFirstToken.findFirstToken DetailAST.findFirstToken
+AtomicInteger.computeIfAbsent.incrementAndGet AtomicInteger.new
+Pattern.matcher.replaceAll
+Pattern.matcher FileText.get Matcher.reset Matcher.matches FileText.size FileText.size
+DetailAST.getColumnNo DetailAST.getChildCount DetailAST.getNextSibling
+DetailAST.getParent DetailAST.getParent DetailAST.getType
+DetailAST.getType DetailAST.getNextSibling DetailAST.getNextSibling.getType DetailAST.getParent DetailAST.findFirstToken DetailAST.getColumnNo DetailAST.getColumnNo DetailAST.getText.length
+DetailAST.getLineNo String.length
+DetailAST.getFirstChild DetailAST.getType DetailAST.findFirstToken DetailAST.findFirstToken DetailAST.getLastChild DetailAST.findFirstToken
+DetailAST.findFirstToken DetailAST.getFirstChild DetailAST.findFirstToken
+DetailAST.getLineNo DetailAST.getLineNo DetailAST.getLineNo DetailAST.getLineNo DetailAST.getColumnNo DetailAST.getColumnNo DetailAST.getColumnNo DetailAST.getColumnNo
+DetailAST.getFirstChild DetailAST.getType DetailAST.findFirstToken DetailAST.getType DetailAST.findFirstToken DetailAST.getFirstChild IllegalStateException.new
+DetailAST.findFirstToken DetailAST.findFirstToken DetailAST.findFirstToken DetailAST.findFirstToken DetailAST.getFirstChild.getNextSibling
+DetailAST.getType DetailAST.findFirstToken
+DetailAST.getType
+DetailAST.getPreviousSibling DetailAST.getType
+DetailAST.getLastChild.getLastChild DetailAST.getLineNo DetailAST.getLineNo FileContents.lineIsBlank Integer.add ArrayList.new
+DetailAST.getLineNo DetailAST.getFirstChild.getChildCount
+DetailAST.getLineNo
+DetailAST.getType DetailAST.getType
+DetailAST.getType
+DetailAST.getLineNo
+DetailAST.getType DetailAST.getType
+emptyLines.size emptyLines.get Integer.add ArrayList.new
+DetailAST.getLastChild.getLastChild DetailAST.getLastChild DetailAST.getNextSibling DetailAST.getNextSibling DetailAST.getLineNo DetailAST.getLineNo
+FileContents.lineIsBlank
+DetailAST.getLineNo DetailAST.getColumnNo String.length String.charAt
+DetailAST.getColumnNo DetailAST.getLineNo String.charAt
+DetailAST.getPreviousSibling DetailAST.getType DetailAST.getType DetailAST.getChildCount
+DetailAST.getType DetailAST.getNextSibling.getType DetailAST.getParent.getParent.getType DetailAST.getParent.getParent.getNextSibling.getType
+DetailAST.getType DetailAST.getParent DetailAST.getParent.getParent DetailAST.getFirstChild.getType DetailAST.getType DetailAST.getFirstChild.getType
+DetailAST.getType DetailAST.getNextSibling DetailAST.getPreviousSibling DetailAST.getType DetailAST.getType
+DetailAST.getParent.getType
+DetailAST.getType DetailAST.getFirstChild.getType DetailAST.getType
+DetailAST.getParent.getType DetailAST.getPreviousSibling DetailAST.getPreviousSibling.getType
+DetailAST.getFirstChild DetailAST.getType DetailAST.getType DetailAST.getNextSibling
+DetailAST.getParent DetailAST.findFirstToken DetailAST.findFirstToken DetailAST.getChildCount
+int.new
+DetailAST.getParent.getType DetailAST.getParent.findFirstToken DetailAST.getLineNo DetailAST.getLineNo DetailAST.getColumnNo DetailAST.getColumnNo
+DetailAST.getParent DetailAST.findFirstToken DetailAST.findFirstToken DetailAST.getChildCount
+DetailAST.findFirstToken
+DetailAST.findFirstToken
+DetailAST.findFirstToken DetailAST.findFirstToken
+String.charAt
+DetailAST.getColumnNo DetailAST.getColumnNo String.length
+String.indexOf String.charAt
+DetailAST.getParent.getParent.getType DetailAST.getParent.getParent.getParent.getType
+DetailAST.getColumnNo DetailAST.getColumnNo DetailAST.getParent DetailAST.getParent DetailAST.getType DetailAST.getType String.length
+DetailAST.getColumnNo DetailAST.getText.length String.length String.charAt
+DetailAST.getLineNo DetailAST.getLineNo DetailAST.getLineNo DetailAST.getLineNo FileContents.lineIsBlank FileContents.lineIsComment
+Deque.isEmpty Deque.peek.getScopeDefinition DetailAST.getParent.getParent
+Scope.put Scope.put
+Scope.get
+Deque.peek DetailAST.findFirstToken MethodCounter.increment
+Context.getAST Context.getAST DetailAST.getParent DetailAST.getType DetailAST.getParent DetailAST.getType Context.addCount
+Context.getCount Context.pop
+BitSet.nextSetBit BitSet.set BitSet.nextSetBit
+IndentLevel.new
+IndentLevel.new
+Constructor.keySet typeSet.size int.new
+DetailAST.getFirstChild DetailAST.getFirstChild DetailAST.getType createdHandlers.put MethodCallHandler.new
+Constructor.put
+createdHandlers.get DetailAST.getType Constructor.get
+IndentLevel.new
+DetailAST.getType DetailAST.getLineNo
+DetailAST.getType DetailAST.getType DetailAST.getType DetailAST.getType DetailAST.getType
+DetailAST.getPreviousSibling DetailAST.getPreviousSibling DetailAST.getType DetailAST.getPreviousSibling DetailAST.getFirstChild DetailAST.getFirstChild
+DetailAST.getType DetailAST.getFirstChild DetailAST.getNextSibling
+DetailAST.getColumnNo DetailAST.getColumnNo DetailAST.getColumnNo DetailAST.getColumnNo
+DetailAST.getType DetailAST.getType DetailAST.getType DetailAST.getType DetailAST.getType DetailAST.getType
+DetailAST.getType
+DetailAST.getColumnNo
+DetailAST.getFirstChild DetailAST.getFirstChild DetailAST.getFirstChild.getLineNo DetailAST.getLineNo DetailAST.getFirstChild DetailAST.getFirstChild.getNextSibling
+DetailAST.getColumnNo DetailAST.getColumnNo
+DetailAST.getParent DetailAST.getParent DetailAST.isEmpty DetailAST.pop DetailAST.clear DetailAST.getNextSibling DetailAST.push DetailAST.getFirstChild DetailAST.isEmpty ArrayDeque.new
+DetailAST.getColumnNo DetailAST.getColumnNo
+DetailAST.getFirstChild.findFirstToken
+DetailAST.getParent.getNextSibling DetailAST.getLineNo DetailAST.getParent.getParent DetailAST.getNextSibling DetailAST.getLineNo DetailAST.getType DetailAST.getLineNo
+DetailAST.getType DetailAST.getType DetailAST.getType DetailAST.getType DetailAST.getType
+DetailAST.getParent DetailAST.getParent DetailAST.getParent.getPreviousSibling DetailAST.getParent.getPreviousSibling.getType DetailAST.getParent.getPreviousSibling
+DetailAST.getType DetailAST.getType DetailAST.getType DetailAST.getType
+DetailAST.getPreviousSibling DetailAST.getPreviousSibling DetailAST.getType DetailAST.getPreviousSibling DetailAST.getFirstChild DetailAST.getFirstChild DetailAST.getType DetailAST.getParent DetailAST.getNextSibling DetailAST.getLineNo DetailAST.getLineNo
+DetailAST.getColumnNo DetailAST.getNextSibling DetailAST.getLineNo DetailAST.getLineNo
+DetailAST.getType DetailAST.getFirstChild DetailAST.getNextSibling DetailAST.getLineNo DetailAST.getLineNo
+DetailAST.getType DetailAST.getType DetailAST.getType DetailAST.getFirstChild DetailAST.getNextSibling DetailAST.getNextSibling
+DetailAST.getNextSibling DetailAST.getNextSibling DetailAST.getColumnNo DetailAST.getColumnNo
+DetailAST.getType DetailAST.getType DetailAST.getType
+DetailAST.getLineNo DetailAST.getLineNo
+DetailAST.getPreviousSibling
+DetailAST.getParent DetailAST.getType
+DetailAST.getType
+DetailAST.getType
+DetailAST.getType DetailAST.getType DetailAST.getType DetailAST.getType
+DetailAST.getLineNo DetailAST.getLineNo DetailAST.getType DetailAST.getFirstChild.getFirstChild DetailAST.getFirstChild.getType DetailAST.getFirstChild DetailAST.getType DetailAST.getFirstChild
+DetailAST.getPreviousSibling DetailAST.getLastChild DetailAST.getLastChild.getLastChild DetailAST.getType DetailAST.getPreviousSibling DetailAST.getType DetailAST.getFirstChild.getFirstChild DetailAST.getType DetailAST.getParent.getParent DetailAST.getNextSibling
+DetailAST.getType DetailAST.getLastChild.getLineNo DetailAST.getLineNo DetailAST.getNextSibling DetailAST.getLineNo DetailAST.getLineNo
+DetailAST.getType DetailAST.getType DetailAST.getType DetailAST.getColumnNo DetailAST.getColumnNo DetailAST.getLineNo
+IndentLevel.new
+DetailAST.getType DetailAST.getType DetailAST.getType
+IndentLevel.new IndentLevel.new IndentLevel.new
+IndentLevel.new
+DetailAST.findFirstToken DetailAST.getFirstChild DetailAST.getType DetailAST.getNextSibling DetailAST.getNextSibling DetailAST.getNextSibling IndentLevel.new
+IndentLevel.new
+IndentLevel.isAcceptable IndentLevel.getFirstIndentLevel
+DetailAST.getFirstChild DetailAST.getFirstChild DetailAST.getType
+DetailAST.getType DetailAST.getFirstChild DetailAST.getType DetailAST.getLastChild
+DetailAST.getFirstChild DetailAST.getFirstChild DetailAST.getFirstChild DetailAST.getFirstChild DetailAST.getType DetailAST.getType
+DetailAST.findFirstToken.getLineNo DetailAST.findFirstToken DetailAST.findFirstToken.getFirstChild DetailAST.getType DetailAST.getLineNo DetailAST.getLineNo DetailAST.getNextSibling
+DetailAST.getType DetailAST.getType
+DetailAST.getType DetailAST.getLineNo
+IndentLevel.new
+String.length
+IndentLevel.new
+DetailAST.getParent DetailAST.getColumnNo IndentLevel.new IndentLevel.new
+incorrectIndentationLines.contains incorrectIndentationLines.add
+IndentationCheck.getHandlerFactory.isHandledType DetailAST.getLineNo LineSet.getStartColumn LineSet.addLineAndCol DetailAST.getFirstChild DetailAST.getNextSibling
+LineSet.isEmpty LineSet.firstLine LineSet.lastLine LineSet.firstLineCol DetailAST.getLineNo LineSet.getStartColumn IndentLevel.new
+DetailAST.getLineNo DetailAST.getFirstChild DetailAST.getNextSibling
+DetailAST.getFirstChild DetailAST.getColumnNo DetailAST.getColumnNo DetailAST.getNextSibling
+IndentLevel.isMultiLevel IndentationCheck.indentationLog
+LineSet.addLineAndCol LineSet.new
+IndentationCheck.getLine IndentLevel.isAcceptable IndentLevel.isGreaterThan
+IndentationCheck.getLine
+String.isEmpty IndentLevel.isMultiLevel IndentationCheck.indentationLog
+DetailAST.findFirstToken DetailAST.getFirstChild DetailAST.getNextSibling
+DetailAST.getFirstChild DetailAST.getNextSibling
+IndentationCheck.getLineWrappingHandler.checkIndentation
+DetailAST.getLastChild DetailAST.getType DetailAST.getNextSibling
+IndentationCheck.getLine
+DetailAST.getFirstChild DetailAST.getNextSibling DetailAST.getParent
+DetailAST.higherKey DetailAST.lastKey
+DetailAST.getType DetailAST.getParent DetailAST.getNextSibling DetailAST.getNextSibling DetailAST.equals
+Integer.put DetailAST.getFirstChild DetailAST.getType DetailAST.getType DetailAST.getLastChild Integer.get Integer.put TreeMap.new
+Integer.get DetailAST.getType DetailAST.getParent DetailAST.getType DetailAST.getFirstChild Integer.subMap DetailAST.getNextSibling Integer.remove Integer.values DetailAST.getType
+IndentationCheck.isForceStrictCondition IndentationCheck.indentationLog IndentationCheck.indentationLog
+DetailAST.values DetailAST.getParent.getLastChild DetailAST.getLineNo DetailAST.iterator DetailAST.next DetailAST.getParent DetailAST.getLineNo DetailAST.getType DetailAST.getParent.getType DetailAST.getParent.getType DetailAST.getLineNo DetailAST.getLineNo DetailAST.remove DetailAST.size
+DetailAST.findFirstToken DetailAST.getText classNames.add
+FullIdent.add
+String.contains String.length
+DetailAST.getLastChild.getPreviousSibling FullIdent.getText
+FullIdent.getText String.endsWith String.substring String.contains
+DetailAST.getFirstChild DetailAST.getNextSibling AST.getType FullIdent.getText
+String.length String.length String.charAt String.endsWith String.startsWith
+DetailAST.getParent.getType Set.add
+String.length String.length String.length String.endsWith String.startsWith classNames.contains
+Set.clear Set.addAll
+Pattern.pattern.isEmpty
+DetailAST.getType BitSet.get DetailAST.getParent DetailAST.getParent
+BitSet.clear BitSet.set
+DetailAST.getFirstChild DetailAST.getType DetailAST.addAll DetailAST.getNextSibling DetailAST.add DetailAST.add DetailAST.getNextSibling DetailAST.add DetailAST.getNextSibling LinkedList.new
+Set.clear Set.addAll
+DetailAST.getType DetailAST.findFirstToken DetailAST.getText DetailAST.findFirstToken DetailAST.findFirstToken DetailAST.findFirstToken DetailAST.getChildCount
+DetailAST.getType DetailAST.getParent
+DetailAST.getNextSibling AST.getType AST.getNextSibling
+DetailAST.getType DetailAST.getParent DetailAST.getType DetailAST.getType
+DetailAST.getType DetailAST.getText
+DetailAST.getType
+DetailAST.findFirstToken DetailAST.findFirstToken DetailAST.findFirstToken
+DetailAST.findFirstToken DetailAST.findFirstToken DetailAST.getFirstChild.getFirstChild DetailAST.findFirstToken DetailAST.getFirstChild.getType DetailAST.getType
+AST.getType AST.getFirstChild AST.getType AST.getFirstChild
+AST.getFirstChild
+DetailAST.getParent DetailAST.getType DetailAST.getParent
+DetailAST.getText.equals
+DetailAST.getParent DetailAST.getType DetailAST.findFirstToken DetailAST.findFirstToken DetailAST.findFirstToken DetailAST.getParent
+DetailAST.getParent DetailAST.getParent DetailAST.getParent DetailAST.getParent
+DetailAST.getParent DetailAST.getType DetailAST.getType DetailAST.getType DetailAST.getType
+currentScopeAssignedVariables.peek.iterator Iterator.next Iterator.remove Iterator.hasNext
+ScopeData.descendingIterator ScopeData.next ScopeData.findFinalVariableCandidateForAst ScopeData.hasNext result.isPresent
+DetailAST.getFirstChild DetailAST.getType DetailAST.findFirstToken DetailAST.getNextSibling
+ScopeData.peek DetailAST.findFirstToken FinalVariableCandidate.put FinalVariableCandidate.new
+ScopeData.peek DetailAST.findFirstToken DetailAST.getParent.getType String.put FinalVariableCandidate.new
+ScopeData.descendingIterator iterator.next FinalVariableCandidate.get FinalVariableCandidate.remove iterator.hasNext
+DetailAST.getType
+currentScopeAssignedVariables.pop currentScopeAssignedVariables.peek currentScopeAssignedVariableData.addAll
+DetailAST.getParent DetailAST.getParent
+DetailAST.getText.equals
+Optional.isPresent Optional.get
+ScopeData.peek DetailAST.push ArrayDeque.new
+DetailAST.forEach
+DetailAST.getFirstChild DetailAST.getFirstChild Integer.contains DetailAST.getNextSibling
+DetailAST.findFirstToken
+DetailAST.getFirstChild DetailAST.getType DetailAST.getType DetailAST.getNextSibling
+DetailAST.findFirstToken.getText Set.contains
+String.substring String.contains String.contains String.contains Pattern.matcher.find
+String.split List.add ArrayList.new
+DetailAST.findFirstToken
+DetailAST.getType
+DetailAST.getType StringBuilder.length StringBuilder.append StringBuilder.append StringBuilder.toString StringBuilder.new
+DetailAST.findFirstToken DetailAST.findFirstToken
+String.contains String.substring String.add
+DetailAST.getFirstChild DetailAST.getNextSibling DetailAST.getParent.equals DetailAST.getParent
+DetailAST.findFirstToken DetailAST.findFirstToken
+DetailAST.getParent.getParent DetailAST.getType
+DetailAST.findFirstToken
+DetailAST.findFirstToken DetailAST.getFirstChild.findFirstToken
+String.lastIndexOf String.substring
+DetailAST.getPreviousSibling DetailAST.getType
+String.length String.substring
+DetailAST.getFirstChild DetailAST.getType DetailAST.getNextSibling.getChildCount DetailAST.getNextSibling.getFirstChild.findFirstToken.getChildCount
+DetailAST.findFirstToken DetailAST.getType DetailAST.add DetailAST.getNextSibling LinkedList.new
+DetailAST.findFirstToken DetailAST.findFirstToken DetailAST.getType DetailAST.findFirstToken String.add DetailAST.getNextSibling HashSet.new
+Set.stream.filter.collect
+DetailAST.findFirstToken DetailAST.findFirstToken HashSet.new
+DetailAST.findFirstToken
+String.isEmpty DetailAST.getFirstChild DetailAST.getType
+DetailAST.getNextSibling DetailAST.getType DetailAST.getNextSibling
+DetailAST.getFirstChild DetailAST.findFirstToken DetailAST.findFirstToken DetailAST.findFirstToken DetailAST.findFirstToken
+DetailAST.findFirstToken FullIdent.getText
+DetailAST.getFirstChild DetailAST.findFirstToken DetailAST.findFirstToken DetailAST.findFirstToken AST.getFirstChild.getType DetailAST.findFirstToken DetailAST.findFirstToken DetailAST.getFirstChild DetailAST.findFirstToken DetailAST.findFirstToken
+FieldFrame.getChildren FieldFrame.getChildren.isEmpty FieldFrame.getMethodCalls.forEach
+DetailAST.getType FieldFrame.setClassOrEnumOrEnumConstDef FieldFrame.setFrameName FieldFrame.addChild FieldFrame.new
+DetailAST.getText String.equals FieldFrame.findField String.equals
+DetailAST.getLineNo DetailAST.getLineNo DetailAST.getLineNo DetailAST.getLineNo DetailAST.getColumnNo DetailAST.getColumnNo
+FieldFrame.getParent FieldFrame.isClassOrEnumOrEnumConstDef
+DetailAST.getFirstChild DetailAST.getType DetailAST.getLastChild.getText String.equals FieldFrame.addMethodCall
+DetailAST.getPreviousSibling DetailAST.getType DetailAST.getText
+DetailAST.getFirstChild DetailAST.getType DetailAST.getFirstChild DetailAST.getType DetailAST.getType DetailAST.getNextSibling DetailAST.branchContains DetailAST.branchContains
+DetailAST.findFirstToken FieldFrame.getParent
+DetailAST.findFirstToken FieldFrame.addChild FieldFrame.new
+String.equals FieldFrame.getParent
+String.equals FieldFrame.addChild FieldFrame.new
+DetailAST.getFirstChild.getFirstChild DetailAST.getType DetailAST.getLastChild DetailAST.findFirstToken.getFirstChild DetailAST.getFirstChild.getLastChild.getText String.equals
+DetailAST.findFirstToken fields.add
+DetailAST.findFirstToken.findFirstToken DetailAST.getText
+DetailAST.getText String.equals
+DetailAST.getText FieldFrame.findField FieldFrame.isClassOrEnumOrEnumConstDef String.equals FieldFrame.getParent
+DetailAST.getType DetailAST.getFirstChild.getType DetailAST.getFirstChild.getNextSibling
+DetailAST.findFirstToken DetailAST.findFirstToken DetailAST.findFirstToken FullIdent.getText
+DetailAST.getType DetailAST.getFirstChild.getText DetailAST.getText DetailAST.getText
+String.isEmpty DetailAST.getFirstChild DetailAST.getType String.contains
+DetailAST.findFirstToken DetailAST.getType DetailAST.findFirstToken String.add DetailAST.getNextSibling
+Deque.push HashSet.new
+DetailAST.findFirstToken
+DetailAST.findFirstToken classFieldNames.contains
+ScopeState.peek
+DetailAST.isEmpty DetailAST.pop DetailAST.getType DetailAST.equals Set.add DetailAST.getNextSibling DetailAST.push DetailAST.getFirstChild DetailAST.isEmpty HashSet.new ArrayDeque.new
+ScopeState.peek
+DetailAST.getLastChild DetailAST.getPreviousSibling variableUsageExpressions.add DetailAST.getFirstChild DetailAST.getType DetailAST.getLastChild variableUsageExpressions.add DetailAST.getType variableUsageExpressions.add variableUsageExpressions.size variableUsageExpressions.get ArrayList.new
+DetailAST.getType DetailAST.getFirstChild DetailAST.findFirstToken.getNextSibling DetailAST.getType DetailAST.getFirstChild
+DetailAST.findFirstToken DetailAST.getNextSibling DetailAST.getNextSibling DetailAST.getType DetailAST.getType DetailAST.getLastChild DetailAST.getType DetailAST.getFirstChild DetailAST.getType
+DetailAST.getType DetailAST.getFirstChild.getNextSibling DetailAST.getType DetailAST.findFirstToken
+DetailAST.getFirstChild DetailAST.getType DetailAST.getNextSibling DetailAST.getType SimpleEntry.new
+DetailAST.getType DetailAST.getFirstChild DetailAST.getType String.isEmpty String.equals String.isEmpty DetailAST.findFirstToken.getText String.equals DetailAST.getPreviousSibling
+DetailAST.findAllPartial ASTEnumeration.nextNode DetailAST.getParent DetailAST.equals DetailAST.getLineNo DetailAST.getLineNo DetailAST.getParent ASTEnumeration.hasMoreNodes
+Integer.getKey Integer.getValue DetailAST.size DetailAST.get DetailAST.getType DetailAST.getFirstChild DetailAST.isEmpty DetailAST.get SimpleEntry.new
+DetailAST.findFirstToken DetailAST.getLastChild DetailAST.add DetailAST.getNextSibling DetailAST.getType DetailAST.size DetailAST.get ArrayList.new
+String.lastIndexOf String.substring
+DetailAST.getFirstChild variableUsageExpressions.add DetailAST.getNextSibling DetailAST.getLastChild variableUsageExpressions.add DetailAST.getNextSibling DetailAST.getType DetailAST.getLastChild variableUsageExpressions.add variableUsageExpressions.size variableUsageExpressions.get.getFirstChild ArrayList.new
+DetailAST.getFirstChild DetailAST.add DetailAST.isEmpty DetailAST.getType DetailAST.getNextSibling DetailAST.getType ArrayList.new SimpleEntry.new
+DetailAST.getFirstChild DetailAST.getLineNo DetailAST.getLineNo DetailAST.getLineNo DetailAST.getLineNo DetailAST.getColumnNo DetailAST.getColumnNo DetailAST.getNextSibling
+DetailAST.findFirstToken DetailAST.getNextSibling
+DetailAST.findFirstToken AbstractFrame.getType DetailAST.findFirstToken DetailAST.findFirstToken AbstractFrame.addIdent
+DetailAST.getParent DetailAST.getParent DetailAST.getType DetailAST.getType DetailAST.getType
+DetailAST.getLastChild DetailAST.getType
+DetailAST.getType frames.put frames.put
+DetailAST.getParent.findFirstToken DetailAST.findFirstToken DetailAST.equals
+DetailAST.isEmpty DetailAST.pop DetailAST.getType Set.add DetailAST.getNextSibling DetailAST.push DetailAST.getFirstChild DetailAST.isEmpty HashSet.new ArrayDeque.new
+DetailAST.getParent.getType DetailAST.getParent.getParent.getParent.getType
+Deque.peek AbstractFrame.getParent AbstractFrame.getType AbstractFrame.getFrameName
+HashSet.new
+AbstractFrame.getType AbstractFrame.getParent AbstractFrame.getType AbstractFrame.getType
+DetailAST.isEmpty DetailAST.pop DetailAST.equals DetailAST.getLineNo DetailAST.add DetailAST.getNextSibling DetailAST.push DetailAST.getFirstChild DetailAST.isEmpty HashSet.new ArrayDeque.new
+AbstractFrame.getFrameNameIdent DetailAST.getParent DetailAST.findFirstToken DetailAST.getPreviousSibling DetailAST.getType
+DetailAST.getParent DetailAST.getNextSibling ClassFrame.containsFieldOrVariableDef
+DetailAST.getLineNo DetailAST.getLineNo DetailAST.getLineNo DetailAST.getLineNo DetailAST.getColumnNo DetailAST.getColumnNo
+DetailAST.getParent.findFirstToken DetailAST.getText.equals DetailAST.getParent.findFirstToken.getChildCount DetailAST.getChildCount
+DetailAST.getPreviousSibling
+DetailAST.getText String.equals
+DetailAST.getParent DetailAST.getType DetailAST.getNextSibling DetailAST.getParent DetailAST.getLineNo DetailAST.getLineNo
+Deque.peek AbstractFrame.getParent
+AbstractFrame.getFrameNameIdent DetailAST.getParent DetailAST.findFirstToken DetailAST.findAll.hasMoreNodes
+HashSet.new HashSet.new HashSet.new HashSet.new
+AbstractFrame.getFrameNameIdent DetailAST.getParent DetailAST.getType AbstractFrame.getParent AbstractFrame.getType AbstractFrame.getType AbstractFrame.getType DetailAST.getFirstChild DetailAST.getType DetailAST.findFirstToken AbstractFrame.getFrameNameIdent DetailAST.getParent DetailAST.findFirstToken.findFirstToken
+DetailAST.getParent DetailAST.getType DetailAST.getParent DetailAST.getType DetailAST.findFirstToken DetailAST.getFirstChild.getText.equals
+stack.isEmpty stack.pop DetailAST.getType DetailAST.getLineNo DetailAST.add DetailAST.getNextSibling stack.push DetailAST.getFirstChild stack.isEmpty HashSet.new ArrayDeque.new
+AbstractFrame.getIfContains
+DetailAST.getParent DetailAST.getNextSibling ClassFrame.containsFieldOrVariableDef
+AbstractFrame.getFrameName.equals
+DetailAST.getParent DetailAST.getType
+DetailAST.getParent DetailAST.getNextSibling AST.getType
+Context.push DetailAST.findFirstToken Pattern.matcher.find Context.new
+DetailAST.getFirstChild.getType Context.visitLiteralReturn Context.visitLiteralReturn
+DetailAST.getFirstChild DetailAST.getType DetailAST.findFirstToken.getText String.containsKey String.get Map.get String.put Map.put DetailAST.getNextSibling HashMap.new HashMap.new
+DetailAST.getParent DetailAST.getType DetailAST.getParent.getParent.getType
+DetailAST.getParent DetailAST.getParent DetailAST.getType DetailAST.findFirstToken DetailAST.findFirstToken DetailAST.getChildCount
+DetailAST.getParent DetailAST.getType
+DetailAST.getText DetailAST.getParent DetailAST.getType DetailAST.getType
+DetailAST.getParent DetailAST.getType DetailAST.getParent
+double.new
+DetailAST.getType DetailAST.getParent
+int.new
+DetailAST.getParent DetailAST.getType DetailAST.getType DetailAST.getType DetailAST.findFirstToken DetailAST.findFirstToken
+DetailAST.getLineNo DetailAST.getLineNo DetailAST.getLineNo
+DetailAST.getPreviousSibling DetailAST.getPreviousSibling DetailAST.getLineNo DetailAST.getLineNo DetailAST.getParent
+DetailAST.getPreviousSibling DetailAST.getPreviousSibling.getType DetailAST.getPreviousSibling Integer.pop Integer.push
+DetailAST.getType
+DetailAST.getLastChild DetailAST.getType DetailAST.getPreviousSibling
+DetailAST.findFirstToken.getNextSibling DetailAST.getNextSibling
+DetailAST.findFirstToken DetailAST.findFirstToken DetailAST.getNextSibling DetailAST.getType
+Pattern.matcher Matcher.find
+DetailAST.getType DetailAST.findFirstToken DetailAST.getPreviousSibling DetailAST.findFirstToken DetailAST.getNextSibling
+DetailAST.getLineNo DetailAST.getColumnNo DetailAST.getLineNo
+DetailAST.getLastChild DetailAST.getType DetailAST.getFirstChild DetailAST.getType DetailAST.getNextSibling DetailAST.findFirstToken DetailAST.findFirstToken DetailAST.getNextSibling DetailAST.getType
+DetailAST.getType DetailAST.getParent.getParent DetailAST.getType DetailAST.findFirstToken DetailAST.findFirstToken
+DetailAST.getFirstChild DetailAST.getType DetailAST.getText FieldFrame.containsStaticField
+DetailAST.findFirstToken.getText DetailAST.findFirstToken DetailAST.getFirstChild.getText DetailAST.findFirstToken FieldFrame.isEmbeddedIn
+DetailAST.getType DetailAST.getParent DetailAST.getParent DetailAST.getChildCount DetailAST.getType
+String.length String.substring.toUpperCase String.substring
+DetailAST.getType DetailAST.findFirstToken DetailAST.getText FieldFrame.containsStaticField
+DetailAST.getParent DetailAST.getType DetailAST.getType DetailAST.getType DetailAST.findFirstToken DetailAST.findFirstToken DetailAST.getParent
+Set.contains FieldFrame.containsStaticField
+DetailAST.findFirstToken DetailAST.findFirstToken DetailAST.findFirstToken.getText DetailAST.findFirstToken DetailAST.getFirstChild DetailAST.getType DetailAST.findFirstToken.getText DetailAST.findFirstToken DetailAST.findFirstToken FieldFrame.addInstanceField FieldFrame.addStaticField DetailAST.getNextSibling FieldFrame.new
+DetailAST.getType DetailAST.getParent DetailAST.getParent DetailAST.getType
+instanceFields.contains FieldFrame.containsInstanceField
+DetailAST.findFirstToken DetailAST.getFirstChild DetailAST.getType DetailAST.findFirstToken DetailAST.findFirstToken DetailAST.getNextSibling
+DetailAST.findFirstToken DetailAST.findFirstToken DetailAST.findFirstToken DetailAST.findFirstToken DetailAST.findFirstToken
+DetailAST.getParent DetailAST.getType DetailAST.getType
+DetailAST.findFirstToken annotation.isPresent
+DetailAST.findFirstToken DetailAST.getLastChild DetailAST.isPresent
+DetailAST.findFirstToken DetailAST.getType DetailAST.findFirstToken
+DetailAST.findFirstToken DetailAST.findFirstToken.getText DetailAST.findFirstToken.getText
+DetailAST.getParent.getType DetailAST.findFirstToken DetailAST.findFirstToken
+DetailAST.findFirstToken DetailAST.getLastChild DetailAST.getLastChild DetailAST.getText Pattern.matcher.matches
+DetailAST.findFirstToken DetailAST.findFirstToken
+DetailAST.getParent.findFirstToken DetailAST.getFirstChild DetailAST.getType DetailAST.getNextSibling
+DetailAST.findFirstToken DetailAST.findFirstToken.getText DetailAST.findFirstToken.getText
+DetailAST.getChildCount
+DetailAST.findFirstToken AST.getFirstChild String.add AST.getNextSibling HashSet.new
+DetailAST.getFirstChild DetailAST.getType StringBuilder.length StringBuilder.append StringBuilder.append DetailAST.getType StringBuilder.toString StringBuilder.new
+String.equals String.equals String.equals
+DetailAST.getFirstChild DetailAST.getType DetailAST.getFirstChild ignoreAnnotationCanonicalNames.contains String.contains DetailAST.getNextSibling
+DetailAST.getFirstChild.findFirstToken DetailAST.findFirstToken
+DetailAST.getFirstChild DetailAST.getNextSibling DetailAST.getParent.getColumnNo DetailAST.getColumnNo DetailAST.getParent
+String.substring String.add ArrayList.new
+DetailAST.findFirstToken.getNextSibling DetailAST.getText
+DetailAST.getFirstChild.getText
+DetailAST.getType
+modifiers.contains
+DetailAST.getParent.getParent String.contains DetailAST.getType
+Set.contains Set.contains
+DetailAST.findFirstToken String.contains String.contains
+DetailAST.getFirstChild String.contains String.remove ignoreAnnotationCanonicalNames.contains String.remove
+DetailAST.findFirstToken List.add DetailAST.getNextSibling DetailAST.getNextSibling List.add DetailAST.getNextSibling DetailAST.getType ArrayList.new
+typeArgsClassNames.stream.noneMatch
+DetailAST.findFirstToken.getText classes.isEmpty classes.peek.getQualifiedName
+String.isEmpty
+ClassDesc.getQualifiedName ClassDesc.registerNestedSubclass
+DetailAST.findFirstToken
+String.contains String.equals
+DetailAST.findFirstToken DetailAST.getFirstChild DetailAST.getType DetailAST.findFirstToken DetailAST.findFirstToken DetailAST.findFirstToken DetailAST.findFirstToken DetailAST.findFirstToken DetailAST.findFirstToken DetailAST.getNextSibling
+int.new
+String.isEmpty
 IllegalArgumentException.new
-TransportService.getConnection TransportService.getRemoteClusterService.getConnection
-TransportService.getConnection TransportService.sendChildRequest ConnectionCountingHandler.new COMMA.new
-AggregationsTests.createTestInstance InternalSearchResponse.new SearchResponse.new
-SearchResponse.getShardFailures ShardSearchFailure.getCause.getMessage ShardSearchFailure.getCause.getCause.getMessage SearchResponse.getShardFailures ShardSearchFailure.new ToXContent.new
+int.new
+readerLines.add LineNumberReader.new
+URI.toURL.openStream InputStreamReader.new BufferedInputStream.new CheckstyleException.new
+CheckstyleException.new
+UnsupportedEncodingException.new
+readerLines.isEmpty IllegalArgumentException.new
+Pattern.matcher.replaceAll StringReader.new IllegalArgumentException.new
+Deque.push expressionValues.push
+TokenEnd.isAfter Deque.push TokenEnd.setToken
+DetailAST.getLastChild DetailAST.getFirstChild
+DetailAST.getLineNo DetailAST.getColumnNo
+Values.getExpressionValue Values.getRangeValue BigInteger.equals BigInteger.equals BigInteger.add.multiply
+DetailAST.getFirstChild DetailAST.getType DetailAST.getNextSibling
+Deque.pop Values.getRangeValue Values.getExpressionValue BigInteger.equals BigInteger.equals BigInteger.add.multiply
+Values.getRangeValue Values.getExpressionValue BigInteger.equals BigInteger.subtract.add.add
+DetailAST.findFirstToken.getNextSibling DetailAST.getType DetailAST.getNextSibling TokenEnd.setToken
+DetailAST.getFirstChild DetailAST.getType DetailAST.getNextSibling
+BigInteger.compareTo
+DetailAST.getLineNo DetailAST.getColumnNo
+DetailAST.getParent
+Deque.push Context.new
+Pattern.addAll
+DetailAST.getFirstChild DetailAST.getType DetailAST.getNextSibling
+FullIdent.getText String.lastIndexOf String.put
+String.contains
+referencedClassNames.add
+String.contains FileContext.getClassNameWithPackage.orElse String.contains String.lastIndexOf String.substring String.startsWith excludedPackages.contains
+referencedClassNames.remove referencedClassNames.remove referencedClassNames.size
+Pattern.matcher.matches
+String.isEmpty String.stream.collect IllegalArgumentException.new
+DetailAST.getFirstChild DetailAST.getNextSibling ClassContext.addReferencedClassName
+BigInteger.compareTo
+DetailAST.getType DetailAST.getType
+DetailAST.getParent.getType DetailAST.getPreviousSibling DetailAST.getType
+DetailAST.getParent.getType DetailAST.getPreviousSibling DetailAST.getType
+DetailAST.getType
+DetailAST.findFirstToken DetailAST.findFirstToken
+DetailAST.getParent DetailAST.getParent DetailAST.getType DetailAST.getType
+DetailAST.findFirstToken DetailAST.findFirstToken DetailAST.getParent DetailAST.getType DetailAST.findFirstToken DetailAST.findFirstToken DetailAST.getType DetailAST.getType DetailAST.getType DetailAST.findFirstToken DetailAST.getParent DetailAST.findFirstToken
+DetailAST.findFirstToken DetailAST.getFirstChild DetailAST.getType DetailAST.getNextSibling
+DetailAST.findFirstToken
+DetailAST.getFirstChild DetailAST.getNextSibling DetailAST.getType
+DetailAST.findFirstToken DetailAST.getFirstChild DetailAST.getType DetailAST.add DetailAST.getNextSibling ArrayList.new
+DetailAST.getParent DetailAST.findFirstToken DetailAST.findFirstToken DetailAST.getParent.getParent DetailAST.getType
+DetailAST.findFirstToken DetailAST.getFirstChild DetailAST.getType DetailAST.getNextSibling
+DetailAST.findFirstToken DetailAST.getFirstChild DetailAST.getType DetailAST.getType DetailAST.getType DetailAST.getType DetailAST.getNextSibling
+DetailAST.findFirstToken DetailAST.findFirstToken
+DetailAST.getParent.getParent
+DetailAST.getParent DetailAST.getParent DetailAST.getType DetailAST.findFirstToken DetailAST.getLastChild.getType
+DetailAST.iterator DetailAST.getType DetailAST.getType DetailAST.hasNext DetailAST.next
+DetailAST.next DetailAST.hasNext DetailAST.getType
+DetailAST.findFirstToken DetailAST.findFirstToken DetailAST.findFirstToken DetailAST.findFirstToken
+DetailAST.findFirstToken DetailAST.findFirstToken DetailAST.findFirstToken DetailAST.findFirstToken DetailAST.findFirstToken DetailAST.findFirstToken DetailAST.findFirstToken
+DetailAST.findFirstToken DetailAST.findFirstToken DetailAST.findFirstToken
+DetailAST.getNextSibling DetailAST.getFirstChild DetailAST.getType DetailAST.getLineNo DetailAST.getLineNo
+DetailAST.getNextSibling DetailAST.findFirstToken DetailAST.getFirstChild DetailAST.getLineNo DetailAST.getLineNo DetailAST.getLineNo DetailAST.getLineNo
+DetailAST.getParent.getType DetailAST.getFirstChild DetailAST.getLineNo DetailAST.getLineNo
+DetailAST.getType
+DetailAST.getParent.getType
+DetailAST.getLastChild.getType DetailAST.getParent.getType DetailAST.getLineNo DetailAST.getLastChild.getLineNo
+DetailAST.getParent.getType DetailAST.getLastChild DetailAST.getType DetailAST.getPreviousSibling DetailAST.findFirstToken DetailAST.getLineNo DetailAST.getLineNo
+DetailAST.getParent.getType DetailAST.getLastChild.getPreviousSibling DetailAST.getLineNo DetailAST.getLineNo
+DetailAST.getType DetailAST.getType DetailAST.getFirstChild DetailAST.getNextSibling DetailAST.getNextSibling DetailAST.getType
+DetailAST.getType
+DetailAST.getType DetailAST.findFirstToken DetailAST.getLastChild DetailAST.getPreviousSibling DetailAST.getFirstChild DetailAST.getType DetailAST.getLastChild Details.new
+DetailAST.getNextSibling DetailAST.getParent DetailAST.new
+DetailAST.getParent.getParent.getType DetailAST.getType DetailAST.getLineNo
+DetailAST.getParent.getType DetailAST.getNextSibling.getType DetailAST.getFirstChild.getType
+DetailAST.getType DetailAST.getType DetailAST.getParent.getLastChild DetailAST.getLineNo DetailAST.getLineNo DetailAST.getLineNo DetailAST.getLineNo
+DetailAST.getType DetailAST.getLastChild DetailAST.getFirstChild DetailAST.getLastChild DetailAST.findFirstToken DetailAST.getLastChild Details.new
+DetailAST.getPreviousSibling DetailAST.getLineNo DetailAST.getLineNo
+DetailAST.getType DetailAST.getFirstChild.getType DetailAST.getFirstChild.getNextSibling DetailAST.getFirstChild DetailAST.getNextSibling DetailAST.getLastChild DetailAST.getNextSibling DetailAST.getLastChild DetailAST.getLastChild DetailAST.getFirstChild DetailAST.getLastChild Details.new
+DetailAST.getType DetailAST.findFirstToken DetailAST.findFirstToken DetailAST.getLastChild DetailAST.findFirstToken DetailAST.getLastChild Details.new
+DetailAST.getLineNo DetailAST.getLineNo
+DetailAST.getFirstChild DetailAST.getType
+DetailAST.getType DetailAST.getFirstChild DetailAST.getParent.getParent.getType DetailAST.getNextSibling DetailAST.getType DetailAST.getLineNo DetailAST.getLineNo
+DetailAST.findFirstToken DetailAST.getNextSibling DetailAST.getNextSibling DetailAST.getNextSibling.getType
+DetailAST.getLineNo DetailAST.getLineNo
+DetailAST.findFirstToken DetailAST.getNextSibling DetailAST.getNextSibling DetailAST.getNextSibling
+String.length DetailAST.getColumnNo String.charAt DetailAST.getLineNo DetailAST.getLineNo
+DetailAST.findFirstToken DetailAST.getParent.findFirstToken DetailAST.getLineNo DetailAST.getColumnNo DetailAST.getLineNo DetailAST.getColumnNo
+DetailAST.findFirstToken DetailAST.getType DetailAST.getType DetailAST.getNextSibling DetailAST.getNextSibling.getFirstChild DetailAST.getNextSibling.getFirstChild.getType DetailAST.getNextSibling.getFirstChild DetailAST.findFirstToken
+DetailAST.findFirstToken DetailAST.getFirstChild DetailAST.getType DetailAST.getType DetailAST.getNextSibling DetailAST.getType
+Pattern.matcher.find String.isEmpty Pattern.matcher.find
+DetailAST.getLastChild DetailAST.getFirstChild DetailAST.getType DetailAST.getFirstChild.getText DetailAST.getType DetailAST.getFirstChild.getText String.split String.isEmpty
+DetailAST.findFirstToken DetailAST.findFirstToken DetailAST.getText
+AbstractImportControl.checkAccess
+AbstractImportRule.isLocalOnly AbstractImportRule.verifyImport
+String.equals String.equals String.equals String.equals String.add String.startsWith String.substring String.add IllegalArgumentException.new IllegalStateException.new
+Pattern.matcher Matcher.end Matcher.start Matcher.start Matcher.start Matcher.find RuleMatchForImport.new
+StringBuilder.append.append StringTokenizer.hasMoreTokens StringBuilder.toString StringBuilder.new StringTokenizer.new
+String.equals String.equals
+String.split String.split String.compareTo
+importToGroupList.get String.indexOf ImportDetails.getImportGroup ImportDetails.getImportFullPath String.equals String.size String.equals String.indexOf
+String.equals
+String.contains String.length String.contains String.equals String.length String.equals String.equals String.contains Pattern.matcher.find RuleMatchForImport.new
+Pattern.split String.add
+String.size String.get
+String.matches String.equals
+from.clone Pattern.clear Pattern.add
+String.clone List.add
+String.startsWith String.equals
+Pattern.matcher.matches Pattern.matcher.matches
+tags.addAll tags.addAll tags.stream.filter.forEach ArrayList.new HashSet.new
+DetailAST.getLineNo FileContents.getJavadocBefore String.addAll
+FullIdent.getText.endsWith FullIdent.add
+JavadocTag.getFirstArg.trim references.addAll HashSet.new Pattern.new
+Pattern.matcher references.add Matcher.find HashSet.new
+Pattern.matcher String.contains Matcher.matches
+String.indexOf String.substring
+FullIdent.getText.endsWith FullIdent.add
+DetailAST.getParent DetailAST.getType DetailAST.getNextSibling String.add
+Pattern.matcher.matches
+String.startsWith String.length String.length String.charAt
+SAXException.getMessage ImportControlLoader.parseInputSource ImportControlLoader.getRoot ImportControlLoader.new CheckstyleException.new CheckstyleException.new
+Attributes.getValue SAXException.new
+URI.toURL.openStream InputSource.new CheckstyleException.new CheckstyleException.new
+Attributes.getValue String.equals String.equals
+String.equals Attributes.getValue Attributes.getValue Attributes.getValue ClassImportRule.new PkgImportRule.new
+Attributes.getValue String.equals
+String.endsWith String.substring String.startsWith String.equals String.substring String.indexOf
+String.equals
+IllegalArgumentException.new
+DetailAST.getType FullIdent.getText
+String.compareTo String.compareToIgnoreCase
+FullIdent.getText
+String.equals String.substring StringBuilder.append Pattern.new IllegalArgumentException.new StringBuilder.new
+Matcher.find Matcher.start Matcher.end Matcher.start Matcher.start Matcher.end Matcher.end
+String.compareTo String.compareToIgnoreCase
+String.matches String.matches String.startsWith String.indexOf
+String.lastIndexOf String.substring String.equals
+String.endsWith excludes.add excludes.add
+FullIdent.getText String.endsWith excludes.contains
+DetailAST.findFirstToken.findFirstToken
+DetailAST.findFirstToken.getText
+DetailAST.findFirstToken DetailAST.findFirstToken DetailAST.findFirstToken
+DetailAST.getParent DetailAST.getParent DetailAST.getType DetailAST.getType
+String.length String.substring String.substring
+Set.contains
+String.charAt String.length String.length
+DetailAST.getFirstChild DetailAST.getType DetailAST.findFirstToken DetailAST.findFirstToken DetailAST.getType
+DetailAST.findFirstToken
+DetailAST.getFirstChild DetailAST.add DetailAST.getNextSibling LinkedList.new
+DetailAST.getParent.getType
+DetailAST.getParent.getParent DetailAST.isPresent DetailAST.isPresent
+DetailAST.getParent DetailAST.getParent DetailAST.findFirstToken
+TextBlock.getText Pattern.matcher Matcher.find
+DetailAST.getType
+DetailAST.findFirstToken DetailAST.findFirstToken DetailAST.findFirstToken
+Pattern.matcher Matcher.matches
+DetailAST.findFirstToken DetailAST.getPreviousSibling DetailAST.getType DetailAST.getType
+DetailAST.getFirstChild DetailAST.getType DetailAST.findFirstToken DetailAST.getType DetailAST.getNextSibling
+IllegalArgumentException.new
+DetailAST.getChildCount DetailAST.branchContains
+DetailAST.findFirstToken DetailAST.getChildCount DetailAST.getChildCount DetailAST.findFirstToken DetailAST.findFirstToken String.equals DetailAST.getChildCount
+DetailAST.getChildCount DetailAST.findFirstToken String.equals
+DetailAST.getLastChild DetailAST.getType DetailAST.branchContains DetailAST.branchContains
+Pattern.matcher Matcher.find Matcher.group String.equals String.equals
+TextBlock.getText TextBlock.getStartLineNo Pattern.matcher Pattern.matcher Matcher.find Matcher.find
+DetailAST.findFirstToken DetailAST.findFirstToken.getLastChild DetailAST.getText
+DetailAST.getNextSibling DetailAST.getParent.getNextSibling
+DetailAST.getLineNo DetailAST.getPreviousSibling DetailAST.getLineNo
+DetailAST.getFirstChild DetailAST.getColumnNo DetailAST.getNextSibling DetailAST.getType
+DetailAST.getLineNo DetailAST.getNextSibling DetailAST.getParent.getNextSibling DetailAST.getLineNo
+DetailAST.findFirstToken DetailAST.findFirstToken.findFirstToken DetailAST.getText
+DetailAST.getParent DetailAST.getType DetailAST.getParent
+Pattern.matcher Matcher.find Matcher.start String.substring Pattern.matcher.find
+Pattern.matcher.replaceAll Pattern.matcher.find
+DetailNode.getChildren DetailNode.getType DetailNode.getType
+DetailNode.getChildren DetailNode.getChildren DetailNode.getText String.contains StringBuilder.append StringBuilder.append StringBuilder.toString StringBuilder.new
+DetailNode.getType StringBuilder.append StringBuilder.toString StringBuilder.new
+DetailNode.getChildren ALLOWED_TYPES.contains StringBuilder.append DetailNode.getType StringBuilder.append DetailNode.getType StringBuilder.toString.trim StringBuilder.new
+DetailAST.findFirstToken.getText Pattern.matcher.matches
+DetailAST.getType DetailAST.findFirstToken Scope.isIn Scope.isIn Scope.isIn Scope.isIn
+JavadocTags.getInvalidTags JavadocTags.getValidTags
+List.size List.get JavadocTag.isParamTag JavadocTag.getFirstArg.indexOf
+List.size List.get JavadocTag.getTagName.equals Pattern.matcher.find
+tags.size tags.get JavadocTag.isParamTag String.contains
+Pattern.matcher Matcher.find Matcher.group.trim Pattern.split
+DetailAST.findFirstToken Scope.isIn Scope.isIn Scope.isIn Scope.isIn
+IllegalStateException.new
+int.new
+DetailNode.getParent
+Integer.clear Integer.add
+DetailAST.getType DetailAST.getType Scope.isIn Scope.isIn Scope.isIn Scope.isIn
+String.equalsIgnoreCase
+String.regionMatches String.regionMatches String.charAt String.length
+String.charAt StringBuilder.append StringBuilder.append StringBuilder.toString.trim StringBuilder.new
+String.isEmpty Pattern.matcher.find String.startsWith
+String.isEmpty
+Set.contains
+StringBuilder.length StringBuilder.deleteCharAt StringBuilder.charAt StringBuilder.charAt StringBuilder.deleteCharAt StringBuilder.deleteCharAt StringBuilder.deleteCharAt StringBuilder.charAt
+Deque.pop Deque.pop HtmlTag.push Deque.pop String.equalsIgnoreCase HtmlTag.getId.equals HtmlTag.getId ArrayDeque.new
+ArrayList.new ArrayList.new
+Point.getColumnNo Point.getLineNo String.length String.charAt
+Point.getLineNo Point.getColumnNo String.length String.charAt String.charAt String.length String.length String.charAt Point.new
+Point.getLineNo Point.getColumnNo Point.getLineNo Point.new
+Point.getLineNo Point.new
+Point.getLineNo Point.getLineNo HtmlTag.new
+Point.getColumnNo Point.getLineNo String.length String.charAt String.substring.trim String.length String.substring
+String.lastIndexOf String.substring String.substring IllegalStateException.new
+String.isEmpty String.isEmpty
+String.endsWith String.substring
+String.isEmpty
+HashSet.new
+String.endsWith
+String.add ArrayList.new
+Integer.add ArrayList.new
+DetailAST.getParent DetailAST.getType DetailAST.getParent.getType
+DetailNode.getChildren DetailNode.getType String.indexOf
+RegularClass.new ClassAlias.new
+FullIdent.getText FullIdent.getLineNo FullIdent.getColumnNo
+DetailAST.findFirstToken typeParams.push DetailAST.getFirstChild DetailAST.getType DetailAST.findFirstToken DetailAST.findFirstToken.getText paramsMap.put DetailAST.getNextSibling HashMap.new Token.new
+DetailAST.findFirstToken DetailAST.getText String.isEmpty
+FullIdent.getText ClassResolver.new
+typeParams.descendingIterator Map.next paramMap.get Map.hasNext
+LocalizedMessage.getMessage LocalizedMessage.new IllegalStateException.new
+IllegalArgumentException.new
+DetailNode.getType DetailNode.add ArrayList.new
+DetailNode.getParent DetailNode.getType DetailNode.getParent
+NAME_TO_TAG.get IllegalArgumentException.new IllegalArgumentException.new
+String.get IllegalArgumentException.new IllegalArgumentException.new
+JavadocTag.size JavadocTag.get.isInheritDocTag
+typeParams.iterator typeParamsIt.next DetailAST.findFirstToken.getText.equals typeParamsIt.remove typeParamsIt.hasNext
+ExceptionInfo.getName.getText.equals List.listIterator ExceptionInfo.next AbstractClassInfo.getClazz ExceptionInfo.getClazz ExceptionInfo.hasNext ExceptionInfo.setFound Set.add
+DetailAST.findFirstToken DetailAST.getFirstChild DetailAST.getType DetailAST.findFirstToken returnValue.add DetailAST.getNextSibling ArrayList.new
+List.listIterator JavadocTag.next JavadocTag.isParamTag JavadocTag.remove JavadocTag.getFirstArg JavadocTag.hasNext
+Matcher.start
+List.listIterator tagIt.next JavadocTag.isThrowsTag tagIt.remove JavadocTag.getFirstArg JavadocTag.getFirstArg JavadocTag.getLineNo JavadocTag.getColumnNo String.contains tagIt.hasNext ExceptionInfo.stream.filter.forEach HashSet.new Token.new
+DetailAST.getType List.iterator JavadocTag.next.isInheritDocTag JavadocTag.hasNext List.stream.filter.forEach
+DetailAST.findFirstToken DetailAST.getFirstChild DetailAST.getType DetailAST.getType List.add DetailAST.getNextSibling ArrayList.new ExceptionInfo.new Token.new
+Scope.isIn Scope.isIn
+DetailAST.findFirstToken
+Pattern.matcher Matcher.find Matcher.group String.equals String.equals Matcher.group Matcher.start JavadocTag.add ArrayList.new JavadocTag.new
+tags.listIterator ListIterator.next JavadocTag.isReturnTag ListIterator.remove ListIterator.hasNext
+DetailAST.getLastChild DetailAST.getLastChild DetailAST.getFirstChild DetailAST.getLineNo DetailAST.getLineNo
+TextBlock.getText TextBlock.getStartLineNo TextBlock.getStartColNo Pattern.matcher Pattern.matcher Pattern.matcher Pattern.matcher Pattern.matcher Matcher.find tags.add Matcher.find tags.add Matcher.find tags.add Matcher.find tags.addAll Matcher.find tags.addAll ArrayList.new JavadocTag.new JavadocTag.new JavadocTag.new
+DetailAST.getType DetailAST.getType
+DetailAST.findFirstToken DetailAST.getText Pattern.matcher Matcher.matches
+DetailAST.iterator DetailAST.next DetailAST.getText.equals DetailAST.remove DetailAST.hasNext
+Matcher.group Matcher.group Pattern.matcher Matcher.find Matcher.group String.equals String.equals JavadocTag.add ArrayList.new JavadocTag.new
+DetailNode.getLineNumber DetailNode.getLineNumber
+DetailNode.getParent.getType DetailNode.getType DetailNode.getType
+DetailNode.getType
+DetailNode.getType DetailNode.getType
+DetailNode.getType DetailNode.getType
+DetailNode.getType
+DetailNode.getType DetailNode.getType DetailNode.getType DetailNode.getType
+String.substring
+Pattern.matcher Matcher.find Matcher.group Matcher.start String.substring String.trim String.endsWith String.length String.length String.substring.trim TagInfo.add ArrayList.new LineColumn.new TagInfo.new
+String.subSequence.toString Pattern.split String.length LineColumn.new
+String.contains String.contains Pattern.matcher Matcher.group Matcher.group Matcher.start List.add Matcher.find IllegalArgumentException.new ArrayList.new TagInfo.new
+StringBuilder.append StringBuilder.append StringBuilder.toString StringBuilder.new
+FileText.get FileText.size
+Matcher.find Matcher.start Matcher.end DetectorOptions.getSuppressor.shouldSuppress DetectorOptions.getMaximum DetectorOptions.getMessage.isEmpty DetectorOptions.getReporter.log DetectorOptions.getReporter.log
+DetectorOptions.getMinimum DetectorOptions.getMessage.isEmpty DetectorOptions.getReporter.log DetectorOptions.getReporter.log
+Matcher.find FileText.lineColumn LineColumn.getLine
+Matcher.end FileText.lineColumn FileText.lineColumn LineColumn.getColumn LineColumn.getLine LineColumn.getColumn FileContents.hasIntersectionWithComment
+String.isEmpty Pattern.pattern
+DetectorOptions.getMinimum DetectorOptions.getMessage.isEmpty DetectorOptions.getReporter.log DetectorOptions.getReporter.log
+DetectorOptions.getReporter.log Matcher.find DetectorOptions.getMaximum FileText.lineColumn DetectorOptions.getMessage.isEmpty DetectorOptions.getReporter.log DetectorOptions.getReporter.log Matcher.find
+DetectorOptions.getFormat String.isEmpty DetectorOptions.getReporter.log DetectorOptions.getPattern.matcher FileText.new
+File.getName
+File.getAbsolutePath File.getCanonicalFile.getParent CheckstyleException.new
+Pattern.toString
+Pattern.matcher.find

@@ -47,7 +47,7 @@ class DeepCodeSearchDB:
     # Returns the number of methods indexed using this file
     def index_file(self, file_name, start_index=0):
         parser = Parser("filters/tags.txt", "filters/stopwords.txt")
-        method_tokens, method_apis, method_names, javadocs, method_body = parser.parse_file(file_name)
+        method_tokens, method_apis, method_names, _, method_body = parser.parse_file(file_name, only_javadoc=False)
         index = start_index
         for name, api, token, body in zip(method_names, method_apis, method_tokens, method_body):
 
@@ -56,10 +56,12 @@ class DeepCodeSearchDB:
             data_key = REDIS_KEY_FORMAT.format(self.data_table, index)
             emb_key = REDIS_KEY_FORMAT.format(self.emb_table, index)
 
-            self.redis_db.hset(data_key, METHOD_NAME, name)
-            self.redis_db.hset(data_key, METHOD_API, api)
-            self.redis_db.hset(data_key, METHOD_TOKENS, token)
-            self.redis_db.hset(data_key, METHOD_BODY, body)
+            pipeline = self.redis_db.pipeline()
+
+            pipeline.hset(data_key, METHOD_NAME, name)
+            pipeline.hset(data_key, METHOD_API, api)
+            pipeline.hset(data_key, METHOD_TOKENS, token)
+            pipeline.hset(data_key, METHOD_BODY, body)
 
             # We have to explicitly delete any existing embedding vector because
             # inserting a vector amounts to appending to a redis list. Thus, plain insertions will
@@ -67,7 +69,6 @@ class DeepCodeSearchDB:
             if self.redis_db.exists(emb_key):
                 self.redis_db.delete(emb_key)
 
-            pipeline = self.redis_db.pipeline()
             for entry in embedding:
                 pipeline.rpush(emb_key, str(entry))
             pipeline.execute()
