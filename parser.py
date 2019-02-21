@@ -130,14 +130,21 @@ class Parser:
 
                 method_str = self._method_to_str(method.method_block, code_graph)
 
-                if len(method_tokens) > 0 and len(api_call_tokens) > 0 and \
-                   len(method_name_tokens) > 0 and (len(javadoc_tokens) > 0 or not only_javadoc) and \
-                   (only_javadoc or len(method_str.strip()) > 0):
-                   names.append(" ".join(method_name_tokens))
-                   apis.append(" ".join(api_call_tokens))
-                   tokens.append(method_tokens)
-                   javadocs.append(javadoc_tokens)
-                   method_bodies.append(method_str)
+                # During testing, we only omit methods for which there is no proper method body
+                if not only_javadoc and len(method_str.strip()) > 0:
+                    names.append(" ".join(method_name_tokens))
+                    apis.append(" ".join(api_call_tokens))
+                    tokens.append(method_tokens)
+                    javadocs.append(javadoc_tokens)
+                    method_bodies.append(method_str)
+
+                # DUring training, we only omit methods which have no name or javadoc description
+                if only_javadoc and len(javadoc_tokens) > 0 and len(method_name_tokens) > 0:
+                    names.append(" ".join(method_name_tokens))
+                    apis.append(" ".join(api_call_tokens))
+                    tokens.append(method_tokens)
+                    javadocs.append(javadoc_tokens)
+                    method_bodies.append(method_str)
 
         return tokens, apis, names, javadocs, method_bodies
 
@@ -307,19 +314,18 @@ class Parser:
                                                                    neigh_content=MODIFIERS)
             if len(modifiers) == 0:
                 return method_str
-            modifier_tokens = code_graph.get_out_neighbors(modifiers[0].id)
+
+            # We omit all annotations
+            modifier_tokens = list(filter(lambda n: n.contents != ANNOTATIONS,
+                                          code_graph.get_out_neighbors(modifiers[0].id)))
 
             if len(modifier_tokens) == 0:
                 return method_str
 
             # We start with the first modifier token
-            start = None
-            for i in range(0, len(modifier_tokens)):
-                # We omit annotations
-                if modifier_tokens[i].contents == ANNOTATIONS:
-                    continue
-
-                if start == None or start.startPosition > modifier_tokens[i].startPosition:
+            start = modifier_tokens[0]
+            for i in range(1, len(modifier_tokens)):
+                if start.startPosition > modifier_tokens[i].startPosition:
                     start = modifier_tokens[i]
 
         

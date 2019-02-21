@@ -1,0 +1,43 @@
+{
+    "settings": {
+        "analysis": {
+            "analyzer": {
+                "method_analyzer": {
+                    "type": "custom",
+                    "tokenizer": "camel",
+                    "filter": [
+                        "lowercase",
+                        "english_stop",
+                        "asciifolding"
+                    ]
+                }
+            },
+            "tokenizer": {
+                "camel": {
+                    "type": "pattern",
+                    "pattern": "([^\\p{L}\\d]+)|(?<=\\D)(?=\\d)|(?<=\\d)(?=\\D)|(?<=[\\p{L}&&[^\\p{Lu}]])(?=\\p{Lu})|(?<=\\p{Lu})(?=\\p{Lu}[\\p{L}&&[^\\p{Lu}]])"
+                }
+            },
+            "filter": {
+                "english_stop": {
+                    "type": "stop",
+                    "stopwords": "__english__"
+                }
+            }
+        }
+    },
+    "mapping": {
+        "_doc": {
+            "properties": {
+                "method_body": {
+                    "type": "text",
+                    "analyzer": "method_analyzer"
+                },
+                "method_name": {
+                    "type": "text",
+                    "analyzer": "method_analyzer"
+                }
+            }
+        }
+    }
+}

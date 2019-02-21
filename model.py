@@ -367,7 +367,6 @@ class Model:
                 )
             )
 
-
     def _make_training_step(self):
         trainable_vars = self._sess.graph.get_collection(tf.GraphKeys.TRAINABLE_VARIABLES)
         gradients = tf.gradients(self.loss_op, trainable_vars)
@@ -419,7 +418,7 @@ class Model:
                                      activation=tf.nn.tanh,
                                      name=name + "-conv-emb")
 
-        # Mask the output to adjust for the sequence length
+        # Mask the output to adjust for variable sequence lengths
         index_list = tf.range(self.params.max_seq_length)
         index_tensor = tf.tile(tf.expand_dims(index_list, axis=0),
                                multiples=(tf.shape(placeholder)[0],1))
