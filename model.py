@@ -100,7 +100,6 @@ class Model:
             best_valid_loss = 10000
 
             train_time = datetime.now().strftime("%Y-%m-%d-%H-%M-%S")
-            print(self.params)
             train_name = self.params.combine_type + "-" + self.params.seq_embedding + "-" + train_time
             csv_name = self.log_dir + train_name + "-data.csv"
             log_record(csv_name, ["Epoch", "Avg Train Loss", "Avg Validation Loss"])
@@ -467,6 +466,9 @@ class Model:
             neg_javadoc_len.append(javadoc_len[rand_index])
 
         assert len(neg_javadoc) == len(javadoc)
+
+        for i in range(len(javadoc)):
+            assert not lst_equal(javadoc[i], neg_javadoc[i])
 
         return neg_javadoc, neg_javadoc_len
 

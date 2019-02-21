@@ -1,6 +1,7 @@
 import sys
+import os
 import getopt
-import subprocess
+
 from parser import Parser
 from model import Model
 from parameters import params_from_dict, params_dict_from_json
@@ -119,7 +120,7 @@ def main(argv):
             print("Indexed {0} methods into table: {1}".format(written, table_name))
         if opt in ("-s", "--search"):
             if len(search_query) == 0:
-                print("Must specify a query.")
+                print("Must specify a query or query file.")
                 sys.exit(0)
 
             if len(restore_dir) == 0:
@@ -141,13 +142,26 @@ def main(argv):
             db = DeepCodeSearchDB(table=table_name, model=model,
                                   embedding_size=params.embedding_size)
 
-            threshold = try_parse_int(threshold, 10)
-            results = db.search(search_query, k=threshold)
-            results = list(map(lambda r: str(r.decode("utf-8")), results))
+            search_queries = []
+            if ".txt" in search_query:
+                with open(search_query, "r") as query_file:
+                    for query in query_file:
+                        search_queries.append(query.strip())
+            else:
+                search_queries.append(search_query)
 
-            default_file = "searches/" + search_query.replace(" ", "_") + ".txt"
-            output_file = value_if_non_empty(outpt, default_file)
-            write_to_file(output_file, results)
+            threshold = try_parse_int(threshold, 10)
+
+            out_folder = "searches/" + restore_dir.split("/")[1]
+            if not os.path.exists(out_folder):
+                os.mkdir(out_folder)
+
+            for query in search_queries:
+                results = db.search_full(query, k=threshold)
+                results = list(map(lambda r: str(r.decode("utf-8")), results))
+
+                output_file = out_folder + "/" + query.replace(" ", "_") + ".txt"
+                write_to_file(output_file, results)
             
 
 if __name__ == '__main__':

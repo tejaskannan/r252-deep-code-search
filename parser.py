@@ -306,8 +306,6 @@ class Parser:
             while start.type != FeatureNode.TOKEN:
                 start = code_graph.get_out_neighbors(start.id)[0]
 
-            if start.contents == "ANNOTATIONS":
-                print(start.contents)
         else:
             modifiers = code_graph.get_neighbors_with_type_content(modifiers[0].id,
                                                                    neigh_type=None,
@@ -315,7 +313,7 @@ class Parser:
             if len(modifiers) == 0:
                 return method_str
 
-            # We omit all annotations
+            # We omit the annotation AST nodes
             modifier_tokens = list(filter(lambda n: n.contents != ANNOTATIONS,
                                           code_graph.get_out_neighbors(modifiers[0].id)))
 
@@ -332,9 +330,9 @@ class Parser:
         node = start
         while (node.id != end.id):
             contents = node.contents
-            if contents in translate_dict:
-                contents = translate_dict[contents]
             if node.type == FeatureNode.TOKEN:
+                if contents in translate_dict:
+                    contents = translate_dict[contents]
                 contents = contents.lower()
 
             parents = code_graph.get_in_neighbors(node.id)

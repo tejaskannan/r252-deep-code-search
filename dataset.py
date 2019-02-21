@@ -52,6 +52,7 @@ class Dataset:
         combined = []
 
         tensor_dict = self.train_tensors if train else self.valid_tensors
+
         combined = list(zip(tensor_dict[METHOD_NAMES], tensor_dict[METHOD_APIS], \
                             tensor_dict[METHOD_APIS], tensor_dict[JAVADOC], \
                             tensor_dict[METHOD_NAME_LENGTHS], tensor_dict[METHOD_API_LENGTHS], \

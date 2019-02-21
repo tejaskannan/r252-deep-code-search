@@ -1,0 +1,17 @@
+{
+    "step_size" : 0.001,
+    "gradient_clip" : 1,
+    "margin" : 0.05,
+    "max_vocab_size" : 10000,
+    "max_seq_length" : 100,
+    "rnn_units" : 200,
+    "hidden_dense_units" : 64,
+    "hidden_fusion_units": 400,
+    "embedding_size" : 100,
+    "batch_size" : 128,
+    "num_epochs" : 1,
+    "optimizer" : "adam",
+    "combine_type": "attention",
+    "seq_embedding": "conv",
+    "kernel_size": 5
+}

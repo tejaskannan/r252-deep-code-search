@@ -34,7 +34,7 @@ class DeepCodeSearchDB:
             for file_name in files:
                 file_path = root + "/" + file_name
 
-                method_id += self.index_file(file_path, method_id)
+                method_id = self.index_file(file_path, method_id)
                 count += 1
                 
                 if count % 100 == 0:
@@ -77,7 +77,7 @@ class DeepCodeSearchDB:
             self.index.add_item(index, normalized_embedding)
 
             index += 1
-        return index - start_index
+        return index
 
     # K is the max number of results to return
     # uses annoy for approximate (but faster) searching

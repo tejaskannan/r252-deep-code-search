@@ -7,3 +7,4 @@ searches/*
 train_data/*
 validation_data/*
 index/*
+elasticsearch/data.json
