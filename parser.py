@@ -131,7 +131,8 @@ class Parser:
                 method_str = self._method_to_str(method.method_block, code_graph)
 
                 if len(method_tokens) > 0 and len(api_call_tokens) > 0 and \
-                   len(method_name_tokens) > 0 and (len(javadoc_tokens) > 0 or not only_javadoc):
+                   len(method_name_tokens) > 0 and (len(javadoc_tokens) > 0 or not only_javadoc) and \
+                   (only_javadoc or len(method_str.strip()) > 0):
                    names.append(" ".join(method_name_tokens))
                    apis.append(" ".join(api_call_tokens))
                    tokens.append(method_tokens)

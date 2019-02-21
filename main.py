@@ -12,14 +12,17 @@ default_params = {
     "gradient_clip" : 1,
     "margin" : 0.05,
     "max_vocab_size" : 10000,
-    "max_seq_length" : 50,
+    "max_seq_length" : 100,
     "rnn_units" : 64,
-    "dense_units" : 64,
+    "hidden_dense_units" : 64,
+    "hidden_fusion_units": 128,
     "embedding_size" : 64,
     "batch_size" : 32,
     "num_epochs" : 4,
     "optimizer" : "adam",
-    "combine_type": "attention"
+    "combine_type": "max_pool",
+    "seq_embedding": "RNN",
+    "kernel_size": 5
 }
 
 def main(argv):
@@ -139,7 +142,7 @@ def main(argv):
                                   embedding_size=params.embedding_size)
 
             threshold = try_parse_int(threshold, 10)
-            results = db.search_full(search_query, k=threshold)
+            results = db.search(search_query, k=threshold)
             results = list(map(lambda r: str(r.decode("utf-8")), results))
 
             default_file = "searches/" + search_query.replace(" ", "_") + ".txt"

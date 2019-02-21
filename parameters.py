@@ -3,20 +3,25 @@ import json
 class Parameters:
 
     def __init__(self, step_size, gradient_clip,
-                 max_vocab_size, max_seq_length, margin, rnn_units, dense_units,
-                 embedding_size, batch_size, num_epochs, optimizer, combine_type):
+                 max_vocab_size, max_seq_length, margin, rnn_units, hidden_dense_units,
+                 hidden_fusion_units, embedding_size, batch_size, num_epochs, optimizer,
+                 combine_type, seq_embedding, kernel_size):
         self.step_size = step_size
         self.gradient_clip = gradient_clip
         self.margin = margin
         self.max_vocab_size = max_vocab_size
         self.max_seq_length = max_seq_length
         self.rnn_units = rnn_units
-        self.dense_units = dense_units
+        self.hidden_dense_units = hidden_dense_units
+        self.hidden_fusion_units = hidden_fusion_units
         self.batch_size = batch_size
         self.num_epochs = num_epochs
         self.optimizer = optimizer
         self.embedding_size = embedding_size
         self.combine_type = combine_type
+        self.seq_embedding = seq_embedding
+        self.kernel_size = kernel_size
+
 
     def as_dict(self):
         return {
@@ -26,12 +31,15 @@ class Parameters:
             "max_vocab_size": self.max_vocab_size,
             "max_seq_length": self.max_seq_length,
             "rnn_units": self.rnn_units,
-            "dense_units": self.dense_units,
+            "hidden_dense_units": self.hidden_dense_units,
+            "hidden_fusion_units": self.hidden_fusion_units,
             "batch_size": self.batch_size,
             "num_epochs": self.num_epochs,
             "optimizer": self.optimizer,
             "embedding_size": self.embedding_size,
-            "combine_type": self.combine_type
+            "combine_type": self.combine_type,
+            "seq_embedding": self.seq_embedding,
+            "kernel_size": self.kernel_size
         }
 
     def __str__(self):
@@ -61,10 +69,13 @@ def params_from_dict(params_dict):
             max_vocab_size = params_dict["max_vocab_size"],
             max_seq_length = params_dict["max_seq_length"],
             rnn_units = params_dict["rnn_units"],
-            dense_units = params_dict["dense_units"],
+            hidden_dense_units = params_dict["hidden_dense_units"],
+            hidden_fusion_units = params_dict["hidden_fusion_units"],
             embedding_size = params_dict["embedding_size"],
             batch_size = params_dict["batch_size"],
             num_epochs = params_dict["num_epochs"],
             optimizer = params_dict["optimizer"],
-            combine_type = params_dict["combine_type"]
+            combine_type = params_dict["combine_type"],
+            seq_embedding = params_dict["seq_embedding"],
+            kernel_size = params_dict["kernel_size"]
         )

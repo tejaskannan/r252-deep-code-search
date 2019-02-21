@@ -99,7 +99,9 @@ class Model:
             # Some large value
             best_valid_loss = 10000
 
-            train_name = datetime.now().strftime("%Y-%m-%d-%H-%M-%S")
+            train_time = datetime.now().strftime("%Y-%m-%d-%H-%M-%S")
+            print(self.params)
+            train_name = self.params.combine_type + "-" + self.params.seq_embedding + "-" + train_time
             csv_name = self.log_dir + train_name + "-data.csv"
             log_record(csv_name, ["Epoch", "Avg Train Loss", "Avg Validation Loss"])
 
@@ -262,14 +264,29 @@ class Model:
     def _make_model(self):
 
         with tf.variable_scope(self.scope, reuse=tf.AUTO_REUSE):
-            # Method Name embedding
-            name_emb, name_state = self._rnn_embedding(self.name_placeholder,
-                                                       self.name_len_placeholder,
-                                                       name="name-embedding")
-            # API Embedding
-            api_emb, api_state = self._rnn_embedding(self.api_placeholder,
-                                                     self.api_len_placehodler,
-                                                     name="api-embedding")
+
+
+            if self.params.seq_embedding == "conv":
+                name_embedding = self._conv_1d_embedding(self.name_placeholder,
+                                                         self.name_len_placeholder,
+                                                         name="name-embedding")
+                api_embedding = self._conv_1d_embedding(self.api_placeholder,
+                                                        self.api_len_placehodler,
+                                                        name="api-embedding")
+            else:
+                # Method Name embedding
+                name_emb, name_state = self._rnn_embedding(self.name_placeholder,
+                                                           self.name_len_placeholder,
+                                                           name="name-embedding")
+                # API Embedding
+                api_emb, api_state = self._rnn_embedding(self.api_placeholder,
+                                                         self.api_len_placehodler,
+                                                         name="api-embedding")
+
+                # We combine the outputs from the forward and backward passes
+                name_embedding = self._reduction_layer(name_emb, self.params.embedding_size, name="name-reduction")
+                api_embedding = self._reduction_layer(api_emb, self.params.embedding_size, name="api-reduction")
+            
             # Method Token embedding
             vocab_size = len(self.dataset.vocabulary)
             token_emb_var = tf.Variable(tf.random.normal(shape=(vocab_size, self.params.embedding_size)),
@@ -282,13 +299,9 @@ class Model:
                                    multiples=(tf.shape(self.token_placeholder)[0],1))
             token_mask = index_tensor < tf.expand_dims(self.token_len_placeholder, axis=1)
             token_mask = tf.tile(tf.expand_dims(token_mask, axis=2),
-                               multiples=(1,1,self.params.dense_units))
+                               multiples=(1,1,self.params.embedding_size))
 
             token_emb *= tf.cast(token_mask, dtype=tf.float32)
-
-            # We combine the outputs from the forward and backward passes
-            name_embedding = self._reduction_layer(name_emb, self.params.embedding_size, name="name-reduction")
-            api_embedding = self._reduction_layer(api_emb, self.params.embedding_size, name="api-reduction")
 
             if self.params.combine_type == "attention":
                 name_context = self._attention_layer(name_embedding, name="name-attn")
@@ -302,22 +315,39 @@ class Model:
             # Fusion Layer
             code_concat = tf.concat([name_context, api_context, token_context],
                                     axis=1, name="code-concat")
-            self.code_embedding = tf.layers.dense(inputs=code_concat,
+            fusion_hidden = tf.layers.dense(inputs=code_concat,
+                                            units=self.params.hidden_fusion_units,
+                                            activation=tf.nn.tanh,
+                                            name="code-fuction-hidden")
+
+            self.code_embedding = tf.layers.dense(inputs=fusion_hidden,
                                                   units=self.params.embedding_size,
                                                   activation=tf.nn.tanh,
                                                   name="code-fusion")
 
             # Javadoc Embeddings
-            jd_pos_emb, jd_pos_state = self._rnn_embedding(self.javadoc_pos_placeholder,
-                                                                self.javadoc_pos_len_placeholder,
-                                                                name="jd-embedding")
-
-            jd_neg_emb, jd_neg_state = self._rnn_embedding(self.javadoc_neg_placeholder,
+            if self.params.seq_embedding == "conv":
+                jd_pos_embedding = self._conv_1d_embedding(self.javadoc_pos_placeholder,
+                                                           self.javadoc_pos_len_placeholder,
+                                                           name="jd-embedding")
+                jd_neg_embedding = self._conv_1d_embedding(self.javadoc_neg_placeholder,
                                                            self.javadoc_neg_len_placeholder,
                                                            name="jd-embedding")
+            else:
+                jd_pos_emb, jd_pos_state = self._rnn_embedding(self.javadoc_pos_placeholder,
+                                                               self.javadoc_pos_len_placeholder,
+                                                               name="jd-embedding")
 
-            jd_pos_embedding = self._reduction_layer(jd_pos_emb, self.params.embedding_size, name="jd-reduction")
-            jd_neg_embedding = self._reduction_layer(jd_neg_emb, self.params.embedding_size, name="jd-reduction")
+                jd_neg_emb, jd_neg_state = self._rnn_embedding(self.javadoc_neg_placeholder,
+                                                               self.javadoc_neg_len_placeholder,
+                                                               name="jd-embedding")
+
+                jd_pos_embedding = self._reduction_layer(jd_pos_emb,
+                                                         self.params.embedding_size,
+                                                         name="jd-reduction")
+                jd_neg_embedding = self._reduction_layer(jd_neg_emb,
+                                                         self.params.embedding_size,
+                                                         name="jd-reduction")
 
             if self.params.combine_type == "attention":
                 jd_neg_context = self._attention_layer(jd_neg_embedding, name="jd-attn")
@@ -375,6 +405,30 @@ class Model:
                                         dtype=tf.float32,
                                         scope=name)
         return emb, state
+
+    def _conv_1d_embedding(self, placeholder, len_placeholder, name):
+        vocab_size = len(self.dataset.vocabulary)
+        encoding_var = tf.Variable(tf.random.normal(shape=(vocab_size, self.params.embedding_size)),
+                                   name=name + "-var")
+        encoding = tf.nn.embedding_lookup(encoding_var, placeholder, name=name + "-enc")
+
+        embedding = tf.layers.conv1d(inputs=encoding,
+                                     filters=self.params.embedding_size,
+                                     kernel_size=self.params.kernel_size,
+                                     padding="same",
+                                     activation=tf.nn.tanh,
+                                     name=name + "-conv-emb")
+
+        # Mask the output to adjust for the sequence length
+        index_list = tf.range(self.params.max_seq_length)
+        index_tensor = tf.tile(tf.expand_dims(index_list, axis=0),
+                               multiples=(tf.shape(placeholder)[0],1))
+        mask = index_tensor < tf.expand_dims(len_placeholder, axis=1)
+        mask = tf.tile(tf.expand_dims(mask, axis=2),
+                       multiples=(1,1,self.params.embedding_size))
+
+        embedding *= tf.cast(mask, dtype=tf.float32)
+        return embedding
 
     def _max_pooling_1d(self, inputs, name):
         pooled = tf.layers.max_pooling1d(inputs=inputs,
