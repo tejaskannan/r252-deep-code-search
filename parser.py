@@ -18,6 +18,8 @@ METHOD_TOKENS_FILE_NAME = "method-tokens.txt"
 NEW_LOWER = "new"
 API_FORMAT = "{0}.{1}"
 TOKEN_FORMAT = "{0} "
+STRING_FORMAT = "\"{0}\""
+CHAR_FORMAT = "\'{0}\'"
 
 class Parser:
 
@@ -295,6 +297,9 @@ class Parser:
             start = ret_type[0]
             while start.type != FeatureNode.TOKEN:
                 start = code_graph.get_out_neighbors(start.id)[0]
+
+            if start.contents == "ANNOTATIONS":
+                print(start.contents)
         else:
             modifiers = code_graph.get_neighbors_with_type_content(modifiers[0].id,
                                                                    neigh_type=None,
@@ -307,9 +312,13 @@ class Parser:
                 return method_str
 
             # We start with the first modifier token
-            start = modifier_tokens[0]
-            for i in range(1, len(modifier_tokens)):
-                if start.startPosition > modifier_tokens[i].startPosition:
+            start = None
+            for i in range(0, len(modifier_tokens)):
+                # We omit annotations
+                if modifier_tokens[i].contents == ANNOTATIONS:
+                    continue
+
+                if start == None or start.startPosition > modifier_tokens[i].startPosition:
                     start = modifier_tokens[i]
 
         
@@ -320,6 +329,17 @@ class Parser:
                 contents = translate_dict[contents]
             if node.type == FeatureNode.TOKEN:
                 contents = contents.lower()
+
+            parents = code_graph.get_in_neighbors(node.id)
+
+            is_string_literal = len(list(filter(lambda n: n.contents == STRING_LITERAL, parents))) > 0
+            if is_string_literal:
+                contents = STRING_FORMAT.format(contents)
+
+            is_char_literal = len(list(filter(lambda n: n.contents == CHAR_LITERAL, parents))) > 0
+            if is_char_literal:
+                contents = CHAR_FORMAT.format(contents)
+
             method_str += TOKEN_FORMAT.format(contents)
             node = code_graph.get_out_neighbors_with_edge_type(node.id, FeatureEdge.NEXT_TOKEN)
             if node == None or len(node) == 0:

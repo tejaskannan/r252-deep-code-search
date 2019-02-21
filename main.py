@@ -139,7 +139,7 @@ def main(argv):
                                   embedding_size=params.embedding_size)
 
             threshold = try_parse_int(threshold, 10)
-            results = db.search(search_query, k=threshold)
+            results = db.search_full(search_query, k=threshold)
             results = list(map(lambda r: str(r.decode("utf-8")), results))
 
             default_file = "searches/" + search_query.replace(" ", "_") + ".txt"

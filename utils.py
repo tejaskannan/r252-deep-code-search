@@ -67,3 +67,6 @@ def write_to_file(file_name, string_arr):
         for elem in string_arr:
             file.write(elem + "\n")
             file.write(line + "\n")
+
+def get_index(key):
+    return key.split(":")[1].replace("'", "")

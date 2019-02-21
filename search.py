@@ -4,7 +4,7 @@ import os
 import heapq
 
 from parser import Parser
-from utils import cosine_similarity
+from utils import cosine_similarity, get_index
 from annoy import AnnoyIndex
 
 REDIS_KEY_FORMAT = "{0}:{1}"
@@ -24,7 +24,7 @@ class DeepCodeSearchDB:
         self.index_path = INDEX_PATH.format(table)
         self.model = model
         self.embedding_size = embedding_size
-        self.index = AnnoyIndex(embedding_size, metric="euclidean")
+        self.index = AnnoyIndex(embedding_size, metric="dot")
         self.num_trees = num_trees
 
     def index_dir(self, dir_name):
@@ -73,22 +73,23 @@ class DeepCodeSearchDB:
                 pipeline.rpush(emb_key, str(entry))
             pipeline.execute()
 
-            self.index.add_item(index, embedding)
+            normalized_embedding = embedding / np.linalg.norm(embedding)
+            self.index.add_item(index, normalized_embedding)
 
             index += 1
         return index - start_index
 
     # K is the max number of results to return
+    # uses annoy for approximate (but faster) searching
     def search(self, description, k=10):
-
-        def get_index(key):
-            return key.split(":")[1].replace("'", "")
 
         embedded_descr = self.model.embed_description(description)
         top_results = []
 
         self.index.load(self.index_path)
-        nearest_indices = self.index.get_nns_by_vector(embedded_descr, k)
+
+        normalized_descr = embedded_descr / np.linalg.norm(embedded_descr)
+        nearest_indices = self.index.get_nns_by_vector(normalized_descr, k)
 
         search_pipeline = self.redis_db.pipeline()
         for method_index in nearest_indices:
@@ -98,6 +99,27 @@ class DeepCodeSearchDB:
         results = []
         for method_body in search_pipeline.execute():
             results.append(method_body)
+        return results
+
+    # Searches for relevant answer by iterating over the entire dataset
+    def search_full(self, description, k=10):
+
+        embedded_descr = self.model.embed_description(description)
+        top_results = []
+
+        for key in self.redis_db.scan_iter(REDIS_KEY_FORMAT.format(self.emb_table, "*")):
+            embedded_code = list(map(lambda x: float(x), self.redis_db.lrange(key, 0, -1)))
+            sim_score = cosine_similarity(embedded_descr, embedded_code)
+            heapq.heappush(top_results, Similarity(str(key), sim_score))
+            if len(top_results) > k:
+                heapq.heappop(top_results)
+
+        results = []
+        for result in reversed(top_results):
+            key = REDIS_KEY_FORMAT.format(self.data_table, get_index(result.redis_id))
+            method_body = self.redis_db.hget(key, METHOD_BODY)
+            results.append(method_body)
+
         return results
 
 
