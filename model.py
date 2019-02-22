@@ -20,6 +20,8 @@ LINE = "-" * 50
 META_NAME = "meta.pkl.gz"
 MODEL_NAME = "model.chk"
 
+BIG_NUMBER = 1e7
+
 class Model:
 
     def __init__(self, params, train_dir="train_data/", valid_dir="validation_data/",
@@ -70,7 +72,7 @@ class Model:
             self.name_len_placeholder = tf.placeholder(dtype=tf.int32,
                                                        shape=[None],
                                                        name="name-len")
-            self.api_len_placehodler = tf.placeholder(dtype=tf.int32,
+            self.api_len_placeholder = tf.placeholder(dtype=tf.int32,
                                                       shape=[None],
                                                       name="api-len")
             self.token_len_placeholder = tf.placeholder(dtype=tf.int32,
@@ -130,7 +132,7 @@ class Model:
                         self.javadoc_pos_placeholder: train_batches.javadoc_batches[i],
                         self.javadoc_neg_placeholder: javadoc_neg,
                         self.name_len_placeholder: train_batches.name_len_batches[i],
-                        self.api_len_placehodler: train_batches.api_len_batches[i],
+                        self.api_len_placeholder: train_batches.api_len_batches[i],
                         self.token_len_placeholder: train_batches.token_len_batches[i],
                         self.javadoc_pos_len_placeholder: train_batches.javadoc_len_batches[i],
                         self.javadoc_neg_len_placeholder: javadoc_neg_len
@@ -156,7 +158,7 @@ class Model:
                         self.javadoc_pos_placeholder: valid_batches.javadoc_batches[i],
                         self.javadoc_neg_placeholder: javadoc_neg,
                         self.name_len_placeholder: valid_batches.name_len_batches[i],
-                        self.api_len_placehodler: valid_batches.api_len_batches[i],
+                        self.api_len_placeholder: valid_batches.api_len_batches[i],
                         self.token_len_placeholder: valid_batches.token_len_batches[i],
                         self.javadoc_pos_len_placeholder: valid_batches.javadoc_len_batches[i],
                         self.javadoc_neg_len_placeholder: javadoc_neg_len
@@ -216,9 +218,14 @@ class Model:
             saver.restore(self._sess, model_path)
 
     def embed_method(self, method_name, method_api, method_tokens):
-        name_vec = self.dataset.vocabulary.get_id_or_unk_multiple(method_name)
-        api_vec = self.dataset.vocabulary.get_id_or_unk_multiple(method_api)
-        token_vec = self.dataset.vocabulary.get_id_or_unk_multiple(method_tokens)
+
+        name_tok = method_name.split(" ")
+        api_tok = method_api.split(" ")
+        method_tok = method_tokens.split(" ")
+
+        name_vec = self.dataset.vocabulary.get_id_or_unk_multiple(name_tok)
+        api_vec = self.dataset.vocabulary.get_id_or_unk_multiple(api_tok)
+        token_vec = self.dataset.vocabulary.get_id_or_unk_multiple(method_tok)
 
         name_tensor = np.array([pad(name_vec, self.params.max_seq_length)])
         name_len_tensor = np.array([min(len(name_vec), self.params.max_seq_length)])
@@ -233,7 +240,7 @@ class Model:
                 self.name_placeholder: name_tensor,
                 self.name_len_placeholder: name_len_tensor,
                 self.api_placeholder: api_tensor,
-                self.api_len_placehodler: api_len_tensor,
+                self.api_len_placeholder: api_len_tensor,
                 self.token_placeholder: token_tensor,
                 self.token_len_placeholder: token_len_tensor
             }
@@ -249,7 +256,6 @@ class Model:
         descr_tensor = np.array([pad(descr_vec, self.params.max_seq_length)])
         descr_len_tensor = np.array([min(len(descr_vec), self.params.max_seq_length)])
 
-
         with self._sess.graph.as_default():
             feed_dict = {
                 self.javadoc_pos_placeholder: descr_tensor,
@@ -257,6 +263,7 @@ class Model:
             }
 
             embedding = self._sess.run(self.description_embedding, feed_dict=feed_dict)
+
         return embedding[0]
 
 
@@ -270,7 +277,7 @@ class Model:
                                                          self.name_len_placeholder,
                                                          name="name-embedding")
                 api_embedding = self._conv_1d_embedding(self.api_placeholder,
-                                                        self.api_len_placehodler,
+                                                        self.api_len_placeholder,
                                                         name="api-embedding")
             else:
                 # Method Name embedding
@@ -279,12 +286,18 @@ class Model:
                                                            name="name-embedding")
                 # API Embedding
                 api_emb, api_state = self._rnn_embedding(self.api_placeholder,
-                                                         self.api_len_placehodler,
+                                                         self.api_len_placeholder,
                                                          name="api-embedding")
 
                 # We combine the outputs from the forward and backward passes
-                name_embedding = self._reduction_layer(name_emb, self.params.embedding_size, name="name-reduction")
-                api_embedding = self._reduction_layer(api_emb, self.params.embedding_size, name="api-reduction")
+                name_embedding = self._reduction_layer(name_emb,
+                                                       self.params.embedding_size,
+                                                       self.name_len_placeholder,
+                                                       name="name-reduction")
+                api_embedding = self._reduction_layer(api_emb,
+                                                      self.params.embedding_size,
+                                                      self.api_len_placeholder,
+                                                      name="api-reduction")
             
             # Method Token embedding
             vocab_size = len(self.dataset.vocabulary)
@@ -292,24 +305,17 @@ class Model:
                                         name="token-embedding-var")
             token_emb = tf.nn.embedding_lookup(token_emb_var, self.token_placeholder)
 
-            # We mask out elements which are padded before feeding tokens into max pooling
-            index_list = tf.range(self.params.max_seq_length)
-            index_tensor = tf.tile(tf.expand_dims(index_list, axis=0),
-                                   multiples=(tf.shape(self.token_placeholder)[0],1))
-            token_mask = index_tensor < tf.expand_dims(self.token_len_placeholder, axis=1)
-            token_mask = tf.tile(tf.expand_dims(token_mask, axis=2),
-                               multiples=(1,1,self.params.embedding_size))
-
-            token_emb *= tf.cast(token_mask, dtype=tf.float32)
+            token_mask = self._create_mask(token_emb, self.token_len_placeholder)
+            token_emb += token_mask
 
             if self.params.combine_type == "attention":
                 name_context = self._attention_layer(name_embedding, name="name-attn")
                 api_context = self._attention_layer(api_embedding, name="api-attn")
                 token_context = self._attention_layer(token_emb, name="token-attn")
             else:
-                name_context = self._max_pooling_1d(name_embedding, name="name-pooling")
-                api_context = self._max_pooling_1d(api_embedding, name="api-pooling")
-                token_context = self._max_pooling_1d(token_emb, name="token-pooling")
+                name_context = tf.reduce_max(name_embedding, axis=1, name="name-pooling")
+                api_context = tf.reduce_max(api_embedding, axis=1, name="api-pooling")
+                token_context = tf.reduce_max(token_emb, axis=1, name="token-pooling")
 
             # Fusion Layer
             code_concat = tf.concat([name_context, api_context, token_context],
@@ -317,7 +323,7 @@ class Model:
             fusion_hidden = tf.layers.dense(inputs=code_concat,
                                             units=self.params.hidden_fusion_units,
                                             activation=tf.nn.tanh,
-                                            name="code-fuction-hidden")
+                                            name="code-function-hidden")
 
             self.code_embedding = tf.layers.dense(inputs=fusion_hidden,
                                                   units=self.params.embedding_size,
@@ -343,28 +349,34 @@ class Model:
 
                 jd_pos_embedding = self._reduction_layer(jd_pos_emb,
                                                          self.params.embedding_size,
+                                                         self.javadoc_pos_len_placeholder,
                                                          name="jd-reduction")
                 jd_neg_embedding = self._reduction_layer(jd_neg_emb,
                                                          self.params.embedding_size,
+                                                         self.javadoc_neg_len_placeholder,
                                                          name="jd-reduction")
 
             if self.params.combine_type == "attention":
                 jd_neg_context = self._attention_layer(jd_neg_embedding, name="jd-attn")
                 jd_pos_context = self._attention_layer(jd_pos_embedding, name="jd-attn")
             else:
-                jd_neg_context = self._max_pooling_1d(jd_neg_embedding, name="jd-pooling")
-                jd_pos_context = self._max_pooling_1d(jd_pos_embedding, name="jd-pooling")
+                jd_neg_context = tf.reduce_max(jd_neg_embedding, axis=1, name="jd-pooling")
+                jd_pos_context = tf.reduce_max(jd_pos_embedding, axis=1, name="jd_pooling")
 
             self.description_embedding = jd_pos_context
+            self.neg_descr_embedding = jd_neg_context
 
-            self.loss_op = tf.reduce_sum(
-                tf.math.maximum(
-                    tf.constant(self.params.margin, dtype=tf.float32) - \
-                        self._cosine_similarity(jd_pos_context, self.code_embedding) + \
-                        self._cosine_similarity(jd_neg_context, self.code_embedding),
-                    tf.constant(0, dtype=tf.float32)
-                )
-            )
+            code_embedding = tf.math.l2_normalize(self.code_embedding, axis=1)
+            jd_pos_context = tf.math.l2_normalize(jd_pos_context, axis=1)
+            jd_neg_context = tf.math.l2_normalize(jd_neg_context, axis=1)
+
+
+            self.loss_op = tf.reduce_sum(tf.nn.relu(
+                tf.constant(self.params.margin, dtype=tf.float32) + \
+                    tf.losses.cosine_distance(jd_pos_context, code_embedding, axis=1) - \
+                    tf.losses.cosine_distance(jd_neg_context, code_embedding, axis=1)
+            ))
+
 
     def _make_training_step(self):
         trainable_vars = self._sess.graph.get_collection(tf.GraphKeys.TRAINABLE_VARIABLES)
@@ -388,8 +400,8 @@ class Model:
                                           activation=tf.nn.tanh,
                                           name=name + "-fw")
         cell_bw = tf.nn.rnn_cell.LSTMCell(num_units=self.params.rnn_units,
-                                          activation=tf.nn.tanh,
-                                          name=name + "-bw")
+                                  activation=tf.nn.tanh,
+                                  name=name + "-bw")
 
         initial_state_fw = cell_fw.zero_state(tf.shape(encoding)[0], dtype=tf.float32)
         initial_state_bw = cell_bw.zero_state(tf.shape(encoding)[0], dtype=tf.float32)
@@ -397,7 +409,6 @@ class Model:
                                         cell_fw=cell_fw,
                                         cell_bw=cell_bw,
                                         inputs=encoding,
-                                        sequence_length=len_placeholder,
                                         initial_state_fw=initial_state_fw,
                                         initial_state_bw=initial_state_bw,
                                         dtype=tf.float32,
@@ -418,15 +429,8 @@ class Model:
                                      name=name + "-conv-emb")
 
         # Mask the output to adjust for variable sequence lengths
-        index_list = tf.range(self.params.max_seq_length)
-        index_tensor = tf.tile(tf.expand_dims(index_list, axis=0),
-                               multiples=(tf.shape(placeholder)[0],1))
-        mask = index_tensor < tf.expand_dims(len_placeholder, axis=1)
-        mask = tf.tile(tf.expand_dims(mask, axis=2),
-                       multiples=(1,1,self.params.embedding_size))
-
-        embedding *= tf.cast(mask, dtype=tf.float32)
-        return embedding
+        mask = self._create_mask(placeholder, len_placeholder)
+        return embedding + mask
 
     def _max_pooling_1d(self, inputs, name):
         pooled = tf.layers.max_pooling1d(inputs=inputs,
@@ -441,13 +445,30 @@ class Model:
         alphas = tf.nn.softmax(weights, name=name + "-attn")
         return tf.reduce_sum(alphas * inputs, axis=1, name=name + "-attn-reduce")
 
-    def _reduction_layer(self, rnn_embedding, output_size, name):
+    def _reduction_layer(self, rnn_embedding, output_size, len_placeholder, name):
         concat_tensor = tf.concat([rnn_embedding[0], rnn_embedding[1]], axis=2,
                                   name=name + "-concat")
-        return tf.layers.dense(inputs=concat_tensor,
-                               units=output_size,
-                               use_bias=False,
-                               name=name + "-dense")
+        reduction = tf.layers.dense(inputs=concat_tensor,
+                                    units=output_size,
+                                    use_bias=False,
+                                    name=name + "-dense")
+
+        mask = self._create_mask(reduction, len_placeholder)
+
+        return reduction + mask
+
+    def _create_mask(self, placeholder, len_placeholder):
+        # We mask out elements which are padded before feeding tokens into an aggregation layer
+        index_list = tf.range(self.params.max_seq_length)  # S
+        index_tensor = tf.tile(tf.expand_dims(index_list, axis=0),
+                               multiples=(tf.shape(placeholder)[0],1))  # B x S
+
+        mask = index_tensor < tf.expand_dims(len_placeholder, axis=1)  # B x S
+
+        mask = tf.tile(tf.expand_dims(mask, axis=2),  # B x S x E
+                      multiples=(1,1,self.params.embedding_size))
+
+        return (1 - tf.cast(mask, dtype=tf.float32)) * -BIG_NUMBER
 
     def _cosine_similarity(self, labels, predictions):
         dot_prod = tf.reduce_sum(labels * predictions, axis=1)

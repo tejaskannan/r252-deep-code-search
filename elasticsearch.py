@@ -74,5 +74,3 @@ def execute_queries():
                 method_bodies.append(method_body)
 
             write_to_file(output_folder + query_str.replace(" ", "_") + ".txt", method_bodies)
-
-execute_queries()

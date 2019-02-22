@@ -1,6 +1,8 @@
 import sys
 import os
 import getopt
+import time
+import numpy as np
 
 from parser import Parser
 from model import Model
@@ -156,12 +158,19 @@ def main(argv):
             if not os.path.exists(out_folder):
                 os.mkdir(out_folder)
 
+            times = []
             for query in search_queries:
-                results = db.search_full(query, k=threshold)
+                start = time.time()
+                results = db.search(query, k=threshold)
+                end = time.time()
+                times.append(end - start)
+
                 results = list(map(lambda r: str(r.decode("utf-8")), results))
 
                 output_file = out_folder + "/" + query.replace(" ", "_") + ".txt"
                 write_to_file(output_file, results)
+
+            print("Average Query Time: {0}s".format(np.average(times)))
             
 
 if __name__ == '__main__':

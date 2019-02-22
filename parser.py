@@ -131,7 +131,7 @@ class Parser:
                 method_str = self._method_to_str(method.method_block, code_graph)
 
                 # During testing, we only omit methods for which there is no proper method body
-                if not only_javadoc and len(method_str.strip()) > 0:
+                if not only_javadoc and len(method_str.strip()) > 0 and len(method_name_tokens) > 0:
                     names.append(" ".join(method_name_tokens))
                     apis.append(" ".join(api_call_tokens))
                     tokens.append(method_tokens)

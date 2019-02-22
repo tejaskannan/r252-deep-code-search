@@ -33,9 +33,9 @@ def remove_whitespace(lst):
 
 def cosine_similarity(u, v):
     dot_prod = np.dot(u, v)
-    u_norm = np.linalg.norm(u)
-    v_norm = np.linalg.norm(v)
-    return 1.0 - (dot_prod / (u_norm * v_norm))
+    u_norm = np.linalg.norm(u) + 1e-12
+    v_norm = np.linalg.norm(v) + 1e-12
+    return dot_prod / (u_norm * v_norm)
 
 def try_parse_int(val, default):
     try:
