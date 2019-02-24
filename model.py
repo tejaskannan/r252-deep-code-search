@@ -121,35 +121,40 @@ class Model:
                 num_valid_batches = valid_batches.num_batches
 
                 for i in range(0, num_train_batches):
-                    javadoc_neg, javadoc_neg_len = \
-                            self._generate_neg_javadoc(train_batches.javadoc_batches[i],
-                                                       train_batches.javadoc_len_batches[i])
+                    neg_batch_index = np.random.randint(0, num_train_batches)
+                    javadoc_neg_batch, javadoc_neg_len_batch = \
+                            self._generate_neg_javadoc(train_batches.javadoc_batches[neg_batch_index],
+                                                       train_batches.javadoc_len_batches[neg_batch_index])
 
                     feed_dict = {
                         self.name_placeholder: train_batches.name_batches[i],
                         self.api_placeholder: train_batches.api_batches[i],
                         self.token_placeholder: train_batches.token_batches[i],
                         self.javadoc_pos_placeholder: train_batches.javadoc_batches[i],
-                        self.javadoc_neg_placeholder: javadoc_neg,
+                        self.javadoc_neg_placeholder: train_batches.javadoc_batches[i],
                         self.name_len_placeholder: train_batches.name_len_batches[i],
                         self.api_len_placeholder: train_batches.api_len_batches[i],
                         self.token_len_placeholder: train_batches.token_len_batches[i],
                         self.javadoc_pos_len_placeholder: train_batches.javadoc_len_batches[i],
-                        self.javadoc_neg_len_placeholder: javadoc_neg_len
+                        self.javadoc_neg_len_placeholder: train_batches.javadoc_len_batches[i]
                     }
 
-                    ops = [self.loss_op, self.optimizer_op]
+                    ops = [self.loss_op, self.description_embedding, self.neg_descr_embedding, self.code_embedding, self.optimizer_op]
                     op_result = self._sess.run(ops, feed_dict=feed_dict)
 
                     avg_train_loss = (op_result[0]) / self.params.batch_size
                     train_losses.append(avg_train_loss)
 
                     print("Training batch {0}/{1}: {2}".format(i, num_train_batches-1, avg_train_loss))
+                    break
+
+                break
 
                 for i in range(0, num_valid_batches):
+                    neg_batch_index = np.random.randint(0, num_valid_batches)
                     javadoc_neg, javadoc_neg_len = \
-                            self._generate_neg_javadoc(valid_batches.javadoc_batches[i],
-                                                       valid_batches.javadoc_len_batches[i])
+                            self._generate_neg_javadoc(valid_batches.javadoc_batches[neg_batch_index],
+                                                       valid_batches.javadoc_len_batches[neg_batch_index])
 
                     feed_dict = {
                         self.name_placeholder: valid_batches.name_batches[i],
@@ -223,16 +228,19 @@ class Model:
         api_tok = method_api.split(" ")
         method_tok = method_tokens.split(" ")
 
-        name_vec = self.dataset.vocabulary.get_id_or_unk_multiple(name_tok)
-        api_vec = self.dataset.vocabulary.get_id_or_unk_multiple(api_tok)
-        token_vec = self.dataset.vocabulary.get_id_or_unk_multiple(method_tok)
+        name_vec = self.dataset.vocabulary.get_id_or_unk_multiple(name_tok,
+                                                                  pad_to_size=self.params.max_seq_length)
+        api_vec = self.dataset.vocabulary.get_id_or_unk_multiple(api_tok,
+                                                                 pad_to_size=self.params.max_seq_length)
+        token_vec = self.dataset.vocabulary.get_id_or_unk_multiple(method_tok,
+                                                                   pad_to_size=self.params.max_seq_length)
 
-        name_tensor = np.array([pad(name_vec, self.params.max_seq_length)])
-        name_len_tensor = np.array([min(len(name_vec), self.params.max_seq_length)])
-        api_tensor = np.array([pad(api_vec, self.params.max_seq_length)])
-        api_len_tensor = np.array([min(len(api_vec), self.params.max_seq_length)])
-        token_tensor = np.array([pad(token_vec, self.params.max_seq_length)])
-        token_len_tensor = np.array([min(len(token_vec), self.params.max_seq_length)])
+        name_tensor = np.array(name_vec)
+        name_len_tensor = np.array([min(len(name_tok), self.params.max_seq_length)])
+        api_tensor = np.array(api_vec)
+        api_len_tensor = np.array([min(len(api_tok), self.params.max_seq_length)])
+        token_tensor = np.array(token_vec)
+        token_len_tensor = np.array([min(len(method_tok), self.params.max_seq_length)])
 
         with self._sess.graph.as_default():
 
@@ -251,10 +259,11 @@ class Model:
 
     def embed_description(self, description):
         descr_tokens = description.split(" ")
-        descr_vec = self.dataset.vocabulary.get_id_or_unk_multiple(descr_tokens)
+        descr_vec = self.dataset.vocabulary.get_id_or_unk_multiple(descr_tokens,
+                                                                   pad_to_size=self.params.max_seq_length)
 
-        descr_tensor = np.array([pad(descr_vec, self.params.max_seq_length)])
-        descr_len_tensor = np.array([min(len(descr_vec), self.params.max_seq_length)])
+        descr_tensor = np.array(descr_vec)
+        descr_len_tensor = np.array([min(len(descr_tokens), self.params.max_seq_length)])
 
         with self._sess.graph.as_default():
             feed_dict = {
@@ -303,19 +312,28 @@ class Model:
             vocab_size = len(self.dataset.vocabulary)
             token_emb_var = tf.Variable(tf.random.normal(shape=(vocab_size, self.params.embedding_size)),
                                         name="token-embedding-var")
-            token_emb = tf.nn.embedding_lookup(token_emb_var, self.token_placeholder)
+            token_embedding = tf.nn.embedding_lookup(token_emb_var, self.token_placeholder)
+            token_embedding = tf.layers.dense(inputs=token_embedding,
+                                              units=self.params.embedding_size,
+                                              activation=tf.nn.tanh,
+                                              name="token-embedding-dense")
 
-            token_mask = self._create_mask(token_emb, self.token_len_placeholder)
-            token_emb += token_mask
+            token_mask = self._create_mask(token_embedding, self.token_len_placeholder)
+            token_embedding += token_mask
 
             if self.params.combine_type == "attention":
                 name_context = self._attention_layer(name_embedding, name="name-attn")
                 api_context = self._attention_layer(api_embedding, name="api-attn")
-                token_context = self._attention_layer(token_emb, name="token-attn")
+                token_context = self._attention_layer(token_embedding, name="token-attn")
             else:
+                # Max Pooling
                 name_context = tf.reduce_max(name_embedding, axis=1, name="name-pooling")
                 api_context = tf.reduce_max(api_embedding, axis=1, name="api-pooling")
-                token_context = tf.reduce_max(token_emb, axis=1, name="token-pooling")
+                token_context = tf.reduce_max(token_embedding, axis=1, name="token-pooling")
+
+            self.name_context = name_context
+            self.api_context = api_context
+            self.token_context = token_context
 
             # Fusion Layer
             code_concat = tf.concat([name_context, api_context, token_context],

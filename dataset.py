@@ -39,9 +39,11 @@ class Dataset:
 
         all_data = [self.train_data[METHOD_NAMES], self.train_data[METHOD_APIS], \
                     self.train_data[METHOD_TOKENS], self.train_data[JAVADOC]]
-        all_tokens = flatten(all_data)
+        all_tokens = set(flatten(all_data))
+        print(len(all_tokens))
         self.vocabulary = Vocabulary.create_vocabulary(all_tokens,
                                                        max_vocab_size,
+                                                       count_threshold=1,
                                                        add_pad=True)
 
         self.train_tensors = self._tensorize_data(self.train_data)
@@ -54,7 +56,7 @@ class Dataset:
         tensor_dict = self.train_tensors if train else self.valid_tensors
 
         combined = list(zip(tensor_dict[METHOD_NAMES], tensor_dict[METHOD_APIS], \
-                            tensor_dict[METHOD_APIS], tensor_dict[JAVADOC], \
+                            tensor_dict[METHOD_TOKENS], tensor_dict[JAVADOC], \
                             tensor_dict[METHOD_NAME_LENGTHS], tensor_dict[METHOD_API_LENGTHS], \
                             tensor_dict[METHOD_TOKEN_LENGTHS], tensor_dict[JAVADOC_LENGTHS]))
 
@@ -107,21 +109,26 @@ class Dataset:
         javadoc = data_dict[JAVADOC]
 
         for i in range(0, len(method_names)):
-            name_vec = self.vocabulary.get_id_or_unk_multiple(method_names[i])
-            name_lengths.append(min(len(name_vec), self.max_seq_length))
-            name_tensors.append(pad(name_vec, self.max_seq_length))
+            name_vec = self.vocabulary.get_id_or_unk_multiple(method_names[i],
+                                                              pad_to_size=self.max_seq_length)
 
-            api_vec = self.vocabulary.get_id_or_unk_multiple(method_api_calls[i])
-            api_lengths.append(min(len(api_vec), self.max_seq_length))
-            api_tensors.append(pad(api_vec, self.max_seq_length))
+            name_lengths.append(min(len(method_names[i]), self.max_seq_length))
+            name_tensors.append(name_vec)
 
-            token_vec = self.vocabulary.get_id_or_unk_multiple(method_tokens[i])
-            token_lengths.append(min(len(token_vec), self.max_seq_length))
-            token_tensors.append(pad(token_vec, self.max_seq_length))
+            api_vec = self.vocabulary.get_id_or_unk_multiple(method_api_calls[i],
+                                                             pad_to_size=self.max_seq_length)
+            api_lengths.append(min(len(method_api_calls[i]), self.max_seq_length))
+            api_tensors.append(api_vec)
 
-            javadoc_vec = self.vocabulary.get_id_or_unk_multiple(javadoc[i])
-            javadoc_lengths.append(min(len(javadoc_vec), self.max_seq_length))
-            javadoc_tensors.append(pad(javadoc_vec, self.max_seq_length))
+            token_vec = self.vocabulary.get_id_or_unk_multiple(method_tokens[i],
+                                                               pad_to_size=self.max_seq_length)
+            token_lengths.append(min(len(method_tokens[i]), self.max_seq_length))
+            token_tensors.append(token_vec)
+
+            javadoc_vec = self.vocabulary.get_id_or_unk_multiple(javadoc[i],
+                                                                 pad_to_size=self.max_seq_length)
+            javadoc_lengths.append(min(len(javadoc[i]), self.max_seq_length))
+            javadoc_tensors.append(javadoc_vec)
 
         return {
             METHOD_NAMES: np.array(name_tensors),
