@@ -40,7 +40,7 @@ class Dataset:
         all_data = [self.train_data[METHOD_NAMES], self.train_data[METHOD_APIS], \
                     self.train_data[METHOD_TOKENS], self.train_data[JAVADOC]]
         all_tokens = set(flatten(all_data))
-        print(len(all_tokens))
+
         self.vocabulary = Vocabulary.create_vocabulary(all_tokens,
                                                        max_vocab_size,
                                                        count_threshold=1,
@@ -74,6 +74,10 @@ class Dataset:
         api_length_batches = []
         token_length_batches = []
         javadoc_length_batches = []
+
+        assert len(names) == len(apis)
+        assert len(tokens) == len(javadocs)
+        assert len(apis) == len(tokens)
 
         for index in range(0, len(names), batch_size):
             limit = index + batch_size

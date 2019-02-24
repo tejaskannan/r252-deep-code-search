@@ -120,57 +120,58 @@ class Model:
                 num_train_batches = train_batches.num_batches
                 num_valid_batches = valid_batches.num_batches
 
-                for i in range(0, num_train_batches):
-                    neg_batch_index = np.random.randint(0, num_train_batches)
+                for i in range(num_train_batches):
                     javadoc_neg_batch, javadoc_neg_len_batch = \
-                            self._generate_neg_javadoc(train_batches.javadoc_batches[neg_batch_index],
-                                                       train_batches.javadoc_len_batches[neg_batch_index])
+                            self._generate_neg_javadoc(train_batches.javadoc_batches[i],
+                                                       train_batches.javadoc_len_batches[i])
+
 
                     feed_dict = {
                         self.name_placeholder: train_batches.name_batches[i],
                         self.api_placeholder: train_batches.api_batches[i],
                         self.token_placeholder: train_batches.token_batches[i],
                         self.javadoc_pos_placeholder: train_batches.javadoc_batches[i],
-                        self.javadoc_neg_placeholder: train_batches.javadoc_batches[i],
+                        self.javadoc_neg_placeholder: javadoc_neg_batch,
                         self.name_len_placeholder: train_batches.name_len_batches[i],
                         self.api_len_placeholder: train_batches.api_len_batches[i],
                         self.token_len_placeholder: train_batches.token_len_batches[i],
                         self.javadoc_pos_len_placeholder: train_batches.javadoc_len_batches[i],
-                        self.javadoc_neg_len_placeholder: train_batches.javadoc_len_batches[i]
+                        self.javadoc_neg_len_placeholder: javadoc_neg_len_batch
                     }
 
-                    ops = [self.loss_op, self.description_embedding, self.neg_descr_embedding, self.code_embedding, self.optimizer_op]
+                    ops = [self.loss_op, self.optimizer_op]
                     op_result = self._sess.run(ops, feed_dict=feed_dict)
 
                     avg_train_loss = (op_result[0]) / self.params.batch_size
                     train_losses.append(avg_train_loss)
 
                     print("Training batch {0}/{1}: {2}".format(i, num_train_batches-1, avg_train_loss))
-                    break
+                    
+                print(LINE)
 
-                break
-
-                for i in range(0, num_valid_batches):
-                    neg_batch_index = np.random.randint(0, num_valid_batches)
-                    javadoc_neg, javadoc_neg_len = \
-                            self._generate_neg_javadoc(valid_batches.javadoc_batches[neg_batch_index],
-                                                       valid_batches.javadoc_len_batches[neg_batch_index])
+                for i in range(num_valid_batches):
+                    javadoc_neg_batch, javadoc_neg_len_batch = \
+                            self._generate_neg_javadoc(valid_batches.javadoc_batches[i],
+                                                       valid_batches.javadoc_len_batches[i])
 
                     feed_dict = {
                         self.name_placeholder: valid_batches.name_batches[i],
                         self.api_placeholder: valid_batches.api_batches[i],
                         self.token_placeholder: valid_batches.token_batches[i],
                         self.javadoc_pos_placeholder: valid_batches.javadoc_batches[i],
-                        self.javadoc_neg_placeholder: javadoc_neg,
+                        self.javadoc_neg_placeholder: javadoc_neg_batch,
                         self.name_len_placeholder: valid_batches.name_len_batches[i],
                         self.api_len_placeholder: valid_batches.api_len_batches[i],
                         self.token_len_placeholder: valid_batches.token_len_batches[i],
                         self.javadoc_pos_len_placeholder: valid_batches.javadoc_len_batches[i],
-                        self.javadoc_neg_len_placeholder: javadoc_neg_len
+                        self.javadoc_neg_len_placeholder: javadoc_neg_len_batch
                     }
                     valid_result = self._sess.run(self.loss_op, feed_dict=feed_dict)
                     avg_valid_loss = valid_result / self.params.batch_size
                     valid_losses.append(avg_valid_loss)
+
+                    print("Validation batch {0}/{1}: {2}".format(i, num_valid_batches-1, avg_valid_loss))
+
 
                 avg_valid_loss = np.average(valid_losses)
                 avg_train_loss = np.average(train_losses)
@@ -271,7 +272,7 @@ class Model:
                 self.javadoc_pos_len_placeholder: descr_len_tensor
             }
 
-            embedding = self._sess.run(self.description_embedding, feed_dict=feed_dict)
+            embedding = self._sess.run(self.descr_embedding, feed_dict=feed_dict)
 
         return embedding[0]
 
@@ -280,21 +281,32 @@ class Model:
 
         with tf.variable_scope(self.scope, reuse=tf.AUTO_REUSE):
 
+            vocab_size = len(self.dataset.vocabulary)
+
+            # Encode name vector
+            name_enc_var = tf.Variable(tf.random.normal(shape=(vocab_size, self.params.embedding_size)),
+                                        name="name-encoding-var")
+            name_encoding = tf.nn.embedding_lookup(name_enc_var, self.name_placeholder)
+
+            # Encode API vector
+            api_enc_var = tf.Variable(tf.random.normal(shape=(vocab_size, self.params.embedding_size)),
+                                        name="api-encoding-var")
+            api_encoding = tf.nn.embedding_lookup(api_enc_var, self.api_placeholder)
 
             if self.params.seq_embedding == "conv":
-                name_embedding = self._conv_1d_embedding(self.name_placeholder,
+                name_embedding = self._conv_1d_embedding(name_encoding,
                                                          self.name_len_placeholder,
                                                          name="name-embedding")
-                api_embedding = self._conv_1d_embedding(self.api_placeholder,
+                api_embedding = self._conv_1d_embedding(api_encoding,
                                                         self.api_len_placeholder,
                                                         name="api-embedding")
             else:
                 # Method Name embedding
-                name_emb, name_state = self._rnn_embedding(self.name_placeholder,
+                name_emb, name_state = self._rnn_embedding(name_encoding,
                                                            self.name_len_placeholder,
                                                            name="name-embedding")
                 # API Embedding
-                api_emb, api_state = self._rnn_embedding(self.api_placeholder,
+                api_emb, api_state = self._rnn_embedding(api_encoding,
                                                          self.api_len_placeholder,
                                                          name="api-embedding")
 
@@ -348,20 +360,27 @@ class Model:
                                                   activation=tf.nn.tanh,
                                                   name="code-fusion")
 
+
+            vocab_size = len(self.dataset.vocabulary)
+            encoding_var = tf.Variable(tf.random.normal(shape=(vocab_size, self.params.embedding_size)),
+                                   name="jd-embedding-var")
+            jd_pos_encoding = tf.nn.embedding_lookup(encoding_var, self.javadoc_pos_placeholder, name="jd-enc")
+            jd_neg_encoding = tf.nn.embedding_lookup(encoding_var, self.javadoc_neg_placeholder, name="jd-enc")
+
             # Javadoc Embeddings
             if self.params.seq_embedding == "conv":
-                jd_pos_embedding = self._conv_1d_embedding(self.javadoc_pos_placeholder,
+                jd_pos_embedding = self._conv_1d_embedding(jd_pos_encoding,
                                                            self.javadoc_pos_len_placeholder,
                                                            name="jd-embedding")
-                jd_neg_embedding = self._conv_1d_embedding(self.javadoc_neg_placeholder,
+                jd_neg_embedding = self._conv_1d_embedding(jd_neg_encoding,
                                                            self.javadoc_neg_len_placeholder,
                                                            name="jd-embedding")
             else:
-                jd_pos_emb, jd_pos_state = self._rnn_embedding(self.javadoc_pos_placeholder,
+                jd_pos_emb, jd_pos_state = self._rnn_embedding(jd_pos_encoding,
                                                                self.javadoc_pos_len_placeholder,
                                                                name="jd-embedding")
 
-                jd_neg_emb, jd_neg_state = self._rnn_embedding(self.javadoc_neg_placeholder,
+                jd_neg_emb, jd_neg_state = self._rnn_embedding(jd_neg_encoding,
                                                                self.javadoc_neg_len_placeholder,
                                                                name="jd-embedding")
 
@@ -381,19 +400,20 @@ class Model:
                 jd_neg_context = tf.reduce_max(jd_neg_embedding, axis=1, name="jd-pooling")
                 jd_pos_context = tf.reduce_max(jd_pos_embedding, axis=1, name="jd_pooling")
 
-            self.description_embedding = jd_pos_context
+            self.descr_embedding = jd_pos_context
             self.neg_descr_embedding = jd_neg_context
 
             code_embedding = tf.math.l2_normalize(self.code_embedding, axis=1)
             jd_pos_context = tf.math.l2_normalize(jd_pos_context, axis=1)
             jd_neg_context = tf.math.l2_normalize(jd_neg_context, axis=1)
 
-
-            self.loss_op = tf.reduce_sum(tf.nn.relu(
-                tf.constant(self.params.margin, dtype=tf.float32) + \
-                    tf.losses.cosine_distance(jd_pos_context, code_embedding, axis=1) - \
-                    tf.losses.cosine_distance(jd_neg_context, code_embedding, axis=1)
-            ))
+            self.loss_op = tf.reduce_sum(
+                tf.nn.relu(
+                    tf.constant(self.params.margin, dtype=tf.float32) - \
+                    tf.reduce_sum(jd_pos_context * code_embedding, axis=1) + \
+                    tf.reduce_sum(jd_neg_context * code_embedding, axis=1)
+                )
+            )
 
 
     def _make_training_step(self):
@@ -409,11 +429,6 @@ class Model:
 
 
     def _rnn_embedding(self, placeholder, len_placeholder, name):
-        vocab_size = len(self.dataset.vocabulary)
-        encoding_var = tf.Variable(tf.random.normal(shape=(vocab_size, self.params.embedding_size)),
-                                   name=name + "-var")
-        encoding = tf.nn.embedding_lookup(encoding_var, placeholder, name=name + "-enc")
-
         cell_fw = tf.nn.rnn_cell.LSTMCell(num_units=self.params.rnn_units,
                                           activation=tf.nn.tanh,
                                           name=name + "-fw")
@@ -421,12 +436,12 @@ class Model:
                                   activation=tf.nn.tanh,
                                   name=name + "-bw")
 
-        initial_state_fw = cell_fw.zero_state(tf.shape(encoding)[0], dtype=tf.float32)
-        initial_state_bw = cell_bw.zero_state(tf.shape(encoding)[0], dtype=tf.float32)
+        initial_state_fw = cell_fw.zero_state(tf.shape(placeholder)[0], dtype=tf.float32)
+        initial_state_bw = cell_bw.zero_state(tf.shape(placeholder)[0], dtype=tf.float32)
         emb, state = tf.nn.bidirectional_dynamic_rnn(
                                         cell_fw=cell_fw,
                                         cell_bw=cell_bw,
-                                        inputs=encoding,
+                                        inputs=placeholder,
                                         initial_state_fw=initial_state_fw,
                                         initial_state_bw=initial_state_bw,
                                         dtype=tf.float32,
@@ -434,12 +449,7 @@ class Model:
         return emb, state
 
     def _conv_1d_embedding(self, placeholder, len_placeholder, name):
-        vocab_size = len(self.dataset.vocabulary)
-        encoding_var = tf.Variable(tf.random.normal(shape=(vocab_size, self.params.embedding_size)),
-                                   name=name + "-var")
-        encoding = tf.nn.embedding_lookup(encoding_var, placeholder, name=name + "-enc")
-
-        embedding = tf.layers.conv1d(inputs=encoding,
+        embedding = tf.layers.conv1d(inputs=placeholder,
                                      filters=self.params.embedding_size,
                                      kernel_size=self.params.kernel_size,
                                      padding="same",
@@ -497,7 +507,8 @@ class Model:
     def _generate_neg_javadoc(self, javadoc, javadoc_len):
         neg_javadoc = []
         neg_javadoc_len = []
-        for i, jd in enumerate(javadoc):
+
+        for i in range(len(javadoc)):
             rand_index = np.random.randint(0, len(javadoc))
             while lst_equal(javadoc[i], javadoc[rand_index]):
                 rand_index = np.random.randint(0, len(javadoc))
@@ -505,9 +516,6 @@ class Model:
             neg_javadoc_len.append(javadoc_len[rand_index])
 
         assert len(neg_javadoc) == len(javadoc)
-
-        for i in range(len(javadoc)):
-            assert not lst_equal(javadoc[i], neg_javadoc[i])
 
         return neg_javadoc, neg_javadoc_len
 
