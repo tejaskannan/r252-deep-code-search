@@ -101,7 +101,8 @@ class Parser:
                 method_invocations = self._get_method_invocations(method.method_block, code_graph)
                 api_call_tokens = []
                 for invocation in method_invocations:
-                    api_call_tokens.append(self._parse_method_invocation(invocation, code_graph))
+                    parsed_invocation = self._parse_method_invocation(invocation, code_graph).strip()
+                    api_call_tokens.append(parsed_invocation)
 
                 obj_init_tokens = self._get_object_inits(method.method_block, code_graph)
                 api_call_tokens += obj_init_tokens
@@ -173,12 +174,13 @@ class Parser:
             token = token_node[0]
             type_node = self._find_variable_type(token, code_graph)
             if type_node is not None:
-                api_str = type_node.contents
+                api_str = ' '.join([t.lower() for t in self._split_camel_case(type_node.contents)])
 
         if len(api_str) == 0:
             return api_str
-        else:
-            return API_FORMAT.format(api_str, identifier.contents)
+
+        contents = ' '.join([t.lower() for t in self._split_camel_case(identifier.contents)])
+        return api_str + ' ' + contents
 
     def _find_variable_type(self, variable_node, code_graph):
         node = variable_node
@@ -349,7 +351,9 @@ class Parser:
         while (node.id != end.id):
             if node.contents == NEW:
                 obj_type_node = code_graph.get_out_neighbors_with_edge_type(node.id, FeatureEdge.NEXT_TOKEN)[0]
-                tokens.append(API_FORMAT.format(obj_type_node.contents, NEW_LOWER))
+                node_contents = ' '.join([t.lower() for t in self._split_camel_case(obj_type_node.contents)])
+                tokens.append(node_contents + ' ' + NEW_LOWER)
+                # tokens.append(API_FORMAT.format(obj_type_node.contents, NEW_LOWER))
                 node = obj_type_node
             node = code_graph.get_out_neighbors_with_edge_type(node.id, FeatureEdge.NEXT_TOKEN)[0]
         return tokens
