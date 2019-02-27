@@ -46,6 +46,9 @@ class Dataset:
                                                        count_threshold=1,
                                                        add_pad=True)
 
+        self.train_tensors = self._tensorize_data(self.train_data)
+        self.valid_tensors = self._tensorize_data(self.valid_data)
+
     # train = False means we are using validation data
     def make_mini_batches(self, batch_size, train=True):
         combined = []

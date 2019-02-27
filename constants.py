@@ -61,6 +61,8 @@ INDEX_PATH = 'index/{0}_index.ann'
 UTF8 = 'utf-8'
 REPORT_THRESHOLD = 100
 
+OVERLAP_FORMAT = "{0}: {1}/{2} ({3})"
+
 translate_dict = {
     'UNDERSCORE': '_',
     'ARROW': '->',

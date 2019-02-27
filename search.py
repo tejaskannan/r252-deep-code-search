@@ -21,6 +21,7 @@ class DeepCodeSearchDB:
         self.embedding_size = embedding_size
         self.index = AnnoyIndex(embedding_size, metric='dot')
         self.num_trees = num_trees
+        self.parser = Parser('filters/tags.txt', 'filters/stopwords.txt')
 
     def index_dir(self, dir_name):
         method_id = 0
@@ -41,8 +42,7 @@ class DeepCodeSearchDB:
 
     # Returns the number of methods indexed using this file
     def index_file(self, file_name, start_index=0):
-        parser = Parser('filters/tags.txt', 'filters/stopwords.txt')
-        method_tokens, method_apis, method_names, _, method_body = parser.parse_file(file_name, only_javadoc=False)
+        method_tokens, method_apis, method_names, _, method_body = self.parser.parse_file(file_name, only_javadoc=False)
         index = start_index
         for name, api, token, body in zip(method_names, method_apis, method_tokens, method_body):
 
@@ -122,3 +122,31 @@ class DeepCodeSearchDB:
             results.append(method_body)
 
         return list(reversed(results))
+
+    def vocabulary_overlap(self, dir_path):
+        # In the order [token, api, name]
+        overlap = [0, 0, 0]
+        total = [0, 0, 0]
+
+        for root, _dirs, files in os.walk(dir_path):
+            for file_name in files:
+                file_path = root + '/' + file_name
+
+                tokens, apis, names, _javadoc, _body = self.parser.parse_file(file_path, only_javadoc=False)
+
+                for i, token_lst in enumerate([tokens, apis, names]):
+                    t, o = self._find_overlap(token_lst)
+                    overlap[i] += o
+                    total[i] += t
+
+        return overlap, total
+
+    def _find_overlap(self, tokens):
+        overlap = 0
+        total = 0
+        for token_sequence in tokens:
+            for token in token_sequence.split(' '):
+                if not self.model.dataset.vocabulary.is_unk(token):
+                    overlap += 1
+                total += 1
+        return total, overlap

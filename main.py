@@ -10,6 +10,7 @@ from parameters import params_from_dict, params_dict_from_json
 from search import DeepCodeSearchDB
 from utils import try_parse_int, value_if_non_empty, write_methods_to_file, add_slash_to_end
 from utils import load_parameters
+from constants import OVERLAP_FORMAT
 
 default_params = {
     'step_size': 0.001,
@@ -32,7 +33,7 @@ default_params = {
 
 def main(argv):
     try:
-        opts, args = getopt.getopt(argv, 'gtxi:o:f:v:l:r:p:n:s:k:', ['generate', 'train', 'index', 'input', 'output', 'train-dir', 'valid-dir', 'log-dir', 'restore', 'params', 'table-name', 'search'])
+        opts, args = getopt.getopt(argv, 'gtxri:o:t:v:l:m:p:n:s:k:', ['generate', 'train', 'index', 'input', 'output', 'train-dir', 'valid-dir', 'log-dir', 'model', 'params', 'table-name', 'search', 'overlap'])
     except getopt.GetoptError:
         print('Incorrect Arguments.')
         sys.exit(0)
@@ -52,13 +53,13 @@ def main(argv):
             inpt = arg
         if opt in ('-o', '--output'):
             outpt = arg
-        if opt in ('-f', '--train-dir'):
+        if opt in ('-t', '--train-dir'):
             train_dir = arg
         if opt in ('-v', '--valid-dir'):
             valid_dir = arg
         if opt in ('-l', '--log-dir'):
             log_dir = arg
-        if opt in ('-r', '--restore'):
+        if opt in ('-m', '--model'):
             restore_dir = arg
         if opt in ('-p', '--params'):
             params_file = arg
@@ -176,7 +177,34 @@ def main(argv):
                 write_methods_to_file(output_file, results)
 
             print('Average Query Time: {0}s'.format(np.average(times)))
+        if opt in ('-r', '--overlap'):
+            if len(restore_dir) == 0:
+                print('Must specify a model to use.')
+                sys.exit(0)
+            if len(inpt) == 0:
+                print('Must specify an input folder.')
+                sys.exit(0)
 
+            inpt = add_slash_to_end(inpt)
+            restore_dir = add_slash_to_end(restore_dir)
+
+            train_dir = value_if_non_empty(train_dir, 'train_data/')
+            valid_dir = value_if_non_empty(valid_dir, 'validation_data/')
+            save_dir = value_if_non_empty(outpt, 'trained_models/')
+            log_dir = value_if_non_empty(log_dir, 'log/')
+
+            model = Model(params, train_dir, valid_dir, save_dir, log_dir)
+            model.restore(restore_dir)
+
+            table_name = value_if_non_empty(table_name, 'code')
+            db = DeepCodeSearchDB(table=table_name, model=model,
+                                  embedding_size=params.embedding_size)
+            overlaps, totals = db.vocabulary_overlap(inpt)
+            labels = ['Method Tokens', 'Method API Calls', 'Method Names', 'Total']
+
+            for i in range(len(overlaps)):
+                frac = overlaps[i] / totals[i]
+                print(OVERLAP_FORMAT.format(labels[i], overlaps[i], totals[i], round(frac, 4)))
 
 if __name__ == '__main__':
     main(sys.argv[1:])
