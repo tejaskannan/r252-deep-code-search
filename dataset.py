@@ -2,9 +2,8 @@
 import numpy as np
 
 from dpu_utils.mlutils import Vocabulary
-from parser import JAVADOC_FILE_NAME, METHOD_NAME_FILE_NAME
-from parser import METHOD_API_FILE_NAME, METHOD_TOKENS_FILE_NAME
-from utils import pad, flatten, load_data_file
+from constants import *
+from utils import flatten, load_data_file
 
 METHOD_NAMES = "method_names"
 METHOD_APIS = "method_apis"

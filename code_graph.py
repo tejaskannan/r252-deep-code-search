@@ -1,5 +1,5 @@
 from graph_pb2 import Graph, FeatureNode, FeatureEdge
-from contents import *
+from constants import *
 
 class CodeGraph:
 

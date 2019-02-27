@@ -7,19 +7,8 @@ from graph_pb2 import Graph
 from graph_pb2 import FeatureNode, FeatureEdge
 from text_filter import TextFilter
 from code_graph import CodeGraph
-from contents import *
+from constants import *
 from utils import append_to_file, remove_whitespace
-
-JAVADOC_FILE_NAME = "javadoc.txt"
-METHOD_NAME_FILE_NAME = "method-names.txt"
-METHOD_API_FILE_NAME = "method-apis.txt"
-METHOD_TOKENS_FILE_NAME = "method-tokens.txt"
-
-NEW_LOWER = "new"
-API_FORMAT = "{0}.{1}"
-TOKEN_FORMAT = "{0} "
-STRING_FORMAT = "\"{0}\""
-CHAR_FORMAT = "\'{0}\'"
 
 class Parser:
 

@@ -1,4 +1,3 @@
-
 import numpy as np
 import tensorflow as tf
 import gzip
@@ -13,77 +12,45 @@ from parser import JAVADOC_FILE_NAME, METHOD_NAME_FILE_NAME
 from parser import METHOD_API_FILE_NAME, METHOD_TOKENS_FILE_NAME
 from parameters import Parameters, params_from_dict
 from dataset import Dataset, Batch
-from utils import pad, lst_equal, log_record
-
-LINE = "-" * 50
-
-META_NAME = "meta.pkl.gz"
-MODEL_NAME = "model.chk"
-
-BIG_NUMBER = 1e7
+from utils import lst_equal, log_record, add_slash_to_end
+from constants import *
 
 class Model:
 
-    def __init__(self, params, train_dir="train_data/", valid_dir="validation_data/",
-                       save_dir="trained_models/", log_dir="log/", model_path=None):
+    def __init__(self, params, train_dir='train_data/', valid_dir='validation_data/',
+                       save_dir='trained_models/', log_dir='log/'):
         self.params = params
 
-        if train_dir[-1] != "/":
-            train_dir += "/"
-        self.train_dir = train_dir
+        self.train_dir = add_slash_to_end(train_dir)
+        self.valid_dir = add_slash_to_end(valid_dir)
+        self.save_dir = add_slash_to_end(save_dir)
+        self.log_dir = add_slash_to_end(log_dir)
 
-        if valid_dir[-1] != "/":
-            valid_dir += "/"
-        self.valid_dir = valid_dir
+        self.scope = 'deep-cs'
 
-        if save_dir[-1] != "/":
-            save_dir += "/"
-        self.save_dir = save_dir
-
-        if log_dir[-1] != "/":
-            log_dir += "/"
-        self.log_dir = log_dir
-
-        self.scope = "deep-cs"
+        max_seq_len = self.params.max_seq_length
 
         self.dataset = Dataset(train_dir=train_dir,
                                valid_dir=valid_dir,
-                               max_seq_length=self.params.max_seq_length,
+                               max_seq_length=max_seq_len,
                                max_vocab_size=self.params.max_vocab_size)
 
         self._sess = tf.Session(graph=tf.Graph())
 
         with self._sess.graph.as_default():
-            self.name_placeholder = tf.placeholder(dtype=tf.int32,
-                                                   shape=[None, self.params.max_seq_length],
-                                                   name="name")
-            self.api_placeholder = tf.placeholder(dtype=tf.int32,
-                                                  shape=[None, self.params.max_seq_length],
-                                                  name="api")
-            self.token_placeholder = tf.placeholder(dtype=tf.int32,
-                                                    shape=[None, self.params.max_seq_length],
-                                                    name="token")
-            self.javadoc_pos_placeholder = tf.placeholder(dtype=tf.int32,
-                                                          shape=[None, self.params.max_seq_length],
-                                                          name="javadoc-pos")
-            self.javadoc_neg_placeholder = tf.placeholder(dtype=tf.int32,
-                                                          shape=[None, self.params.max_seq_length],
-                                                          name="javadoc-neg")
-            self.name_len_placeholder = tf.placeholder(dtype=tf.int32,
-                                                       shape=[None],
-                                                       name="name-len")
-            self.api_len_placeholder = tf.placeholder(dtype=tf.int32,
-                                                      shape=[None],
-                                                      name="api-len")
-            self.token_len_placeholder = tf.placeholder(dtype=tf.int32,
-                                                        shape=[None],
-                                                        name="token-len")
-            self.javadoc_pos_len_placeholder = tf.placeholder(dtype=tf.int32,
-                                                              shape=[None],
-                                                              name="jd-pos-len")
-            self.javadoc_neg_len_placeholder = tf.placeholder(dtype=tf.int32,
-                                                              shape=[None],
-                                                              name="jd-neg-len")
+            # Placeholders for Token Sequences
+            self.method_names = tf.placeholder(dtype=tf.int32, shape=[None, max_seq_len], name='names')
+            self.method_apis = tf.placeholder(dtype=tf.int32, shape=[None, max_seq_len], name='apis')
+            self.method_tokens = tf.placeholder(dtype=tf.int32, shape=[None, max_seq_len], name='tokens')
+            self.description = tf.placeholder(dtype=tf.int32, shape=[None, max_seq_len], name='descr')
+            self.description_neg = tf.placeholder(dtype=tf.int32, shape=[None, max_seq_len], name='descr-neg')
+            
+            # Placeholders for Token Sequence Lengths
+            self.method_names_len = tf.placeholder(dtype=tf.int32, shape=[None], name='names-len')
+            self.method_apis_len = tf.placeholder(dtype=tf.int32, shape=[None], name='apis-len')
+            self.method_tokens_len = tf.placeholder(dtype=tf.int32, shape=[None], name='tokens-len')
+            self.description_len = tf.placeholder(dtype=tf.int32, shape=[None], name='descr-len')
+            self.description_neg_len = tf.placeholder(dtype=tf.int32, shape=[None], name='descr-neg-len')
 
             self.optimizer = tf.train.AdamOptimizer(learning_rate=self.params.step_size)
 
@@ -98,13 +65,16 @@ class Model:
             init_op = tf.variables_initializer(self._sess.graph.get_collection(tf.GraphKeys.GLOBAL_VARIABLES))
             self._sess.run(init_op)
 
-            # Some large value
-            best_valid_loss = 10000
+            # Initializes a name for this training run using the current time
+            train_time = datetime.now().strftime(DATE_FORMAT)
+            train_name = NAME_FORMAT.format(self.params.combine_type, self.params.seq_embedding, train_time)
 
-            train_time = datetime.now().strftime("%Y-%m-%d-%H-%M-%S")
-            train_name = self.params.combine_type + "-" + self.params.seq_embedding + "-" + train_time
-            csv_name = self.log_dir + train_name + "-data.csv"
-            log_record(csv_name, ["Epoch", "Avg Train Loss", "Avg Validation Loss"])
+            # Initalize logging of this training run
+            csv_name = LOG_FORMAT.format(self.log_dir, train_name)
+            log_record(csv_name, ['Epoch', 'Avg Train Loss', 'Avg Validation Loss'])
+
+            # Initialize best loss to a large value
+            best_valid_loss = BIG_NUMBER
 
             for epoch in range(self.params.num_epochs):
                 train_losses = []
@@ -114,7 +84,7 @@ class Model:
                 valid_batches = self.dataset.make_mini_batches(self.params.batch_size, train=False)
 
                 print(LINE)
-                print("Epoch: {0}".format(epoch))
+                print('Epoch: {0}'.format(epoch))
                 print(LINE)
 
                 num_train_batches = train_batches.num_batches
@@ -125,18 +95,17 @@ class Model:
                             self._generate_neg_javadoc(train_batches.javadoc_batches[i],
                                                        train_batches.javadoc_len_batches[i])
 
-
                     feed_dict = {
-                        self.name_placeholder: train_batches.name_batches[i],
-                        self.api_placeholder: train_batches.api_batches[i],
-                        self.token_placeholder: train_batches.token_batches[i],
-                        self.javadoc_pos_placeholder: train_batches.javadoc_batches[i],
-                        self.javadoc_neg_placeholder: javadoc_neg_batch,
-                        self.name_len_placeholder: train_batches.name_len_batches[i],
-                        self.api_len_placeholder: train_batches.api_len_batches[i],
-                        self.token_len_placeholder: train_batches.token_len_batches[i],
-                        self.javadoc_pos_len_placeholder: train_batches.javadoc_len_batches[i],
-                        self.javadoc_neg_len_placeholder: javadoc_neg_len_batch
+                        self.method_names: train_batches.name_batches[i],
+                        self.method_apis: train_batches.api_batches[i],
+                        self.method_tokens: train_batches.token_batches[i],
+                        self.description: train_batches.javadoc_batches[i],
+                        self.description_neg: javadoc_neg_batch,
+                        self.method_names_len: train_batches.name_len_batches[i],
+                        self.method_apis_len: train_batches.api_len_batches[i],
+                        self.method_tokens_len: train_batches.token_len_batches[i],
+                        self.description_len: train_batches.javadoc_len_batches[i],
+                        self.description_neg_len: javadoc_neg_len_batch
                     }
 
                     ops = [self.loss_op, self.optimizer_op]
@@ -145,7 +114,7 @@ class Model:
                     avg_train_loss = (op_result[0]) / self.params.batch_size
                     train_losses.append(avg_train_loss)
 
-                    print("Training batch {0}/{1}: {2}".format(i, num_train_batches-1, avg_train_loss))
+                    print('Training batch {0}/{1}: {2}'.format(i, num_train_batches-1, avg_train_loss))
                     
                 print(LINE)
 
@@ -155,22 +124,22 @@ class Model:
                                                        valid_batches.javadoc_len_batches[i])
 
                     feed_dict = {
-                        self.name_placeholder: valid_batches.name_batches[i],
-                        self.api_placeholder: valid_batches.api_batches[i],
-                        self.token_placeholder: valid_batches.token_batches[i],
-                        self.javadoc_pos_placeholder: valid_batches.javadoc_batches[i],
-                        self.javadoc_neg_placeholder: javadoc_neg_batch,
-                        self.name_len_placeholder: valid_batches.name_len_batches[i],
-                        self.api_len_placeholder: valid_batches.api_len_batches[i],
-                        self.token_len_placeholder: valid_batches.token_len_batches[i],
-                        self.javadoc_pos_len_placeholder: valid_batches.javadoc_len_batches[i],
-                        self.javadoc_neg_len_placeholder: javadoc_neg_len_batch
+                        self.method_names: valid_batches.name_batches[i],
+                        self.method_apis: valid_batches.api_batches[i],
+                        self.method_tokens: valid_batches.token_batches[i],
+                        self.description: valid_batches.javadoc_batches[i],
+                        self.description_neg: javadoc_neg_batch,
+                        self.method_names_len: valid_batches.name_len_batches[i],
+                        self.method_apis_len: valid_batches.api_len_batches[i],
+                        self.method_tokens_len: valid_batches.token_len_batches[i],
+                        self.description_len: valid_batches.javadoc_len_batches[i],
+                        self.description_neg_len: javadoc_neg_len_batch
                     }
                     valid_result = self._sess.run(self.loss_op, feed_dict=feed_dict)
                     avg_valid_loss = valid_result / self.params.batch_size
                     valid_losses.append(avg_valid_loss)
 
-                    print("Validation batch {0}/{1}: {2}".format(i, num_valid_batches-1, avg_valid_loss))
+                    print('Validation batch {0}/{1}: {2}'.format(i, num_valid_batches-1, avg_valid_loss))
 
 
                 avg_valid_loss = np.average(valid_losses)
@@ -179,33 +148,33 @@ class Model:
                 log_record(csv_name, [str(epoch), str(avg_train_loss), str(avg_valid_loss)])
 
                 print(LINE)
-                print("Average training loss in epoch {0}: {1}".format(epoch, avg_train_loss))
-                print("Average validation loss in epoch {0}: {1}".format(epoch, avg_valid_loss))
+                print('Average training loss in epoch {0}: {1}'.format(epoch, avg_train_loss))
+                print('Average validation loss in epoch {0}: {1}'.format(epoch, avg_valid_loss))
 
                 if (avg_valid_loss < best_valid_loss):
                     best_valid_loss = avg_valid_loss
-                    print("Saving model: " + train_name)
+                    print('Saving model: ' + train_name)
                     self.save(self.save_dir, train_name)
 
                 print(LINE)
 
     def save(self, base_folder, name):
         meta_data = {
-            "model_type": type(self).__name__,
-            "parameters": self.params.as_dict(),
-            "name": name,
-            "vocabulary": self.dataset.vocabulary
+            'model_type': type(self).__name__,
+            'parameters': self.params.as_dict(),
+            'name': name,
+            'vocabulary': self.dataset.vocabulary
         }
 
         save_folder = base_folder + name
         if not exists(save_folder):
             mkdir(save_folder)
 
-        meta_path = save_folder + "/" + META_NAME
-        with gzip.GzipFile(meta_path, "wb") as out_file:
+        meta_path = save_folder + '/' + META_NAME
+        with gzip.GzipFile(meta_path, 'wb') as out_file:
             pickle.dump(meta_data, out_file)
 
-        model_path = save_folder + "/" + MODEL_NAME
+        model_path = save_folder + '/' + MODEL_NAME
         saver = tf.train.Saver()
         saver.save(self._sess, model_path)
 
@@ -213,10 +182,10 @@ class Model:
     def restore(self, save_folder):
         meta_data = {}
         meta_path = save_folder + META_NAME
-        with gzip.GzipFile(meta_path, "rb") as in_file:
+        with gzip.GzipFile(meta_path, 'rb') as in_file:
             meta_data = pickle.load(in_file)
-        self.params = params_from_dict(meta_data["parameters"])
-        self.dataset.vocabulary = meta_data["vocabulary"]
+        self.params = params_from_dict(meta_data['parameters'])
+        self.dataset.vocabulary = meta_data['vocabulary']
 
         with self._sess.graph.as_default():
             model_path = save_folder + MODEL_NAME
@@ -225,9 +194,9 @@ class Model:
 
     def embed_method(self, method_name, method_api, method_tokens):
 
-        name_tok = method_name.split(" ")
-        api_tok = method_api.split(" ")
-        method_tok = method_tokens.split(" ")
+        name_tok = method_name.split(' ')
+        api_tok = method_api.split(' ')
+        method_tok = method_tokens.split(' ')
 
         name_vec = self.dataset.vocabulary.get_id_or_unk_multiple(name_tok,
                                                                   pad_to_size=self.params.max_seq_length)
@@ -236,22 +205,22 @@ class Model:
         token_vec = self.dataset.vocabulary.get_id_or_unk_multiple(method_tok,
                                                                    pad_to_size=self.params.max_seq_length)
 
-        name_tensor = np.array(name_vec)
+        name_tensor = np.array([name_vec])
         name_len_tensor = np.array([min(len(name_tok), self.params.max_seq_length)])
-        api_tensor = np.array(api_vec)
+        api_tensor = np.array([api_vec])
         api_len_tensor = np.array([min(len(api_tok), self.params.max_seq_length)])
-        token_tensor = np.array(token_vec)
+        token_tensor = np.array([token_vec])
         token_len_tensor = np.array([min(len(method_tok), self.params.max_seq_length)])
 
         with self._sess.graph.as_default():
 
             feed_dict = {
-                self.name_placeholder: name_tensor,
-                self.name_len_placeholder: name_len_tensor,
-                self.api_placeholder: api_tensor,
-                self.api_len_placeholder: api_len_tensor,
-                self.token_placeholder: token_tensor,
-                self.token_len_placeholder: token_len_tensor
+                self.method_names: name_tensor,
+                self.method_names_len: name_len_tensor,
+                self.method_apis: api_tensor,
+                self.method_apis_len: api_len_tensor,
+                self.method_tokens: token_tensor,
+                self.method_tokens_len: token_len_tensor
             }
 
             embedding = self._sess.run(self.code_embedding, feed_dict=feed_dict)
@@ -259,17 +228,17 @@ class Model:
         return embedding[0]
 
     def embed_description(self, description):
-        descr_tokens = description.split(" ")
+        descr_tokens = description.split(' ')
         descr_vec = self.dataset.vocabulary.get_id_or_unk_multiple(descr_tokens,
                                                                    pad_to_size=self.params.max_seq_length)
 
-        descr_tensor = np.array(descr_vec)
+        descr_tensor = np.array([descr_vec])
         descr_len_tensor = np.array([min(len(descr_tokens), self.params.max_seq_length)])
 
         with self._sess.graph.as_default():
             feed_dict = {
-                self.javadoc_pos_placeholder: descr_tensor,
-                self.javadoc_pos_len_placeholder: descr_len_tensor
+                self.description: descr_tensor,
+                self.description_len: descr_len_tensor
             }
 
             embedding = self._sess.run(self.descr_embedding, feed_dict=feed_dict)
@@ -279,139 +248,103 @@ class Model:
 
     def _make_model(self):
 
+        vocab_size = len(self.dataset.vocabulary)
+        embed_size = self.params.embedding_size
+
         with tf.variable_scope(self.scope, reuse=tf.AUTO_REUSE):
 
-            vocab_size = len(self.dataset.vocabulary)
+            # Encode input tensors
+            name_enc_var = tf.Variable(tf.random.normal(shape=(vocab_size, embed_size)), name='name-enc-var')
+            name_encoding = tf.nn.embedding_lookup(name_enc_var, self.method_names)
 
-            # Encode name vector
-            name_enc_var = tf.Variable(tf.random.normal(shape=(vocab_size, self.params.embedding_size)),
-                                        name="name-encoding-var")
-            name_encoding = tf.nn.embedding_lookup(name_enc_var, self.name_placeholder)
+            api_enc_var = tf.Variable(tf.random.normal(shape=(vocab_size, embed_size)), name='api-enc-var')
+            api_encoding = tf.nn.embedding_lookup(api_enc_var, self.method_apis)
 
-            # Encode API vector
-            api_enc_var = tf.Variable(tf.random.normal(shape=(vocab_size, self.params.embedding_size)),
-                                        name="api-encoding-var")
-            api_encoding = tf.nn.embedding_lookup(api_enc_var, self.api_placeholder)
+            token_enc_var = tf.Variable(tf.random.normal(shape=(vocab_size, embed_size)), name='token-enc-var')
+            token_encoding = tf.nn.embedding_lookup(token_enc_var, self.method_tokens)
 
-            if self.params.seq_embedding == "conv":
-                name_embedding = self._conv_1d_embedding(name_encoding,
-                                                         self.name_len_placeholder,
-                                                         name="name-embedding")
-                api_embedding = self._conv_1d_embedding(api_encoding,
-                                                        self.api_len_placeholder,
-                                                        name="api-embedding")
-            else:
-                # Method Name embedding
-                name_emb, name_state = self._rnn_embedding(name_encoding,
-                                                           self.name_len_placeholder,
-                                                           name="name-embedding")
-                # API Embedding
-                api_emb, api_state = self._rnn_embedding(api_encoding,
-                                                         self.api_len_placeholder,
-                                                         name="api-embedding")
+            descr_enc_var = tf.Variable(tf.random.normal(shape=(vocab_size, embed_size)), name='descr-enc-var')
+            descr_encoding = tf.nn.embedding_lookup(descr_enc_var, self.description, name='descr-enc')
+            descr_neg_encoding = tf.nn.embedding_lookup(descr_enc_var, self.description_neg, name='descr-enc')
 
-                # We combine the outputs from the forward and backward passes
-                name_embedding = self._reduction_layer(name_emb,
-                                                       self.params.embedding_size,
-                                                       self.name_len_placeholder,
-                                                       name="name-reduction")
-                api_embedding = self._reduction_layer(api_emb,
-                                                      self.params.embedding_size,
-                                                      self.api_len_placeholder,
-                                                      name="api-reduction")
-            
             # Method Token embedding
-            vocab_size = len(self.dataset.vocabulary)
-            token_emb_var = tf.Variable(tf.random.normal(shape=(vocab_size, self.params.embedding_size)),
-                                        name="token-embedding-var")
-            token_embedding = tf.nn.embedding_lookup(token_emb_var, self.token_placeholder)
-            token_embedding = tf.layers.dense(inputs=token_embedding,
+            token_embedding = tf.layers.dense(inputs=token_encoding,
                                               units=self.params.embedding_size,
                                               activation=tf.nn.tanh,
-                                              name="token-embedding-dense")
-
-            token_mask = self._create_mask(token_embedding, self.token_len_placeholder)
+                                              name='token-embedding')
+            token_mask = self._create_mask(token_embedding, self.method_tokens_len)
             token_embedding += token_mask
 
-            if self.params.combine_type == "attention":
-                name_context = self._attention_layer(name_embedding, name="name-attn")
-                api_context = self._attention_layer(api_embedding, name="api-attn")
-                token_context = self._attention_layer(token_embedding, name="token-attn")
+            # Embed sequences. By default we use a BiRNN.
+            if self.params.seq_embedding == 'conv':
+                name_embedding = self._conv_1d_embedding(name_encoding, self.method_names_len, name='name-embed')
+                api_embedding = self._conv_1d_embedding(api_encoding, self.method_apis_len, name='api-embed')
+                descr_embedding = self._conv_1d_embedding(descr_encoding, self.description_len, name='descr-embed')
+                descr_neg_embedding = self._conv_1d_embedding(descr_neg_encoding, self.description_neg_len, name='descr-neg-embed')
+            else:
+                # Embeddings using a BiRNN
+                name_emb, _name_state = self._rnn_embedding(name_encoding,
+                                                           self.method_names_len,
+                                                           name='name-rnn')
+                api_emb, _api_state = self._rnn_embedding(api_encoding,
+                                                         self.method_apis_len,
+                                                         name='api-rnn')
+
+                descr_emb, _descr_state = self._rnn_embedding(descr_encoding,
+                                                              self.description_len,
+                                                              name='descr-rnn')
+
+                descr_neg_emb, _descr_neg_state = self._rnn_embedding(descr_neg_encoding,
+                                                                      self.description_neg_len,
+                                                                      name='descr-rnn')
+
+                # Combine the outputs from the forward and backward passes
+                name_embedding = self._reduction_layer(name_emb, embed_size, self.method_names_len,
+                                                       name='name-embed')
+                api_embedding = self._reduction_layer(api_emb, embed_size, self.method_apis_len,
+                                                      name='api-embed')
+                descr_embedding = self._reduction_layer(descr_emb, embed_size, self.description_len,
+                                                        name='descr-embed')
+                descr_neg_embedding = self._reduction_layer(descr_neg_emb, embed_size, self.description_neg_len,
+                                                            name='descr-embed')
+
+            # Combine sequences into a single context vector. By default we use max pooling.
+            if self.params.combine_type == 'attention':
+                name_context = self._attention_layer(name_embedding, name='name-attn')
+                api_context = self._attention_layer(api_embedding, name='api-attn')
+                token_context = self._attention_layer(token_embedding, name='token-attn')
+                descr_context = self._attention_layer(descr_embedding, name='descr-attn')
+                descr_neg_context = self._attention_layer(descr_neg_embedding, name='descr-attn')
             else:
                 # Max Pooling
-                name_context = tf.reduce_max(name_embedding, axis=1, name="name-pooling")
-                api_context = tf.reduce_max(api_embedding, axis=1, name="api-pooling")
-                token_context = tf.reduce_max(token_embedding, axis=1, name="token-pooling")
+                name_context = tf.reduce_max(name_embedding, axis=1, name='name-pooling')
+                api_context = tf.reduce_max(api_embedding, axis=1, name='api-pooling')
+                token_context = tf.reduce_max(token_embedding, axis=1, name='token-pooling')
+                descr_context = tf.reduce_max(descr_embedding, axis=1, name='descr-pooling')
+                descr_neg_context = tf.reduce_max(descr_neg_embedding, axis=1, name='descr-pooling')
 
-            self.name_context = name_context
-            self.api_context = api_context
-            self.token_context = token_context
 
-            # Fusion Layer
+            # Description embedding
+            self.description_embedding = descr_context
+
+            # Code Fusion Layer
             code_concat = tf.concat([name_context, api_context, token_context],
-                                    axis=1, name="code-concat")
-            fusion_hidden = tf.layers.dense(inputs=code_concat,
-                                            units=self.params.hidden_fusion_units,
-                                            activation=tf.nn.tanh,
-                                            name="code-function-hidden")
-
-            self.code_embedding = tf.layers.dense(inputs=fusion_hidden,
-                                                  units=self.params.embedding_size,
+                                    axis=1, name='code-concat')
+            self.code_embedding = tf.layers.dense(inputs=code_concat,
+                                                  units=embed_size,
                                                   activation=tf.nn.tanh,
-                                                  name="code-fusion")
+                                                  name='code-fusion')
 
-
-            vocab_size = len(self.dataset.vocabulary)
-            encoding_var = tf.Variable(tf.random.normal(shape=(vocab_size, self.params.embedding_size)),
-                                   name="jd-embedding-var")
-            jd_pos_encoding = tf.nn.embedding_lookup(encoding_var, self.javadoc_pos_placeholder, name="jd-enc")
-            jd_neg_encoding = tf.nn.embedding_lookup(encoding_var, self.javadoc_neg_placeholder, name="jd-enc")
-
-            # Javadoc Embeddings
-            if self.params.seq_embedding == "conv":
-                jd_pos_embedding = self._conv_1d_embedding(jd_pos_encoding,
-                                                           self.javadoc_pos_len_placeholder,
-                                                           name="jd-embedding")
-                jd_neg_embedding = self._conv_1d_embedding(jd_neg_encoding,
-                                                           self.javadoc_neg_len_placeholder,
-                                                           name="jd-embedding")
-            else:
-                jd_pos_emb, jd_pos_state = self._rnn_embedding(jd_pos_encoding,
-                                                               self.javadoc_pos_len_placeholder,
-                                                               name="jd-embedding")
-
-                jd_neg_emb, jd_neg_state = self._rnn_embedding(jd_neg_encoding,
-                                                               self.javadoc_neg_len_placeholder,
-                                                               name="jd-embedding")
-
-                jd_pos_embedding = self._reduction_layer(jd_pos_emb,
-                                                         self.params.embedding_size,
-                                                         self.javadoc_pos_len_placeholder,
-                                                         name="jd-reduction")
-                jd_neg_embedding = self._reduction_layer(jd_neg_emb,
-                                                         self.params.embedding_size,
-                                                         self.javadoc_neg_len_placeholder,
-                                                         name="jd-reduction")
-
-            if self.params.combine_type == "attention":
-                jd_neg_context = self._attention_layer(jd_neg_embedding, name="jd-attn")
-                jd_pos_context = self._attention_layer(jd_pos_embedding, name="jd-attn")
-            else:
-                jd_neg_context = tf.reduce_max(jd_neg_embedding, axis=1, name="jd-pooling")
-                jd_pos_context = tf.reduce_max(jd_pos_embedding, axis=1, name="jd_pooling")
-
-            self.descr_embedding = jd_pos_context
-            self.neg_descr_embedding = jd_neg_context
-
-            code_embedding = tf.math.l2_normalize(self.code_embedding, axis=1)
-            jd_pos_context = tf.math.l2_normalize(jd_pos_context, axis=1)
-            jd_neg_context = tf.math.l2_normalize(jd_neg_context, axis=1)
+            # Normalize embeddings to prepare for cosine similarity
+            normalized_code = tf.math.l2_normalize(self.code_embedding, axis=1)
+            normalied_descr = tf.math.l2_normalize(descr_context, axis=1)
+            normalized_descr_neg = tf.math.l2_normalize(descr_neg_context, axis=1)
 
             self.loss_op = tf.reduce_sum(
                 tf.nn.relu(
                     tf.constant(self.params.margin, dtype=tf.float32) - \
-                    tf.reduce_sum(jd_pos_context * code_embedding, axis=1) + \
-                    tf.reduce_sum(jd_neg_context * code_embedding, axis=1)
+                    tf.reduce_sum(normalied_descr * normalized_code, axis=1) + \
+                    tf.reduce_sum(normalized_descr_neg * normalized_code, axis=1)
                 )
             )
 
@@ -431,10 +364,10 @@ class Model:
     def _rnn_embedding(self, placeholder, len_placeholder, name):
         cell_fw = tf.nn.rnn_cell.LSTMCell(num_units=self.params.rnn_units,
                                           activation=tf.nn.tanh,
-                                          name=name + "-fw")
+                                          name=name + '-fw')
         cell_bw = tf.nn.rnn_cell.LSTMCell(num_units=self.params.rnn_units,
                                   activation=tf.nn.tanh,
-                                  name=name + "-bw")
+                                  name=name + '-bw')
 
         initial_state_fw = cell_fw.zero_state(tf.shape(placeholder)[0], dtype=tf.float32)
         initial_state_bw = cell_bw.zero_state(tf.shape(placeholder)[0], dtype=tf.float32)
@@ -452,9 +385,9 @@ class Model:
         embedding = tf.layers.conv1d(inputs=placeholder,
                                      filters=self.params.embedding_size,
                                      kernel_size=self.params.kernel_size,
-                                     padding="same",
+                                     padding='same',
                                      activation=tf.nn.tanh,
-                                     name=name + "-conv-emb")
+                                     name=name + '-conv-emb')
 
         # Mask the output to adjust for variable sequence lengths
         mask = self._create_mask(placeholder, len_placeholder)
@@ -469,17 +402,17 @@ class Model:
 
     def _attention_layer(self, inputs, name):
         weights = tf.layers.dense(inputs=inputs, units=1, activation=tf.nn.tanh,
-                                  name=name + "-attn-weights")
-        alphas = tf.nn.softmax(weights, name=name + "-attn")
-        return tf.reduce_sum(alphas * inputs, axis=1, name=name + "-attn-reduce")
+                                  name=name + '-attn-weights')
+        alphas = tf.nn.softmax(weights, name=name + '-attn')
+        return tf.reduce_sum(alphas * inputs, axis=1, name=name + '-attn-reduce')
 
     def _reduction_layer(self, rnn_embedding, output_size, len_placeholder, name):
         concat_tensor = tf.concat([rnn_embedding[0], rnn_embedding[1]], axis=2,
-                                  name=name + "-concat")
+                                  name=name + '-concat')
         reduction = tf.layers.dense(inputs=concat_tensor,
                                     units=output_size,
                                     use_bias=False,
-                                    name=name + "-dense")
+                                    name=name + '-dense')
 
         mask = self._create_mask(reduction, len_placeholder)
 
@@ -497,12 +430,6 @@ class Model:
                       multiples=(1,1,self.params.embedding_size))
 
         return (1 - tf.cast(mask, dtype=tf.float32)) * -BIG_NUMBER
-
-    def _cosine_similarity(self, labels, predictions):
-        dot_prod = tf.reduce_sum(labels * predictions, axis=1)
-        label_norm = tf.norm(labels, axis=1)
-        predict_norm = tf.norm(predictions, axis=1)
-        return dot_prod / (label_norm * predict_norm)
 
     def _generate_neg_javadoc(self, javadoc, javadoc_len):
         neg_javadoc = []

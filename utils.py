@@ -1,13 +1,6 @@
 import numpy as np
 import csv
 
-def pad(text, max_seq_length):
-    if len(text) > max_seq_length:
-        return text[:max_seq_length]
-    return np.pad(text, (0, max_seq_length - len(text)),
-                  'constant',
-                  constant_values=0)
-
 def flatten(lists):
     flattened = []
     for token_list in lists:
@@ -67,6 +60,11 @@ def write_to_file(file_name, string_arr):
         for elem in string_arr:
             file.write(elem + "\n")
             file.write(line + "\n")
+
+def add_slash_to_end(dir_path):
+    if dir_path[-1] != '/':
+        return dir_path + '/'
+    return dir_path
 
 def get_index(key):
     return key.split(":")[1].replace("'", "")
