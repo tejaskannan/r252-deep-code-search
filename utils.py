@@ -1,5 +1,7 @@
 import numpy as np
 import csv
+import pickle
+import gzip
 from constants import *
 
 
@@ -80,3 +82,10 @@ def add_slash_to_end(dir_path):
 
 def get_index(key):
     return key.split(':')[1].replace('\'', '')
+
+
+def load_parameters(restore_dir):
+    path = restore_dir + META_NAME
+    with gzip.GzipFile(path, 'rb') as in_file:
+            meta_data = pickle.load(in_file)
+    return meta_data['parameters']

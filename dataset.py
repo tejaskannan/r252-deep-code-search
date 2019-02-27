@@ -34,19 +34,17 @@ class Dataset:
             JAVADOC: load_data_file(valid_dir + JAVADOC_FILE_NAME)
         }
 
-        self.max_seq_length = max_seq_length
-
         all_data = [self.train_data[METHOD_NAMES], self.train_data[METHOD_APIS],
                     self.train_data[METHOD_TOKENS], self.train_data[JAVADOC]]
         all_tokens = set(flatten(all_data))
+
+        self.max_seq_length = max_seq_length
+        self.max_vocab_size = max_vocab_size
 
         self.vocabulary = Vocabulary.create_vocabulary(all_tokens,
                                                        max_vocab_size,
                                                        count_threshold=1,
                                                        add_pad=True)
-
-        self.train_tensors = self._tensorize_data(self.train_data)
-        self.valid_tensors = self._tensorize_data(self.valid_data)
 
     # train = False means we are using validation data
     def make_mini_batches(self, batch_size, train=True):
@@ -94,6 +92,15 @@ class Dataset:
                      name_length_batches, api_length_batches, token_length_batches,
                      javadoc_length_batches)
 
+    def create_tensor(self, sequence):
+        # We ensure that we are using the tokens within the given sequence
+        if type(sequence) is str:
+            sequence = sequence.split(' ')
+
+        seq_tensor = self.vocabulary.get_id_or_unk_multiple(sequence, pad_to_size=self.max_seq_length)
+        seq_length = min(len(sequence), self.max_seq_length)
+        return seq_tensor, seq_length
+
     def _tensorize_data(self, data_dict):
 
         name_tensors = []
@@ -112,25 +119,20 @@ class Dataset:
         javadoc = data_dict[JAVADOC]
 
         for i in range(0, len(method_names)):
-            name_vec = self.vocabulary.get_id_or_unk_multiple(method_names[i],
-                                                              pad_to_size=self.max_seq_length)
-
-            name_lengths.append(min(len(method_names[i]), self.max_seq_length))
+            name_vec, name_len = self.create_tensor(method_names[i])
+            name_lengths.append(name_len)
             name_tensors.append(name_vec)
 
-            api_vec = self.vocabulary.get_id_or_unk_multiple(method_api_calls[i],
-                                                             pad_to_size=self.max_seq_length)
-            api_lengths.append(min(len(method_api_calls[i]), self.max_seq_length))
+            api_vec, api_len = self.create_tensor(method_api_calls[i])
+            api_lengths.append(api_len)
             api_tensors.append(api_vec)
 
-            token_vec = self.vocabulary.get_id_or_unk_multiple(method_tokens[i],
-                                                               pad_to_size=self.max_seq_length)
-            token_lengths.append(min(len(method_tokens[i]), self.max_seq_length))
+            token_vec, token_len = self.create_tensor(method_tokens[i])
+            token_lengths.append(token_len)
             token_tensors.append(token_vec)
 
-            javadoc_vec = self.vocabulary.get_id_or_unk_multiple(javadoc[i],
-                                                                 pad_to_size=self.max_seq_length)
-            javadoc_lengths.append(min(len(javadoc[i]), self.max_seq_length))
+            javadoc_vec, javadoc_len = self.create_tensor(javadoc[i])
+            javadoc_lengths.append(javadoc_len)
             javadoc_tensors.append(javadoc_vec)
 
         return {

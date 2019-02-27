@@ -29,14 +29,15 @@ class Model:
 
         self.scope = 'deep-cs'
 
-        max_seq_len = self.params.max_seq_length
-
         self.dataset = Dataset(train_dir=train_dir,
                                valid_dir=valid_dir,
-                               max_seq_length=max_seq_len,
+                               max_seq_length=self.params.max_seq_length,
                                max_vocab_size=self.params.max_vocab_size)
 
         self._sess = tf.Session(graph=tf.Graph())
+
+        # We this variable after a possible restore because the parameters dict may be overwritten
+        max_seq_len = self.params.max_seq_length
 
         with self._sess.graph.as_default():
             # Placeholders for Token Sequences
@@ -183,6 +184,7 @@ class Model:
         meta_path = save_folder + META_NAME
         with gzip.GzipFile(meta_path, 'rb') as in_file:
             meta_data = pickle.load(in_file)
+
         self.params = params_from_dict(meta_data['parameters'])
         self.dataset.vocabulary = meta_data['vocabulary']
 
@@ -193,23 +195,16 @@ class Model:
 
     def embed_method(self, method_name, method_api, method_tokens):
 
-        name_tok = method_name.split(' ')
-        api_tok = method_api.split(' ')
-        method_tok = method_tokens.split(' ')
-
-        name_vec = self.dataset.vocabulary.get_id_or_unk_multiple(name_tok,
-                                                                  pad_to_size=self.params.max_seq_length)
-        api_vec = self.dataset.vocabulary.get_id_or_unk_multiple(api_tok,
-                                                                 pad_to_size=self.params.max_seq_length)
-        token_vec = self.dataset.vocabulary.get_id_or_unk_multiple(method_tok,
-                                                                   pad_to_size=self.params.max_seq_length)
+        name_vec, name_len = self.dataset.create_tensor(method_name)
+        api_vec, api_len = self.dataset.create_tensor(method_api)
+        token_vec, token_len = self.dataset.create_tensor(method_tokens)
 
         name_tensor = np.array([name_vec])
-        name_len_tensor = np.array([min(len(name_tok), self.params.max_seq_length)])
+        name_len_tensor = np.array([name_len])
         api_tensor = np.array([api_vec])
-        api_len_tensor = np.array([min(len(api_tok), self.params.max_seq_length)])
+        api_len_tensor = np.array([api_len])
         token_tensor = np.array([token_vec])
-        token_len_tensor = np.array([min(len(method_tok), self.params.max_seq_length)])
+        token_len_tensor = np.array([token_len])
 
         with self._sess.graph.as_default():
 
@@ -227,12 +222,10 @@ class Model:
         return embedding[0]
 
     def embed_description(self, description):
-        descr_tokens = description.split(' ')
-        descr_vec = self.dataset.vocabulary.get_id_or_unk_multiple(descr_tokens,
-                                                                   pad_to_size=self.params.max_seq_length)
+        descr_vec, descr_len = self.dataset.create_tensor(description)
 
         descr_tensor = np.array([descr_vec])
-        descr_len_tensor = np.array([min(len(descr_tokens), self.params.max_seq_length)])
+        descr_len_tensor = np.array([descr_len])
 
         with self._sess.graph.as_default():
             feed_dict = {
@@ -240,7 +233,7 @@ class Model:
                 self.description_len: descr_len_tensor
             }
 
-            embedding = self._sess.run(self.descr_embedding, feed_dict=feed_dict)
+            embedding = self._sess.run(self.description_embedding, feed_dict=feed_dict)
 
         return embedding[0]
 
@@ -288,6 +281,7 @@ class Model:
                 name_emb, _name_state = self._rnn_embedding(name_encoding,
                                                             self.method_names_len,
                                                             name='name-rnn')
+
                 api_emb, _api_state = self._rnn_embedding(api_encoding,
                                                           self.method_apis_len,
                                                           name='api-rnn')
@@ -303,10 +297,13 @@ class Model:
                 # Combine the outputs from the forward and backward passes
                 name_embedding = self._reduction_layer(name_emb, embed_size, self.method_names_len,
                                                        name='name-embed')
+
                 api_embedding = self._reduction_layer(api_emb, embed_size, self.method_apis_len,
                                                       name='api-embed')
+
                 descr_embedding = self._reduction_layer(descr_emb, embed_size, self.description_len,
                                                         name='descr-embed')
+
                 descr_neg_embedding = self._reduction_layer(descr_neg_emb, embed_size, self.description_neg_len,
                                                             name='descr-embed')
 

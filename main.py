@@ -9,6 +9,7 @@ from model import Model
 from parameters import params_from_dict, params_dict_from_json
 from search import DeepCodeSearchDB
 from utils import try_parse_int, value_if_non_empty, write_methods_to_file, add_slash_to_end
+from utils import load_parameters
 
 default_params = {
     'step_size': 0.001,
@@ -68,6 +69,10 @@ def main(argv):
             search_query = arg
         if opt == '-k':
             threshold = arg
+
+    # Restore parameters from the given checkpoint
+    if len(restore_dir) > 0:
+        params = load_parameters(restore_dir)
 
     params = params_from_dict(params)
     for opt, arg in opts:
@@ -161,7 +166,7 @@ def main(argv):
             times = []
             for query in search_queries:
                 start = time.time()
-                results = db.search(query, k=threshold)
+                results = db.search_full(query, k=threshold)
                 end = time.time()
                 times.append(end - start)
 
