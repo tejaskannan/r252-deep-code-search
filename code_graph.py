@@ -1,15 +1,16 @@
 from graph_pb2 import Graph, FeatureNode, FeatureEdge
 from constants import *
 
+
 class CodeGraph:
 
     def __init__(self, ast_graph):
 
-        self.nodes = { n.id : n for n in ast_graph.node }
-        self.edges = { (e.sourceId, e.destinationId): e for e in ast_graph.edge }
+        self.nodes = {n.id: n for n in ast_graph.node}
+        self.edges = {(e.sourceId, e.destinationId): e for e in ast_graph.edge}
 
-        self.adj = { n.id: [] for n in ast_graph.node }
-        self.rev_adj = { n.id: [] for n in ast_graph.node }
+        self.adj = {n.id: [] for n in ast_graph.node}
+        self.rev_adj = {n.id: [] for n in ast_graph.node}
 
         for src, dest in self.edges.keys():
             self.adj[src].append(dest)
@@ -33,7 +34,7 @@ class CodeGraph:
         return list(filter(lambda n: n.contents == node_content, self.nodes.values()))
 
     def get_nodes_with_type_content(self, node_type, node_content):
-        return list(filter(lambda n: n.contents == node_content and n.type == node_type, \
+        return list(filter(lambda n: n.contents == node_content and n.type == node_type,
                            self.nodes.values()))
 
     def get_out_neighbors(self, node_id):
@@ -43,15 +44,15 @@ class CodeGraph:
         return [self.nodes[i] for i in self.rev_adj[node_id]]
 
     def get_neighbors_with_type_content(self, node_id, neigh_type, neigh_content):
-        assert neigh_type != None or neigh_content != None
+        assert neigh_type is not None or neigh_content is not None, 'Must have either Type or Content'
 
         neighbor_ids = self.adj[node_id]
         neighbors = []
         for node_id in neighbor_ids:
             node = self.nodes[node_id]
-            if neigh_type == None and node.contents == neigh_content:
+            if neigh_type is None and node.contents == neigh_content:
                 neighbors.append(node)
-            elif node.type == neigh_type and neigh_content == None:
+            elif node.type == neigh_type and neigh_content is None:
                 neighbors.append(node)
             elif node.type == neigh_type and node.contents == neigh_content:
                 neighbors.append(node)
@@ -87,7 +88,6 @@ class CodeGraph:
     def get_in_edges_with_type(self, node_id, edge_type):
         return list(filter(lambda e: e.type == edge_type, self.get_in_edges(node_id)))
 
-
     def _create_variables_dict(self):
         var_dict = {}
         var_ast_nodes = self.get_nodes_with_type_content(FeatureNode.AST_ELEMENT, VARIABLE)
@@ -96,7 +96,7 @@ class CodeGraph:
             type_node = self.get_neighbors_with_type_content(var_ast_node.id,
                                                              neigh_type=None,
                                                              neigh_content=TYPE)
-            if type_node == None or len(type_node) == 0:
+            if type_node is None or len(type_node) == 0:
                 continue
             else:
                 type_node = type_node[0]
@@ -135,7 +135,7 @@ class CodeGraph:
     def _add_method(self, method_node, javadoc_node, method_dict):
         method_assoc_tokens = self.get_out_neighbors_with_edge_type(method_node.id,
                                                                     edge_type=FeatureEdge.ASSOCIATED_TOKEN)
-        if method_assoc_tokens == None or len(method_assoc_tokens) == 0:
+        if method_assoc_tokens is None or len(method_assoc_tokens) == 0:
             return
 
         method_name_node = next(filter(lambda n: n.type == FeatureNode.IDENTIFIER_TOKEN,
@@ -180,6 +180,7 @@ class Variable:
     def __init__(self, type_node, var_node):
         self.type_node = type_node
         self.var_node = var_node
+
 
 class Method:
 

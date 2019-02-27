@@ -1,26 +1,26 @@
 import re
-
 from dpu_utils import codeutils
 from html.parser import HTMLParser
+
 
 class TextFilter:
 
     def __init__(self, tags_file, stopwords_file):
-        self.java_keywords = set(codeutils.get_language_keywords("java"))
+        self.java_keywords = set(codeutils.get_language_keywords('java'))
         self.javadoc_tags = self._load_from_file(tags_file)
         self.stopwords = self._load_from_file(stopwords_file)
-        self.token_regex = re.compile(r"[\{\}\[\]\(\)\*\n\t,><\\]") 
+        self.token_regex = re.compile(r'[\{\}\[\]\(\)\*\n\t,><\\]')
 
     def apply_to_token_lst(self, tokens, use_keywords=True, use_stopwords=True, use_tags=False):
-        tokens = [self.token_regex.sub("", t.strip()) for t in tokens]
+        tokens = [self.token_regex.sub('', t.strip()) for t in tokens]
         all_tokens = []
         for token in tokens:
-            all_tokens += token.split("_")
+            all_tokens += token.split('_')
         return list(filter(lambda t: self.filter_single_token(t, use_keywords, use_stopwords, use_tags),
                            all_tokens))
 
     def apply_to_javadoc(self, text, use_stopwords=False, use_tags=True):
-        lines = text.split("\n")
+        lines = text.split('\n')
         cleaned_lines = []
 
         html_parser = JavadocHTMLParser()
@@ -35,7 +35,6 @@ class TextFilter:
             filtered_tokens = list(filter(lambda t: self.filter_single_token(t, False, use_stopwords, use_tags),
                                           tokens))
 
-
             stripped_tokens = []
             for token in filtered_tokens:
                 html_parser.feed(token)
@@ -46,7 +45,7 @@ class TextFilter:
             for token in stripped_tokens:
                 for tag in self.javadoc_tags:
                     if tag in token:
-                        token = token.replace(tag, "")
+                        token = token.replace(tag, '')
                         break
                 cleaned_tokens.append(token)
 
@@ -65,10 +64,9 @@ class TextFilter:
             return False
         return True
 
-
     def _load_from_file(self, file_name):
         tokens = set()
-        with open(file_name, "r") as token_file:
+        with open(file_name, 'r') as token_file:
             for token in token_file:
                 tokens.add(token.strip())
         return tokens
@@ -85,7 +83,7 @@ class JavadocHTMLParser(HTMLParser):
         self.contents.append(data)
 
     def get_data(self):
-        return "".join(self.contents)
+        return ''.join(self.contents)
 
     def reset(self):
         super().reset()

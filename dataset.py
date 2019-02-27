@@ -23,20 +23,20 @@ class Dataset:
         self.train_data = {
             METHOD_NAMES: load_data_file(train_dir + METHOD_NAME_FILE_NAME),
             METHOD_APIS: load_data_file(train_dir + METHOD_API_FILE_NAME),
-            METHOD_TOKENS : load_data_file(train_dir + METHOD_TOKENS_FILE_NAME),
+            METHOD_TOKENS: load_data_file(train_dir + METHOD_TOKENS_FILE_NAME),
             JAVADOC: load_data_file(train_dir + JAVADOC_FILE_NAME)
         }
 
         self.valid_data = {
             METHOD_NAMES: load_data_file(valid_dir + METHOD_NAME_FILE_NAME),
             METHOD_APIS: load_data_file(valid_dir + METHOD_API_FILE_NAME),
-            METHOD_TOKENS : load_data_file(valid_dir + METHOD_TOKENS_FILE_NAME),
+            METHOD_TOKENS: load_data_file(valid_dir + METHOD_TOKENS_FILE_NAME),
             JAVADOC: load_data_file(valid_dir + JAVADOC_FILE_NAME)
         }
 
         self.max_seq_length = max_seq_length
 
-        all_data = [self.train_data[METHOD_NAMES], self.train_data[METHOD_APIS], \
+        all_data = [self.train_data[METHOD_NAMES], self.train_data[METHOD_APIS],
                     self.train_data[METHOD_TOKENS], self.train_data[JAVADOC]]
         all_tokens = set(flatten(all_data))
 
@@ -54,15 +54,15 @@ class Dataset:
 
         tensor_dict = self.train_tensors if train else self.valid_tensors
 
-        combined = list(zip(tensor_dict[METHOD_NAMES], tensor_dict[METHOD_APIS], \
-                            tensor_dict[METHOD_TOKENS], tensor_dict[JAVADOC], \
-                            tensor_dict[METHOD_NAME_LENGTHS], tensor_dict[METHOD_API_LENGTHS], \
+        combined = list(zip(tensor_dict[METHOD_NAMES], tensor_dict[METHOD_APIS],
+                            tensor_dict[METHOD_TOKENS], tensor_dict[JAVADOC],
+                            tensor_dict[METHOD_NAME_LENGTHS], tensor_dict[METHOD_API_LENGTHS],
                             tensor_dict[METHOD_TOKEN_LENGTHS], tensor_dict[JAVADOC_LENGTHS]))
 
         np.random.shuffle(combined)
 
         names, apis, tokens, javadocs, name_lengths, \
-               api_lengths, token_lengths, javadoc_lengths = zip(*combined)
+            api_lengths, token_lengths, javadoc_lengths = zip(*combined)
 
         name_batches = []
         api_batches = []
@@ -90,8 +90,8 @@ class Dataset:
             token_length_batches.append(token_lengths[index:limit])
             javadoc_length_batches.append(javadoc_lengths[index:limit])
 
-        return Batch(name_batches, api_batches, token_batches, javadoc_batches, \
-                     name_length_batches, api_length_batches, token_length_batches, \
+        return Batch(name_batches, api_batches, token_batches, javadoc_batches,
+                     name_length_batches, api_length_batches, token_length_batches,
                      javadoc_length_batches)
 
     def _tensorize_data(self, data_dict):

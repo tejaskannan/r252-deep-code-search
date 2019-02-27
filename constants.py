@@ -51,6 +51,16 @@ DATE_FORMAT = '%Y-%m-%d-%H-%M-%S'
 NAME_FORMAT = '{0}-{1}-{2}'
 LOG_FORMAT = '{0}{1}-data.csv'
 
+# DB constants
+REDIS_KEY_FORMAT = '{0}:{1}'
+METHOD_NAME = 'method_name'
+METHOD_API = 'method_api'
+METHOD_BODY = 'method_body'
+METHOD_TOKENS = 'method_tokens'
+INDEX_PATH = 'index/{0}_index.ann'
+UTF8 = 'utf-8'
+REPORT_THRESHOLD = 100
+
 translate_dict = {
     'UNDERSCORE': '_',
     'ARROW': '->',

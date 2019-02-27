@@ -15,10 +15,11 @@ from dataset import Dataset, Batch
 from utils import lst_equal, log_record, add_slash_to_end
 from constants import *
 
+
 class Model:
 
     def __init__(self, params, train_dir='train_data/', valid_dir='validation_data/',
-                       save_dir='trained_models/', log_dir='log/'):
+                 save_dir='trained_models/', log_dir='log/'):
         self.params = params
 
         self.train_dir = add_slash_to_end(train_dir)
@@ -44,7 +45,7 @@ class Model:
             self.method_tokens = tf.placeholder(dtype=tf.int32, shape=[None, max_seq_len], name='tokens')
             self.description = tf.placeholder(dtype=tf.int32, shape=[None, max_seq_len], name='descr')
             self.description_neg = tf.placeholder(dtype=tf.int32, shape=[None, max_seq_len], name='descr-neg')
-            
+
             # Placeholders for Token Sequence Lengths
             self.method_names_len = tf.placeholder(dtype=tf.int32, shape=[None], name='names-len')
             self.method_apis_len = tf.placeholder(dtype=tf.int32, shape=[None], name='apis-len')
@@ -56,7 +57,6 @@ class Model:
 
             self._make_model()
             self._make_training_step()
-    
 
     def train(self):
 
@@ -115,7 +115,7 @@ class Model:
                     train_losses.append(avg_train_loss)
 
                     print('Training batch {0}/{1}: {2}'.format(i, num_train_batches-1, avg_train_loss))
-                    
+
                 print(LINE)
 
                 for i in range(num_valid_batches):
@@ -140,7 +140,6 @@ class Model:
                     valid_losses.append(avg_valid_loss)
 
                     print('Validation batch {0}/{1}: {2}'.format(i, num_valid_batches-1, avg_valid_loss))
-
 
                 avg_valid_loss = np.average(valid_losses)
                 avg_train_loss = np.average(train_losses)
@@ -224,7 +223,7 @@ class Model:
             }
 
             embedding = self._sess.run(self.code_embedding, feed_dict=feed_dict)
-        
+
         return embedding[0]
 
     def embed_description(self, description):
@@ -244,7 +243,6 @@ class Model:
             embedding = self._sess.run(self.descr_embedding, feed_dict=feed_dict)
 
         return embedding[0]
-
 
     def _make_model(self):
 
@@ -277,18 +275,22 @@ class Model:
 
             # Embed sequences. By default we use a BiRNN.
             if self.params.seq_embedding == 'conv':
-                name_embedding = self._conv_1d_embedding(name_encoding, self.method_names_len, name='name-embed')
-                api_embedding = self._conv_1d_embedding(api_encoding, self.method_apis_len, name='api-embed')
-                descr_embedding = self._conv_1d_embedding(descr_encoding, self.description_len, name='descr-embed')
-                descr_neg_embedding = self._conv_1d_embedding(descr_neg_encoding, self.description_neg_len, name='descr-neg-embed')
+                name_embedding = self._conv_1d_embedding(name_encoding, self.method_names_len,
+                                                         name='name-embed')
+                api_embedding = self._conv_1d_embedding(api_encoding, self.method_apis_len,
+                                                        name='api-embed')
+                descr_embedding = self._conv_1d_embedding(descr_encoding, self.description_len,
+                                                          name='descr-embed')
+                descr_neg_embedding = self._conv_1d_embedding(descr_neg_encoding, self.description_neg_len,
+                                                              name='descr-neg-embed')
             else:
                 # Embeddings using a BiRNN
                 name_emb, _name_state = self._rnn_embedding(name_encoding,
-                                                           self.method_names_len,
-                                                           name='name-rnn')
+                                                            self.method_names_len,
+                                                            name='name-rnn')
                 api_emb, _api_state = self._rnn_embedding(api_encoding,
-                                                         self.method_apis_len,
-                                                         name='api-rnn')
+                                                          self.method_apis_len,
+                                                          name='api-rnn')
 
                 descr_emb, _descr_state = self._rnn_embedding(descr_encoding,
                                                               self.description_len,
@@ -323,7 +325,6 @@ class Model:
                 descr_context = tf.reduce_max(descr_embedding, axis=1, name='descr-pooling')
                 descr_neg_context = tf.reduce_max(descr_neg_embedding, axis=1, name='descr-pooling')
 
-
             # Description embedding
             self.description_embedding = descr_context
 
@@ -342,12 +343,11 @@ class Model:
 
             self.loss_op = tf.reduce_sum(
                 tf.nn.relu(
-                    tf.constant(self.params.margin, dtype=tf.float32) - \
-                    tf.reduce_sum(normalied_descr * normalized_code, axis=1) + \
+                    tf.constant(self.params.margin, dtype=tf.float32) -
+                    tf.reduce_sum(normalied_descr * normalized_code, axis=1) +
                     tf.reduce_sum(normalized_descr_neg * normalized_code, axis=1)
                 )
             )
-
 
     def _make_training_step(self):
         trainable_vars = self._sess.graph.get_collection(tf.GraphKeys.TRAINABLE_VARIABLES)
@@ -355,19 +355,16 @@ class Model:
         clipped_grad, _ = tf.clip_by_global_norm(gradients, self.params.gradient_clip)
         pruned_gradients = []
         for grad, var in zip(clipped_grad, trainable_vars):
-            if grad != None:
+            if grad is not None:
                 pruned_gradients.append((grad, var))
 
         self.optimizer_op = self.optimizer.apply_gradients(pruned_gradients)
 
-
     def _rnn_embedding(self, placeholder, len_placeholder, name):
-        cell_fw = tf.nn.rnn_cell.LSTMCell(num_units=self.params.rnn_units,
-                                          activation=tf.nn.tanh,
+        cell_fw = tf.nn.rnn_cell.LSTMCell(num_units=self.params.rnn_units, activation=tf.nn.tanh,
                                           name=name + '-fw')
-        cell_bw = tf.nn.rnn_cell.LSTMCell(num_units=self.params.rnn_units,
-                                  activation=tf.nn.tanh,
-                                  name=name + '-bw')
+        cell_bw = tf.nn.rnn_cell.LSTMCell(num_units=self.params.rnn_units, activation=tf.nn.tanh,
+                                          name=name + '-bw')
 
         initial_state_fw = cell_fw.zero_state(tf.shape(placeholder)[0], dtype=tf.float32)
         initial_state_bw = cell_bw.zero_state(tf.shape(placeholder)[0], dtype=tf.float32)
@@ -422,12 +419,12 @@ class Model:
         # We mask out elements which are padded before feeding tokens into an aggregation layer
         index_list = tf.range(self.params.max_seq_length)  # S
         index_tensor = tf.tile(tf.expand_dims(index_list, axis=0),
-                               multiples=(tf.shape(placeholder)[0],1))  # B x S
+                               multiples=(tf.shape(placeholder)[0], 1))  # B x S
 
         mask = index_tensor < tf.expand_dims(len_placeholder, axis=1)  # B x S
 
         mask = tf.tile(tf.expand_dims(mask, axis=2),  # B x S x E
-                      multiples=(1,1,self.params.embedding_size))
+                       multiples=(1, 1, self.params.embedding_size))
 
         return (1 - tf.cast(mask, dtype=tf.float32)) * -BIG_NUMBER
 
@@ -445,4 +442,3 @@ class Model:
         assert len(neg_javadoc) == len(javadoc)
 
         return neg_javadoc, neg_javadoc_len
-
