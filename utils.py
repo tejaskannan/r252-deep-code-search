@@ -2,6 +2,7 @@ import numpy as np
 import csv
 import pickle
 import gzip
+import heapq
 from constants import *
 
 
@@ -87,5 +88,15 @@ def get_index(key):
 def load_parameters(restore_dir):
     path = restore_dir + META_NAME
     with gzip.GzipFile(path, 'rb') as in_file:
-            meta_data = pickle.load(in_file)
+        meta_data = pickle.load(in_file)
     return meta_data['parameters']
+
+
+def get_ranking(heap, x):
+    rank = 1
+    while len(heap) > 0:
+        elem = heapq.heappop(heap)
+        if int(get_index(elem[2])) == x:
+            return rank
+        rank += 1
+    return -1

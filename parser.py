@@ -127,7 +127,7 @@ class Parser:
                     javadocs.append(javadoc_tokens)
                     method_bodies.append(method_str)
 
-                # DUring training, we only omit methods which have no name or javadoc description
+                # During training, we only omit methods which have no name or javadoc description
                 if only_javadoc and len(javadoc_tokens) > 0 and len(method_name_tokens) > 0:
                     names.append(' '.join(method_name_tokens))
                     apis.append(' '.join(api_call_tokens))

@@ -33,7 +33,7 @@ default_params = {
 
 def main(argv):
     try:
-        opts, args = getopt.getopt(argv, 'gtxri:o:t:v:l:m:p:n:s:k:', ['generate', 'train', 'index', 'input', 'output', 'train-dir', 'valid-dir', 'log-dir', 'model', 'params', 'table-name', 'search', 'overlap'])
+        opts, args = getopt.getopt(argv, 'gtxrhi:o:t:v:l:m:p:n:s:k:', ['generate', 'train', 'index', 'input', 'output', 'train-dir', 'valid-dir', 'log-dir', 'model', 'params', 'table-name', 'search', 'overlap', 'hit-rank'])
     except getopt.GetoptError:
         print('Incorrect Arguments.')
         sys.exit(0)
@@ -48,6 +48,7 @@ def main(argv):
     table_name = ''
     search_query = ''
     threshold = ''
+    should_calc_hit_rank = False
     for opt, arg in opts:
         if opt in ('-i', '--input'):
             inpt = arg
@@ -70,6 +71,8 @@ def main(argv):
             search_query = arg
         if opt == '-k':
             threshold = arg
+        if opt in ('-h', '--hit-rank'):
+            should_calc_hit_rank = True
 
     # Restore parameters from the given checkpoint
     if len(restore_dir) > 0:
@@ -127,6 +130,14 @@ def main(argv):
             else:
                 written = db.index_file(inpt)
             print('Indexed {0} methods into table: {1}'.format(written, table_name))
+
+            # We only support hit rank calculations when indexing a directory
+            if should_calc_hit_rank and inpt[-1] == '/':
+                print('Calculating Hit Ranks')
+                success_hit_rank, mean_hit_rank = db.hit_rank_over_corpus(inpt)
+                print('Success Hit Rank: {0}'.format(success_hit_rank))
+                print('Mean Hit Rank: {0}'.format(mean_hit_rank))
+
         if opt in ('-s', '--search'):
             if len(search_query) == 0:
                 print('Must specify a query or query file.')
@@ -205,6 +216,7 @@ def main(argv):
             for i in range(len(overlaps)):
                 frac = overlaps[i] / totals[i]
                 print(OVERLAP_FORMAT.format(labels[i], overlaps[i], totals[i], round(frac, 4)))
+
 
 if __name__ == '__main__':
     main(sys.argv[1:])

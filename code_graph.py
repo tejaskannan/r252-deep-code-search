@@ -128,8 +128,19 @@ class CodeGraph:
     def _create_all_methods_dict(self):
         method_dict = {}
         method_nodes = self.get_nodes_with_content(METHOD)
+
+        javadoc_dict = {}
+        javadoc_nodes = self.get_nodes_with_type(FeatureNode.COMMENT_JAVADOC)
+        for javadoc_node in javadoc_nodes:
+            method = self.get_neighbors_with_type_content(javadoc_node.id, None, METHOD)
+            if len(method) == 0:
+                continue
+            method = method[0]
+            javadoc_dict[method.id] = javadoc_node
+
         for method_node in method_nodes:
-            self._add_method(method_node, None, method_dict)
+            javadoc = javadoc_dict[method_node.id] if method_node.id in javadoc_dict else None
+            self._add_method(method_node, javadoc, method_dict)
         return method_dict
 
     def _add_method(self, method_node, javadoc_node, method_dict):

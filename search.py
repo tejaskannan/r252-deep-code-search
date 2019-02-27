@@ -4,7 +4,7 @@ import os
 import heapq
 
 from parser import Parser
-from utils import cosine_similarity, get_index
+from utils import cosine_similarity, get_index, get_ranking
 from annoy import AnnoyIndex
 from constants import *
 
@@ -74,6 +74,40 @@ class DeepCodeSearchDB:
             index += 1
         return index
 
+    # This function implements a baseline test where we use javadoc comments to search the
+    # corpus and expect the corresponding method to be returned (using the full search strategy)
+    # For correct results, the given directory should be the same as that of the indexed dataset.
+    def hit_rank_over_corpus(self, corpus_dir, k=10):
+        total_hit_rank = 0.0
+        total_hits = 0.0
+        total_queries = 0.0
+
+        method_id = 0
+        for root, _dirs, files in os.walk(corpus_dir):
+            for file_name in files:
+                file_path = root + '/' + file_name
+
+                _t, _a, names, javadocs, _b = self.parser.parse_file(file_path, only_javadoc=False)
+                for javadoc, name in zip(javadocs, names):
+
+                    if len(javadoc) == 0:
+                        method_id += 1
+                        continue
+
+                    total_queries += 1
+
+                    search_results = self._search_full(javadoc, k)
+                    hit_rank = get_ranking(search_results, method_id)
+
+                    method_id += 1
+
+                    # This means that the method was  found
+                    if hit_rank != -1:
+                        total_hits += 1.0
+                        total_hit_rank += 1.0 / (hit_rank + 1)  
+
+        return total_hits / total_queries, total_hit_rank / total_queries
+
     # K is the max number of results to return
     # uses annoy for approximate (but faster) searching
     def search(self, description, k=10):
@@ -99,29 +133,30 @@ class DeepCodeSearchDB:
     # Searches for relevant answer by iterating over the entire dataset
     def search_full(self, description, k=10):
 
+        top_results = self._search_full(description, k)
+
+        results = []
+        while len(top_results) > 0:
+            result = heapq.heappop(top_results)
+            key = REDIS_KEY_FORMAT.format(self.data_table, get_index(result[2]))
+            method_body = self.redis_db.hget(key, METHOD_BODY)
+            results.append(method_body)
+
+        return results
+
+    def _search_full(self, description, k):
         embedded_descr = self.model.embed_description(description)
-        normalized_descr = embedded_descr / np.linalg.norm(embedded_descr)
         top_results = []
 
         counter = 0
         for key in self.redis_db.scan_iter(REDIS_KEY_FORMAT.format(self.emb_table, '*')):
             embedded_code = list(map(lambda x: float(str(x.decode('utf-8'))), self.redis_db.lrange(key, 0, -1)))
-            sim_score = cosine_similarity(normalized_descr, embedded_code)
-            heapq.heappush(top_results, (sim_score, counter, str(key.decode('utf-8'))))
+            sim_score = cosine_similarity(embedded_descr, embedded_code)
+            heapq.heappush(top_results, (-sim_score, counter, str(key.decode('utf-8'))))
             if len(top_results) > k:
                 heapq.heappop(top_results)
             counter += 1
-
-        results = []
-        scores = []
-        while len(top_results) > 0:
-            result = heapq.heappop(top_results)
-            scores.append(result[0])
-            key = REDIS_KEY_FORMAT.format(self.data_table, get_index(result[2]))
-            method_body = self.redis_db.hget(key, METHOD_BODY)
-            results.append(method_body)
-
-        return list(reversed(results))
+        return top_results
 
     def vocabulary_overlap(self, dir_path):
         # In the order [token, api, name]
