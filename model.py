@@ -69,6 +69,7 @@ class Model:
             # Initializes a name for this training run using the current time
             train_time = datetime.now().strftime(DATE_FORMAT)
             train_name = NAME_FORMAT.format(self.params.combine_type, self.params.seq_embedding, train_time)
+            overfit_train_name = 'overfit-' + train_name
 
             # Initalize logging of this training run
             csv_name = LOG_FORMAT.format(self.log_dir, train_name)
@@ -76,6 +77,7 @@ class Model:
 
             # Initialize best loss to a large value
             best_valid_loss = BIG_NUMBER
+            best_train_loss = BIG_NUMBER
 
             for epoch in range(self.params.num_epochs):
                 train_losses = []
@@ -155,6 +157,11 @@ class Model:
                     best_valid_loss = avg_valid_loss
                     print('Saving model: ' + train_name)
                     self.save(self.save_dir, train_name)
+
+                if (avg_train_loss < best_train_loss):
+                    best_train_loss = avg_train_loss
+                    print('Saving model: ' + overfit_train_name)
+                    self.save(self.save_dir, overfit_train_name)
 
                 print(LINE)
 

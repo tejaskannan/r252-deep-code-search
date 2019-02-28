@@ -45,7 +45,6 @@ class Dataset:
                                                        max_vocab_size,
                                                        count_threshold=1,
                                                        add_pad=True)
-        print(len(self.vocabulary))
 
         self.train_tensors = self._tensorize_data(self.train_data)
         self.valid_tensors = self._tensorize_data(self.valid_data)

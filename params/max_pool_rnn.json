@@ -9,7 +9,7 @@
     "hidden_fusion_units": 400,
     "embedding_size" : 100,
     "batch_size" : 128,
-    "num_epochs" : 5,
+    "num_epochs" : 15,
     "optimizer" : "adam",
     "combine_type": "max_pool",
     "seq_embedding": "rnn",
