@@ -101,10 +101,10 @@ class Dataset:
             token_length_batches.append(token_lengths[index:limit])
             javadoc_length_batches.append(javadoc_lengths[index:limit])
 
-            name_freq_batches.append(name_freq[index:limit])
-            api_freq_batches.append(api_freq[index:limit])
-            token_freq_batches.append(token_freq[index:limit])
-            javadoc_freq_batches.append(javadoc_freq[index:limit])
+            name_freq_batches.append(np.array(name_freq[index:limit]))
+            api_freq_batches.append(np.array(api_freq[index:limit]))
+            token_freq_batches.append(np.array(token_freq[index:limit]))
+            javadoc_freq_batches.append(np.array(javadoc_freq[index:limit]))
 
         return Batch(name_batches=name_batches,
                      api_batches=api_batches,
@@ -168,12 +168,13 @@ class Dataset:
             javadoc_tensors.append(javadoc_vec)
 
             method = [method_names[i], method_api_calls[i], method_tokens[i]]
-            method_f = self.method_frequency.tf_idf_multiple(method)
+            method_f = self.method_frequency.tf_idf_multiple(method, self.max_seq_length)
+
             name_freqs.append(method_f[0])
             api_freqs.append(method_f[1])
             token_freqs.append(method_f[2])
 
-            javadoc_f = self.javadoc_frequency.tf_idf_multiple([javadoc[i]])
+            javadoc_f = self.javadoc_frequency.tf_idf_multiple([javadoc[i]], self.max_seq_length)
             javadoc_freqs.append(javadoc_f[0])
 
         return {

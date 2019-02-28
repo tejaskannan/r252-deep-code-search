@@ -1,6 +1,6 @@
 import numpy as np
 from constants import *
-from utils import flatten
+from utils import flatten, softmax
 
 class TokenFrequency:
 
@@ -26,16 +26,21 @@ class TokenFrequency:
 
         scores = []
         for lst in doc_lists:
-            scores.append([self.tf_idf(word, doc_tokens) for word in lst])
-            if pad_to_size != -1 and len(scores) < pad_to_size:
-                scores = np.pad(scores, (0, pad_to_size - len(scores)), mode='constant',
-                                constant_values=SMALL_NUMBER)
+            score_arr = [self.tf_idf(word, doc_tokens) for word in lst]
+            if pad_to_size != -1:
+                if len(score_arr) < pad_to_size:
+                    score_arr = np.pad(score_arr, (0, pad_to_size - len(score_arr)), mode='constant',
+                                       constant_values=-BIG_NUMBER)
+                else:
+                    score_arr = score_arr[0:pad_to_size]
+
+            scores.append(softmax(score_arr))
         return scores
 
     def tf_idf(self, word, doc):
         word = word.strip().lower()
         if self.vocabulary.is_unk(word) or (not word in self.doc_counts):
-            return SMALL_NUMBER
+            return -BIG_NUMBER
 
         word_count = np.sum([int(w == word) for w in doc])
         word_freq = float(word_count) / float(len(doc))

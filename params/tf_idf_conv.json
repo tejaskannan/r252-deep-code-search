@@ -11,7 +11,7 @@
     "batch_size" : 128,
     "num_epochs" : 5,
     "optimizer" : "adam",
-    "combine_type": "attention",
-    "seq_embedding": "rnn",
+    "combine_type": "tf-idf",
+    "seq_embedding": "conv",
     "kernel_size": 5
 }

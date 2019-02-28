@@ -108,3 +108,9 @@ def get_ranking_in_array(arr, x):
         if elem == x:
             return i + 1
     return -1
+
+
+def softmax(arr):
+    max_elem = np.max(arr)
+    arr_exp = np.exp(arr - max_elem)
+    return arr_exp / np.sum(arr_exp)
