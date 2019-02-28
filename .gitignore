@@ -2,6 +2,7 @@
 __pycache__/*
 data/*
 log/*
+trained_models/*
 searches/*
 train_data/*
 validation_data/*
