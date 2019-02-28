@@ -15,10 +15,12 @@ class TextFilter:
 
     # Accepts a single method name (string) and returns a list of cleaned tokens
     def apply_to_method_name(self, method_name):
-        return [t.lower() for t in self._split_camel_case(method_name.strip())]
+        return [t.lower() for t in self.split_camel_case(method_name.strip())]
 
-    def apply_to_api_calls(self, api_calls):
-        return [call.strip().lower() for call in api_calls if len(call.strip()) > 0]
+    def apply_to_api_calls(self, api_calls, lowercase_api):
+        if lowercase_api:
+            return [call.strip().lower() for call in api_calls if len(call.strip()) > 0]
+        return [call.strip() for call in api_calls if len(call.strip()) > 0]
 
     # Accepts a list of method tokens and returns a cleaned list
     def apply_to_token_lst(self, tokens, use_keywords=True, use_stopwords=True, use_tags=False):
@@ -26,7 +28,7 @@ class TextFilter:
         for token in tokens:
             t = token.strip()
             if len(t) > 0:
-                split_on_camel_case += self._split_camel_case(t)
+                split_on_camel_case += self.split_camel_case(t)
 
         split_on_underscore = []
         for token in split_on_camel_case:
@@ -97,7 +99,7 @@ class TextFilter:
                 tokens.add(token.strip())
         return tokens
 
-    def _split_camel_case(self, text):
+    def split_camel_case(self, text):
         return self.camel_case.sub(r'\1 \2', text).split()
 
 

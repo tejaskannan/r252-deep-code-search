@@ -1,21 +1,21 @@
 Overlaps Using Plain API Strings (i.e. parser.parseMethod -> HtmlParser.parseBlock)
 
 Train (all) compared to Train (without Javadoc)
-Method Tokens: 1280793/1293008 (0.9906)
-Method API Calls: 192130/291347 (0.6595)
-Method Names: 207966/210701 (0.987)
+Method Tokens: 1381844/1412345 (0.9784)
+Method API Calls: 164987/334343 (0.4935)
+Method Names: 293045/299095 (0.9798)
 
 Validation (all) compared to Train (without Javadoc)
 Method Tokens: 123306/130962 (0.9415)
 Method API Calls: 9523/27587 (0.3452)
 Method Names: 19304/20021 (0.9642)
 
-Test (all) compared to Train (without Javadoc)
-Method Tokens: 7057/7394 (0.9544)
-Method API Calls: 644/2881 (0.2235)
-Method Names: 1139/1160 (0.9819)
+Hit Rates (attn conv, overfit), comparing method names as hits
+Validation data (all, 1512 methods)
+Success Hit Rank: 0.10912698412698413
+Mean Hit Rank: 0.025886773059392125
 
-Test (all) compared to Train (without Javadoc) with split and lowercase API tokens
-Method Tokens: 7057/7394 (0.9544)
-Method API Calls: 8613/9299 (0.9262)
-Method Names: 1139/1160 (0.9819)
+Train Data (Hadoop, 3812 methods)
+Success Hit Rank: 0.21825813221406087
+Mean Hit Rank: 0.06300945105378468
+

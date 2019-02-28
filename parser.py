@@ -13,8 +13,8 @@ from utils import append_to_file, remove_whitespace
 
 class Parser:
 
-    def __init__(self, tags_file, keywords_file, line_threshold=2):
-        self.text_filter = TextFilter(tags_file, keywords_file)
+    def __init__(self, tags_file, stopwords_file, line_threshold=2):
+        self.text_filter = TextFilter(tags_file, stopwords_file)
         self.line_threshold = line_threshold
 
     def generate_data_from_dir(self, base, output_folder='data'):
@@ -67,7 +67,7 @@ class Parser:
             return len(method_tokens)
         return 0
 
-    def parse_file(self, file_name, only_javadoc=True):
+    def parse_file(self, file_name, only_javadoc=True, lowercase_api=True):
 
         names = []
         apis = []
@@ -104,7 +104,7 @@ class Parser:
 
                 obj_init_tokens = self._get_object_inits(method.method_block, code_graph)
                 api_call_tokens += obj_init_tokens
-                api_call_tokens = self.text_filter.apply_to_api_calls(api_call_tokens)
+                api_call_tokens = self.text_filter.apply_to_api_calls(api_call_tokens, lowercase_api)
 
                 javadoc_tokens = []
 

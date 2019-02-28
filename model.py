@@ -272,64 +272,48 @@ class Model:
                                               units=self.params.embedding_size,
                                               activation=tf.nn.tanh,
                                               name='token-embedding')
-            token_mask = self._create_mask(token_embedding, self.method_tokens_len)
-            token_embedding += token_mask
 
             # Embed sequences. By default we use a BiRNN.
             if self.params.seq_embedding == 'conv':
-                name_embedding = self._conv_1d_embedding(name_encoding, self.method_names_len,
-                                                         name='name-embed')
-                api_embedding = self._conv_1d_embedding(api_encoding, self.method_apis_len,
-                                                        name='api-embed')
-                descr_embedding = self._conv_1d_embedding(descr_encoding, self.description_len,
-                                                          name='descr-embed')
-                descr_neg_embedding = self._conv_1d_embedding(descr_neg_encoding, self.description_neg_len,
-                                                              name='descr-embed')
+                name_embedding = self._conv_1d_embedding(name_encoding, name='name-embed')
+                api_embedding = self._conv_1d_embedding(api_encoding, name='api-embed')
+                descr_embedding = self._conv_1d_embedding(descr_encoding, name='descr-embed')
+                descr_neg_embedding = self._conv_1d_embedding(descr_neg_encoding, name='descr-embed')
             else:
                 # Embeddings using a BiRNN
-                name_emb, _name_state = self._rnn_embedding(name_encoding,
-                                                            self.method_names_len,
-                                                            name='name-rnn')
-
-                api_emb, _api_state = self._rnn_embedding(api_encoding,
-                                                          self.method_apis_len,
-                                                          name='api-rnn')
-
-                descr_emb, _descr_state = self._rnn_embedding(descr_encoding,
-                                                              self.description_len,
-                                                              name='descr-rnn')
-
-                descr_neg_emb, _descr_neg_state = self._rnn_embedding(descr_neg_encoding,
-                                                                      self.description_neg_len,
-                                                                      name='descr-rnn')
+                name_emb, _name_state = self._rnn_embedding(name_encoding, name='name-rnn')
+                api_emb, _api_state = self._rnn_embedding(api_encoding, name='api-rnn')
+                descr_emb, _descr_state = self._rnn_embedding(descr_encoding, name='descr-rnn')
+                descr_neg_emb, _descr_neg_state = self._rnn_embedding(descr_neg_encoding, name='descr-rnn')
 
                 # Combine the outputs from the forward and backward passes
-                name_embedding = self._reduction_layer(name_emb, embed_size, self.method_names_len,
-                                                       name='name-embed')
+                name_embedding = self._reduction_layer(name_emb, embed_size, name='name-embed')
+                api_embedding = self._reduction_layer(api_emb, embed_size, name='api-embed')
+                descr_embedding = self._reduction_layer(descr_emb, embed_size, name='descr-embed')
+                descr_neg_embedding = self._reduction_layer(descr_neg_emb, embed_size, name='descr-embed')
 
-                api_embedding = self._reduction_layer(api_emb, embed_size, self.method_apis_len,
-                                                      name='api-embed')
 
-                descr_embedding = self._reduction_layer(descr_emb, embed_size, self.description_len,
-                                                        name='descr-embed')
-
-                descr_neg_embedding = self._reduction_layer(descr_neg_emb, embed_size, self.description_neg_len,
-                                                            name='descr-embed')
+            # Create masks based on sequence length
+            name_mask = self._create_mask(name_embedding, self.method_names_len)
+            api_mask = self._create_mask(api_embedding, self.method_apis_len)
+            token_mask = self._create_mask(token_embedding, self.method_tokens_len)
+            descr_mask = self._create_mask(descr_embedding, self.description_len)
+            descr_neg_mask = self._create_mask(descr_neg_embedding, self.description_neg_len)
 
             # Combine sequences into a single context vector. By default we use max pooling.
             if self.params.combine_type == 'attention':
-                name_context = self._attention_layer(name_embedding, name='name-attn')
-                api_context = self._attention_layer(api_embedding, name='api-attn')
-                token_context = self._attention_layer(token_embedding, name='token-attn')
-                descr_context = self._attention_layer(descr_embedding, name='descr-attn')
-                descr_neg_context = self._attention_layer(descr_neg_embedding, name='descr-attn')
+                name_context = self._attention_layer(name_embedding, name_mask, name='name-attn')
+                api_context = self._attention_layer(api_embedding, api_mask, name='api-attn')
+                token_context = self._attention_layer(token_embedding, token_mask, name='token-attn')
+                descr_context = self._attention_layer(descr_embedding, descr_mask, name='descr-attn')
+                descr_neg_context = self._attention_layer(descr_neg_embedding, descr_neg_mask, name='descr-attn')
             else:
                 # Max Pooling
-                name_context = tf.reduce_max(name_embedding, axis=1, name='name-pooling')
-                api_context = tf.reduce_max(api_embedding, axis=1, name='api-pooling')
-                token_context = tf.reduce_max(token_embedding, axis=1, name='token-pooling')
-                descr_context = tf.reduce_max(descr_embedding, axis=1, name='descr-pooling')
-                descr_neg_context = tf.reduce_max(descr_neg_embedding, axis=1, name='descr-pooling')
+                name_context = tf.reduce_max(name_embedding + name_mask, axis=1, name='name-pooling')
+                api_context = tf.reduce_max(api_embedding + api_mask, axis=1, name='api-pooling')
+                token_context = tf.reduce_max(token_embedding + token_mask, axis=1, name='token-pooling')
+                descr_context = tf.reduce_max(descr_embedding + descr_mask, axis=1, name='descr-pooling')
+                descr_neg_context = tf.reduce_max(descr_neg_embedding + descr_neg_mask, axis=1, name='descr-pooling')
 
             # Description embedding
             self.description_embedding = descr_context
@@ -345,13 +329,13 @@ class Model:
 
             # Normalize embeddings to prepare for cosine similarity
             normalized_code = tf.math.l2_normalize(self.code_embedding, axis=1)
-            normalied_descr = tf.math.l2_normalize(descr_context, axis=1)
+            normalized_descr = tf.math.l2_normalize(descr_context, axis=1)
             normalized_descr_neg = tf.math.l2_normalize(descr_neg_context, axis=1)
 
             self.loss_op = tf.reduce_sum(
                 tf.nn.relu(
                     tf.constant(self.params.margin, dtype=tf.float32) -
-                    tf.reduce_sum(normalied_descr * normalized_code, axis=1) +
+                    tf.reduce_sum(normalized_descr * normalized_code, axis=1) +
                     tf.reduce_sum(normalized_descr_neg * normalized_code, axis=1)
                 )
             )
@@ -367,7 +351,7 @@ class Model:
 
         self.optimizer_op = self.optimizer.apply_gradients(pruned_gradients)
 
-    def _rnn_embedding(self, placeholder, len_placeholder, name):
+    def _rnn_embedding(self, placeholder, name):
         cell_fw = tf.nn.rnn_cell.LSTMCell(num_units=self.params.rnn_units, activation=tf.nn.tanh,
                                           name=name + '-fw')
         cell_bw = tf.nn.rnn_cell.LSTMCell(num_units=self.params.rnn_units, activation=tf.nn.tanh,
@@ -385,53 +369,38 @@ class Model:
                                         scope=name)
         return emb, state
 
-    def _conv_1d_embedding(self, placeholder, len_placeholder, name):
+    def _conv_1d_embedding(self, placeholder, name):
         embedding = tf.layers.conv1d(inputs=placeholder,
                                      filters=self.params.embedding_size,
                                      kernel_size=self.params.kernel_size,
                                      padding='same',
                                      activation=tf.nn.tanh,
                                      name=name + '-conv-emb')
+        return embedding
 
-        # Mask the output to adjust for variable sequence lengths
-        mask = self._create_mask(placeholder, len_placeholder)
-        return embedding + mask
-
-    def _max_pooling_1d(self, inputs, name):
-        pooled = tf.layers.max_pooling1d(inputs=inputs,
-                                         pool_size=(self.params.max_seq_length,),
-                                         strides=(1,),
-                                         name=name)
-        return tf.squeeze(pooled, axis=1)
-
-    def _attention_layer(self, inputs, name):
+    def _attention_layer(self, inputs, input_mask, name):
         weights = tf.layers.dense(inputs=inputs, units=1, activation=tf.nn.tanh,
                                   name=name + '-attn-weights')
-        alphas = tf.nn.softmax(weights, name=name + '-attn')
-        return tf.reduce_sum(alphas * inputs, axis=1, name=name + '-attn-reduce')
+        alphas = tf.nn.softmax(weights + input_mask, axis=1, name=name + '-attn')
+        return tf.reduce_sum(inputs * alphas, axis=1, name=name + '-attn-reduce')
 
-    def _reduction_layer(self, rnn_embedding, output_size, len_placeholder, name):
+    def _reduction_layer(self, rnn_embedding, output_size, name):
         concat_tensor = tf.concat([rnn_embedding[0], rnn_embedding[1]], axis=2,
                                   name=name + '-concat')
         reduction = tf.layers.dense(inputs=concat_tensor,
                                     units=output_size,
                                     use_bias=False,
                                     name=name + '-dense')
-
-        mask = self._create_mask(reduction, len_placeholder)
-
-        return reduction + mask
+        return reduction
 
     def _create_mask(self, placeholder, len_placeholder):
         # We mask out elements which are padded before feeding tokens into an aggregation layer
-        index_list = tf.range(self.params.max_seq_length)  # S
+        index_list = tf.range(self.params.max_seq_length)
         index_tensor = tf.tile(tf.expand_dims(index_list, axis=0),
-                               multiples=(tf.shape(placeholder)[0], 1))  # B x S
+                               multiples=(tf.shape(placeholder)[0], 1))
 
-        mask = index_tensor < tf.expand_dims(len_placeholder, axis=1)  # B x S
-
-        mask = tf.tile(tf.expand_dims(mask, axis=2),  # B x S x E
-                       multiples=(1, 1, self.params.embedding_size))
+        mask = index_tensor < tf.expand_dims(len_placeholder, axis=1)
+        mask = tf.expand_dims(mask, axis=2)
 
         return (1 - tf.cast(mask, dtype=tf.float32)) * -BIG_NUMBER
 

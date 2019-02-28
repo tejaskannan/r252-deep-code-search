@@ -57,6 +57,17 @@ METHOD_NAME = 'method_name'
 METHOD_API = 'method_api'
 METHOD_BODY = 'method_body'
 METHOD_TOKENS = 'method_tokens'
+
+METHOD_NAME_LENGTHS = 'method_name_lengths'
+METHOD_API_LENGTHS = 'method_api_lengths'
+METHOD_TOKEN_LENGTHS = 'method_token_lengths'
+JAVADOC_LENGTHS = 'javadoc_lengths'
+
+METHOD_NAME_FREQ = 'method_name_freq'
+METHOD_API_FREQ = 'method_api_freq'
+METHOD_TOKEN_FREQ = 'method_token_freq'
+JAVADOC_FREQ = 'javadoc_freq'
+
 INDEX_PATH = 'index/{0}_index.ann'
 UTF8 = 'utf-8'
 REPORT_THRESHOLD = 100

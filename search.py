@@ -42,7 +42,7 @@ class DeepCodeSearchDB:
 
     # Returns the number of methods indexed using this file
     def index_file(self, file_name, start_index=0):
-        method_tokens, method_apis, method_names, _, method_body = self.parser.parse_file(file_name, only_javadoc=False)
+        method_tokens, method_apis, method_names, _, method_body = self.parser.parse_file(file_name, only_javadoc=True)
         index = start_index
         for name, api, token, body in zip(method_names, method_apis, method_tokens, method_body):
 
@@ -84,16 +84,14 @@ class DeepCodeSearchDB:
 
         self.index.load(self.index_path)
 
-        method_id = 0
         for root, _dirs, files in os.walk(corpus_dir):
             for file_name in files:
                 file_path = root + '/' + file_name
 
-                _t, _a, names, javadocs, _b = self.parser.parse_file(file_path, only_javadoc=False)
+                _t, _a, names, javadocs, _b = self.parser.parse_file(file_path, only_javadoc=True)
                 for javadoc, name in zip(javadocs, names):
 
                     if len(javadoc) == 0:
-                        method_id += 1
                         continue
 
                     javadoc = self.parser.text_filter.apply_to_javadoc(javadoc)
@@ -103,10 +101,14 @@ class DeepCodeSearchDB:
                     embedded_descr = self.model.embed_description(javadoc)
                     normalized_descr = embedded_descr / np.linalg.norm(embedded_descr)
                     nearest_indices = self.index.get_nns_by_vector(normalized_descr, k)
-                    
-                    hit_rank = get_ranking_in_array(nearest_indices, method_id)
 
-                    method_id += 1
+                    search_pipeline = self.redis_db.pipeline()
+                    for method_index in nearest_indices:
+                        key = REDIS_KEY_FORMAT.format(self.data_table, method_index)
+                        search_pipeline.hget(key, METHOD_NAME)
+
+                    results = [str(method_name.decode('utf-8')) for method_name in search_pipeline.execute()]                    
+                    hit_rank = get_ranking_in_array(results, name)
 
                     # This means that the method was  found
                     if hit_rank != -1:
@@ -125,11 +127,11 @@ class DeepCodeSearchDB:
         self.index.load(self.index_path)
 
         normalized_descr = embedded_descr / np.linalg.norm(embedded_descr)
-        nearest_indices = self.index.get_nns_by_vector(normalized_descr, k, include_distances=True)
+        nearest_indices = self.index.get_nns_by_vector(normalized_descr, k)
 
         search_pipeline = self.redis_db.pipeline()
         for method_index in nearest_indices:
-            key = REDIS_KEY_FORMAT.format(self.data_table, method_index[0])
+            key = REDIS_KEY_FORMAT.format(self.data_table, method_index)
             search_pipeline.hget(key, METHOD_BODY)
 
         results = []
