@@ -1,4 +1,4 @@
-Overlaps
+Overlaps Using Plain API Strings (i.e. parser.parseMethod -> HtmlParser.parseBlock)
 
 Train (all) compared to Train (without Javadoc)
 Method Tokens: 1280793/1293008 (0.9906)
@@ -13,4 +13,9 @@ Method Names: 19304/20021 (0.9642)
 Test (all) compared to Train (without Javadoc)
 Method Tokens: 7057/7394 (0.9544)
 Method API Calls: 644/2881 (0.2235)
+Method Names: 1139/1160 (0.9819)
+
+Test (all) compared to Train (without Javadoc) with split and lowercase API tokens
+Method Tokens: 7057/7394 (0.9544)
+Method API Calls: 8613/9299 (0.9262)
 Method Names: 1139/1160 (0.9819)

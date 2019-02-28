@@ -85,7 +85,7 @@ def main(argv):
                 print('Must specify an input folder or file.')
                 sys.exit(0)
 
-            threshold = try_parse_int(threshold, 3)
+            threshold = try_parse_int(threshold, 2)
             parser = Parser('filters/tags.txt', 'filters/stopwords.txt', threshold)
             out_folder = outpt if len(outpt) > 0 else 'data/'
             if inpt[-1] == '/':

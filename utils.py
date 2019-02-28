@@ -92,11 +92,19 @@ def load_parameters(restore_dir):
     return meta_data['parameters']
 
 
-def get_ranking(heap, x):
+# heap is a min PQ
+def get_ranking_in_heap(heap, x):
     rank = 1
+    num_elems = len(heap)
     while len(heap) > 0:
         elem = heapq.heappop(heap)
         if int(get_index(elem[2])) == x:
-            return rank
+            return (num_elems - rank) + 1
         rank += 1
+    return -1
+
+def get_ranking_in_array(arr, x):
+    for i, elem in enumerate(arr):
+        if elem == x:
+            return i + 1
     return -1

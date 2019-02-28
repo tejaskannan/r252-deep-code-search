@@ -230,12 +230,14 @@ class Model:
         with self._sess.graph.as_default():
             feed_dict = {
                 self.description: descr_tensor,
-                self.description_len: descr_len_tensor
+                self.description_len: descr_len_tensor,
+                self.description_neg: descr_tensor,
+                self.description_neg_len: descr_len_tensor
             }
 
-            embedding = self._sess.run(self.description_embedding, feed_dict=feed_dict)
+            embedding = self._sess.run([self.description_embedding, self.neg_descr_embedding], feed_dict=feed_dict)
 
-        return embedding[0]
+        return embedding[0][0]
 
     def _make_model(self):
 
@@ -275,7 +277,7 @@ class Model:
                 descr_embedding = self._conv_1d_embedding(descr_encoding, self.description_len,
                                                           name='descr-embed')
                 descr_neg_embedding = self._conv_1d_embedding(descr_neg_encoding, self.description_neg_len,
-                                                              name='descr-neg-embed')
+                                                              name='descr-embed')
             else:
                 # Embeddings using a BiRNN
                 name_emb, _name_state = self._rnn_embedding(name_encoding,
@@ -324,6 +326,7 @@ class Model:
 
             # Description embedding
             self.description_embedding = descr_context
+            self.neg_descr_embedding = descr_neg_context
 
             # Code Fusion Layer
             code_concat = tf.concat([name_context, api_context, token_context],

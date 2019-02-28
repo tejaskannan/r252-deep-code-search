@@ -4,7 +4,7 @@ import os
 import heapq
 
 from parser import Parser
-from utils import cosine_similarity, get_index, get_ranking
+from utils import cosine_similarity, get_index, get_ranking_in_array, get_ranking_in_heap
 from annoy import AnnoyIndex
 from constants import *
 
@@ -19,7 +19,7 @@ class DeepCodeSearchDB:
         self.index_path = INDEX_PATH.format(table)
         self.model = model
         self.embedding_size = embedding_size
-        self.index = AnnoyIndex(embedding_size, metric='dot')
+        self.index = AnnoyIndex(embedding_size, metric='euclidean')
         self.num_trees = num_trees
         self.parser = Parser('filters/tags.txt', 'filters/stopwords.txt')
 
@@ -82,6 +82,8 @@ class DeepCodeSearchDB:
         total_hits = 0.0
         total_queries = 0.0
 
+        self.index.load(self.index_path)
+
         method_id = 0
         for root, _dirs, files in os.walk(corpus_dir):
             for file_name in files:
@@ -94,10 +96,15 @@ class DeepCodeSearchDB:
                         method_id += 1
                         continue
 
+                    javadoc = self.parser.text_filter.apply_to_javadoc(javadoc)
+
                     total_queries += 1
 
-                    search_results = self._search_full(javadoc, k)
-                    hit_rank = get_ranking(search_results, method_id)
+                    embedded_descr = self.model.embed_description(javadoc)
+                    normalized_descr = embedded_descr / np.linalg.norm(embedded_descr)
+                    nearest_indices = self.index.get_nns_by_vector(normalized_descr, k)
+                    
+                    hit_rank = get_ranking_in_array(nearest_indices, method_id)
 
                     method_id += 1
 
@@ -111,18 +118,18 @@ class DeepCodeSearchDB:
     # K is the max number of results to return
     # uses annoy for approximate (but faster) searching
     def search(self, description, k=10):
-
+        description = self.parser.text_filter.apply_to_javadoc(description)
         embedded_descr = self.model.embed_description(description)
         top_results = []
 
         self.index.load(self.index_path)
 
         normalized_descr = embedded_descr / np.linalg.norm(embedded_descr)
-        nearest_indices = self.index.get_nns_by_vector(normalized_descr, k)
+        nearest_indices = self.index.get_nns_by_vector(normalized_descr, k, include_distances=True)
 
         search_pipeline = self.redis_db.pipeline()
         for method_index in nearest_indices:
-            key = REDIS_KEY_FORMAT.format(self.data_table, method_index)
+            key = REDIS_KEY_FORMAT.format(self.data_table, method_index[0])
             search_pipeline.hget(key, METHOD_BODY)
 
         results = []
@@ -132,7 +139,7 @@ class DeepCodeSearchDB:
 
     # Searches for relevant answer by iterating over the entire dataset
     def search_full(self, description, k=10):
-
+        description = self.parser.text_filter.apply_to_javadoc(description)
         top_results = self._search_full(description, k)
 
         results = []
@@ -144,6 +151,7 @@ class DeepCodeSearchDB:
 
         return results
 
+    # Returns the top k results as a min PQ
     def _search_full(self, description, k):
         embedded_descr = self.model.embed_description(description)
         top_results = []
@@ -152,7 +160,7 @@ class DeepCodeSearchDB:
         for key in self.redis_db.scan_iter(REDIS_KEY_FORMAT.format(self.emb_table, '*')):
             embedded_code = list(map(lambda x: float(str(x.decode('utf-8'))), self.redis_db.lrange(key, 0, -1)))
             sim_score = cosine_similarity(embedded_descr, embedded_code)
-            heapq.heappush(top_results, (-sim_score, counter, str(key.decode('utf-8'))))
+            heapq.heappush(top_results, (sim_score, counter, str(key.decode('utf-8'))))
             if len(top_results) > k:
                 heapq.heappop(top_results)
             counter += 1

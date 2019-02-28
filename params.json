@@ -1,7 +1,0 @@
-{
-    "step_size": 0.001,
-    "optimizer": "adam",
-    "combine_type": "max_pool",
-    "num_epochs": 4,
-    "batch_size": 64
-}

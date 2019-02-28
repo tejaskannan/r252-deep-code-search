@@ -101,7 +101,13 @@ class CodeGraph:
             else:
                 type_node = type_node[0]
 
-            while type_node.type != FeatureNode.IDENTIFIER_TOKEN:
+            type_node = self.get_out_neighbors(type_node.id)[0]
+            if type_node.type != FeatureNode.IDENTIFIER_TOKEN:
+                # The type may either be parameterized or primitive
+                if type_node.contents == PARAM_TYPE:
+                    type_node = self.get_neighbors_with_type_content(type_node.id,
+                                                                     neigh_type=None,
+                                                                     neigh_content=TYPE)[0]
                 type_node = self.get_out_neighbors(type_node.id)[0]
 
             var_node = self.get_neighbors_with_type_content(var_ast_node.id,

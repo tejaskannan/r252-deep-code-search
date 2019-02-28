@@ -13,10 +13,9 @@ from utils import append_to_file, remove_whitespace
 
 class Parser:
 
-    def __init__(self, tags_file, keywords_file, line_threshold=3):
+    def __init__(self, tags_file, keywords_file, line_threshold=2):
         self.text_filter = TextFilter(tags_file, keywords_file)
         self.line_threshold = line_threshold
-        self.camel_case_regex = re.compile('([a-z])([A-Z])')
 
     def generate_data_from_dir(self, base, output_folder='data'):
         num_methods_written = 0
@@ -95,27 +94,26 @@ class Parser:
                 if method.num_lines <= self.line_threshold:
                     continue
 
-                method_name_tokens = self._split_camel_case(method.method_name)
-                method_name_tokens = [token.lower() for token in method_name_tokens]
+                method_name_tokens = self.text_filter.apply_to_method_name(method.method_name)
 
                 method_invocations = self._get_method_invocations(method.method_block, code_graph)
                 api_call_tokens = []
                 for invocation in method_invocations:
-                    api_call_tokens.append(self._parse_method_invocation(invocation, code_graph))
+                    parsed_invocation = self._parse_method_invocation(invocation, code_graph).strip()
+                    api_call_tokens.append(parsed_invocation)
 
                 obj_init_tokens = self._get_object_inits(method.method_block, code_graph)
                 api_call_tokens += obj_init_tokens
-                api_call_tokens = remove_whitespace(api_call_tokens)
+                api_call_tokens = self.text_filter.apply_to_api_calls(api_call_tokens)
 
                 javadoc_tokens = []
 
                 # There may be no javadoc on methods which are used during testing
                 if method.javadoc:
-                    javadoc_tokens = self._clean_javadoc(method.javadoc.contents)
+                    javadoc_tokens = self.text_filter.apply_to_javadoc(method.javadoc.contents)
 
                 method_tokens = self._get_method_tokens(method.method_block, code_graph)
-                method_tokens = remove_whitespace(method_tokens)
-                method_tokens = self._clean_tokens(method_tokens)
+                method_tokens = self.text_filter.apply_to_token_lst(method_tokens)
 
                 method_str = self._method_to_str(method.method_block, code_graph)
 
@@ -123,16 +121,16 @@ class Parser:
                 if not only_javadoc and len(method_str.strip()) > 0 and len(method_name_tokens) > 0:
                     names.append(' '.join(method_name_tokens))
                     apis.append(' '.join(api_call_tokens))
-                    tokens.append(method_tokens)
-                    javadocs.append(javadoc_tokens)
+                    tokens.append(' '.join(method_tokens))
+                    javadocs.append(' '.join(javadoc_tokens))
                     method_bodies.append(method_str)
 
                 # During training, we only omit methods which have no name or javadoc description
                 if only_javadoc and len(javadoc_tokens) > 0 and len(method_name_tokens) > 0:
                     names.append(' '.join(method_name_tokens))
                     apis.append(' '.join(api_call_tokens))
-                    tokens.append(method_tokens)
-                    javadocs.append(javadoc_tokens)
+                    tokens.append(' '.join(method_tokens))
+                    javadocs.append(' '.join(javadoc_tokens))
                     method_bodies.append(method_str)
 
         return tokens, apis, names, javadocs, method_bodies
@@ -174,11 +172,15 @@ class Parser:
             type_node = self._find_variable_type(token, code_graph)
             if type_node is not None:
                 api_str = type_node.contents
+                #api_str = ' '.join([t.lower() for t in self._split_camel_case(type_node.contents)])
 
         if len(api_str) == 0:
             return api_str
-        else:
-            return API_FORMAT.format(api_str, identifier.contents)
+
+        return API_FORMAT.format(api_str, identifier.contents)
+
+        #contents = ' '.join([t.lower() for t in self._split_camel_case(identifier.contents)])
+        #return api_str + ' ' + contents
 
     def _find_variable_type(self, variable_node, code_graph):
         node = variable_node
@@ -259,7 +261,8 @@ class Parser:
         while (node.id != end.id):
             # We only use identifier tokens in our method tokens
             if node.type == FeatureNode.IDENTIFIER_TOKEN:
-                tokens += [token.lower() for token in self._split_camel_case(node.contents)]
+                tokens.append(node.contents)
+                #tokens += [token.lower() for token in self._split_camel_case(node.contents)]
             node = code_graph.get_out_neighbors_with_edge_type(node.id, FeatureEdge.NEXT_TOKEN)[0]
         return list(set(tokens))
 
@@ -349,6 +352,8 @@ class Parser:
         while (node.id != end.id):
             if node.contents == NEW:
                 obj_type_node = code_graph.get_out_neighbors_with_edge_type(node.id, FeatureEdge.NEXT_TOKEN)[0]
+                #node_contents = ' '.join([t.lower() for t in self._split_camel_case(obj_type_node.contents)])
+                #tokens.append(node_contents + ' ' + NEW_LOWER)
                 tokens.append(API_FORMAT.format(obj_type_node.contents, NEW_LOWER))
                 node = obj_type_node
             node = code_graph.get_out_neighbors_with_edge_type(node.id, FeatureEdge.NEXT_TOKEN)[0]
@@ -365,15 +370,6 @@ class Parser:
             start = end
             end = t
         return start, end
-
-    def _clean_tokens(self, tokens):
-        return ' '.join(self.text_filter.apply_to_token_lst(tokens))
-
-    def _clean_javadoc(self, javadoc):
-        javadoc_contents = javadoc.replace('/', '').replace('*', '') \
-                                  .replace('{', '').replace('}', '').lower()
-        cleaned_javadoc = self.text_filter.apply_to_javadoc(javadoc_contents)
-        return ' '.join(cleaned_javadoc)
 
     def _split_camel_case(self, text):
         return self.camel_case_regex.sub(r'\1 \2', text).split()

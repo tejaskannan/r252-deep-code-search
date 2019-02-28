@@ -36,7 +36,7 @@ class Dataset:
 
         all_data = [self.train_data[METHOD_NAMES], self.train_data[METHOD_APIS],
                     self.train_data[METHOD_TOKENS], self.train_data[JAVADOC]]
-        all_tokens = set(flatten(all_data))
+        all_tokens = flatten(all_data)
 
         self.max_seq_length = max_seq_length
         self.max_vocab_size = max_vocab_size
@@ -45,6 +45,7 @@ class Dataset:
                                                        max_vocab_size,
                                                        count_threshold=1,
                                                        add_pad=True)
+        print(len(self.vocabulary))
 
         self.train_tensors = self._tensorize_data(self.train_data)
         self.valid_tensors = self._tensorize_data(self.valid_data)
