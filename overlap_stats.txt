@@ -10,7 +10,7 @@ Method Tokens: 123306/130962 (0.9415)
 Method API Calls: 9523/27587 (0.3452)
 Method Names: 19304/20021 (0.9642)
 
-Hit Rates (attn conv, overfit), comparing method names as hits
+Hit Rates (attn conv), comparing method names as hits
 Validation data (all, 1512 methods)
 Success Hit Rank: 0.10912698412698413
 Mean Hit Rank: 0.025886773059392125

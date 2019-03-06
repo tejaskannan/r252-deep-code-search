@@ -1,6 +1,6 @@
 import sys
 import os
-import getopt
+import argparse
 import time
 import numpy as np
 
@@ -8,8 +8,8 @@ from parser import Parser
 from model import Model
 from parameters import params_from_dict, params_dict_from_json
 from search import DeepCodeSearchDB
-from utils import try_parse_int, value_if_non_empty, write_methods_to_file, add_slash_to_end
-from utils import load_parameters
+from utils import value_if_non_empty, write_methods_to_file
+from utils import load_parameters, add_slash_to_end
 from constants import OVERLAP_FORMAT
 
 default_params = {
@@ -30,193 +30,166 @@ default_params = {
     'kernel_size': 5
 }
 
+def parse_args():
+    arg_parser = argparse.ArgumentParser(description='Deep Code Search')
 
-def main(argv):
-    try:
-        opts, args = getopt.getopt(argv, 'gtxrhi:o:t:v:l:m:p:n:s:k:', ['generate', 'train', 'index', 'input', 'output', 'train-dir', 'valid-dir', 'log-dir', 'model', 'params', 'table-name', 'search', 'overlap', 'hit-rank'])
-    except getopt.GetoptError:
-        print('Incorrect Arguments.')
-        sys.exit(0)
+    # Action arguments
+    arg_parser.add_argument('--generate', action='store_true', help='Generate a dataset.')
+    arg_parser.add_argument('--train', action='store_true', help='Train a model.')
+    arg_parser.add_argument('--index', action='store_true', help='Index a corpus.')
+    arg_parser.add_argument('--search', action='store_true', help='Execute a search query.')
+    arg_parser.add_argument('--overlap', action='store_true', help='Compute vocabulary overlap.')
 
-    params = default_params
-    inpt = ''
-    outpt = ''
-    train_dir = ''
-    valid_dir = ''
-    log_dir = ''
-    restore_dir = ''
-    table_name = ''
-    search_query = ''
-    threshold = ''
-    should_calc_hit_rank = False
-    for opt, arg in opts:
-        if opt in ('-i', '--input'):
-            inpt = arg
-        if opt in ('-o', '--output'):
-            outpt = arg
-        if opt in ('-t', '--train-dir'):
-            train_dir = arg
-        if opt in ('-v', '--valid-dir'):
-            valid_dir = arg
-        if opt in ('-l', '--log-dir'):
-            log_dir = arg
-        if opt in ('-m', '--model'):
-            restore_dir = arg
-        if opt in ('-p', '--params'):
-            params_file = arg
-            params = params_dict_from_json(params_file, params)
-        if opt in ('-n', '--table-name'):
-            table_name = arg
-        if opt in ('-s', '--search'):
-            search_query = arg
-        if opt == '-k':
-            threshold = arg
-        if opt in ('-h', '--hit-rank'):
-            should_calc_hit_rank = True
+    # Input Arguments
+    arg_parser.add_argument('--input', type=str, default='', help='Input file, folder, or string.')
+    arg_parser.add_argument('--output', type=str, default='', help='Output file or folder.')
+    arg_parser.add_argument('--model', type=str, default='', help='Directory of saved model.')
+    arg_parser.add_argument('--params', type=str, default='', help='Parameters file.')
+    arg_parser.add_argument('--table', type=str, default='code', help='Table name to store an indexed corpus.')
+    arg_parser.add_argument('--threshold', type=int, default=2, help='Threshold value for methods or search results.')
+    arg_parser.add_argument('--train-dir', type=str, default='train_data/', help='Directory with training data.')
+    arg_parser.add_argument('--valid-dir', type=str, default='validation_data/', help='Direction with validation data.')
+    arg_parser.add_argument('--hit-rank', action='store_true', help='Calculate hit ranks after indexing.')
+    arg_parser.add_argument('--subtokenize', action='store_true', help='Subtokenize API calls during generation.')
 
+    return arg_parser.parse_args()
+
+def main():
+    args = parse_args()
+    print(args)
+    
     # Restore parameters from the given checkpoint
-    if len(restore_dir) > 0:
-        params = load_parameters(restore_dir)
-
+    params = default_params
+    if len(args.model) > 0:
+        params = load_parameters(args.model)
+    elif len(args.params) > 0:
+        params = params_dict_from_json(args.params, params)
     params = params_from_dict(params)
-    for opt, arg in opts:
-        if opt in ('-g', '--generate'):
-            if len(inpt) == 0:
-                print('Must specify an input folder or file.')
-                sys.exit(0)
 
-            threshold = try_parse_int(threshold, 2)
-            parser = Parser('filters/tags.txt', 'filters/stopwords.txt', threshold)
-            out_folder = outpt if len(outpt) > 0 else 'data/'
-            if inpt[-1] == '/':
-                written = parser.generate_data_from_dir(inpt, out_folder)
-            else:
-                written = parser.generate_data_from_file(inpt, out_folder)
-            print('Generated dataset size: {0}'.format(written))
-        if opt in ('-t', '--train'):
-            train_dir = value_if_non_empty(train_dir, 'train_data/')
-            valid_dir = value_if_non_empty(valid_dir, 'validation_data/')
-            save_dir = value_if_non_empty(outpt, 'trained_models/')
-            log_dir = value_if_non_empty(log_dir, 'log/')
+    if args.generate:
+        if len(args.input) == 0:
+            print('Must specify an input folder or file.')
+            return
 
-            model = Model(params, train_dir, valid_dir, save_dir, log_dir)
-            model.train()
-        if opt in ('-x', '--index'):
-            if len(restore_dir) == 0:
-                print('Must specify a model to use.')
-                sys.exit(0)
-            if restore_dir[-1] != '/':
-                restore_dir += '/'
+        args.output = value_if_non_empty(args.output, 'data/')
+        args.output = add_slash_to_end(args.output)
 
-            if len(inpt) == 0:
-                print('Must specify a file to index.')
-                sys.exit(0)
+        parser = Parser('filters/tags.txt', 'filters/stopwords.txt', args.threshold)
+        if args.input[-1] == '/':
+            written = parser.generate_data_from_dir(args.input, args.output,
+                                                    should_subtokenize=args.subtokenize)
+        else:
+            written = parser.generate_data_from_file(args.input, args.output,
+                                                     should_subtokenize=args.subtokenize)
+    elif args.train:
+        args.output = value_if_non_empty(args.output, 'trained_models/')
+        model = Model(params, args.train_dir, args.valid_dir, args.output)
+        model.train()
+    elif args.index:
+        if len(args.input) == 0:
+            print('Must specify a corpus to index.')
+            return
 
-            train_dir = value_if_non_empty(train_dir, 'train_data/')
-            valid_dir = value_if_non_empty(valid_dir, 'validation_data/')
-            save_dir = value_if_non_empty(outpt, 'trained_models/')
-            log_dir = value_if_non_empty(log_dir, 'log/')
+        if len(args.model) == 0:
+            print('Must specify a model to use.')
+            return
+        args.model = add_slash_to_end(args.model)
 
-            model = Model(params, train_dir, valid_dir, save_dir, log_dir)
-            model.restore(restore_dir)
+        args.output = value_if_non_empty(args.output, 'trained_models/')
+        args.output = add_slash_to_end(args.output)
 
-            table_name = value_if_non_empty(table_name, 'code')
-            db = DeepCodeSearchDB(table=table_name, model=model,
-                                  embedding_size=params.embedding_size)
+        model = Model(params, args.train_dir, args.valid_dir, args.output)
+        model.restore(args.model)
 
-            written = 0
-            if inpt[-1] == '/':
-                written = db.index_dir(inpt)
-            else:
-                written = db.index_file(inpt)
-            print('Indexed {0} methods into table: {1}'.format(written, table_name))
+        db = DeepCodeSearchDB(table=args.table, model=model,
+                              embedding_size=params.embedding_size)
 
-            # We only support hit rank calculations when indexing a directory
-            if should_calc_hit_rank and inpt[-1] == '/':
-                print('Calculating Hit Ranks')
-                success_hit_rank, mean_hit_rank = db.hit_rank_over_corpus(inpt)
-                print('Success Hit Rank: {0}'.format(success_hit_rank))
-                print('Mean Hit Rank: {0}'.format(mean_hit_rank))
+        written = 0
+        if args.input[-1] == '/':
+            written = db.index_dir(args.input)
+        else:
+            written = db.index_file(args.input)
+        print('Indexed {0} methods into table: {1}'.format(written, args.table))
 
-        if opt in ('-s', '--search'):
-            if len(search_query) == 0:
-                print('Must specify a query or query file.')
-                sys.exit(0)
+        # We only support hit rank calculations when indexing a directory
+        if args.hit_rank and args.input[-1] == '/':
+            print('Calculating Hit Ranks')
+            success_hit_rank, mean_hit_rank = db.hit_rank_over_corpus(args.input)
+            print('Success Hit Rank: {0}'.format(success_hit_rank))
+            print('Mean Hit Rank: {0}'.format(mean_hit_rank))
+    elif args.search:
+        if len(args.input) == 0:
+            print('Must specify a query or query file.')
+            return
 
-            if len(restore_dir) == 0:
-                print('Must specify a model to use.')
-                sys.exit(0)
-            if restore_dir[-1] != '/':
-                restore_dir += '/'
+        if len(args.model) == 0:
+            print('Must specify a model to use.')
+            return
+        args.model = add_slash_to_end(args.model)
 
-            train_dir = value_if_non_empty(train_dir, 'train_data/')
-            valid_dir = value_if_non_empty(valid_dir, 'validation_data/')
-            save_dir = value_if_non_empty(outpt, 'trained_models/')
-            log_dir = value_if_non_empty(log_dir, 'log/')
+        args.output = value_if_non_empty(args.output, 'searches/')
+        args.output = add_slash_to_end(args.output)
 
-            model = Model(params, train_dir, valid_dir, save_dir, log_dir)
-            model.restore(restore_dir)
+        model = Model(params, args.train_dir, args.valid_dir, args.output)
+        model.restore(args.model)
 
-            table_name = value_if_non_empty(table_name, 'code')
-            db = DeepCodeSearchDB(table=table_name, model=model,
-                                  embedding_size=params.embedding_size)
+        db = DeepCodeSearchDB(table=args.table, model=model,
+                              embedding_size=params.embedding_size)
 
-            search_queries = []
-            if '.txt' in search_query:
-                with open(search_query, 'r') as query_file:
-                    for query in query_file:
-                        search_queries.append(query.strip())
-            else:
-                search_queries.append(search_query)
+        search_queries = []
+        if '.txt' in args.input:
+            with open(args.input, 'r') as query_file:
+                for query in query_file:
+                    search_queries.append(query.strip())
+        else:
+            search_queries.append(args.input)
 
-            threshold = try_parse_int(threshold, 10)
+        args.output = value_if_non_empty(args.output, 'searches/')
+        args.output = add_slash_to_end(args.output)
+        out_folder = add_slash_to_end(args.output + args.model.split('/')[1])
+        if not os.path.exists(out_folder):
+            os.mkdir(out_folder)
 
-            out_folder = 'searches/' + restore_dir.split('/')[1]
-            if not os.path.exists(out_folder):
-                os.mkdir(out_folder)
+        print(out_folder)
 
-            times = []
-            for query in search_queries:
-                start = time.time()
-                results = db.search_full(query, k=threshold)
-                end = time.time()
-                times.append(end - start)
+        times = []
+        for query in search_queries:
+            start = time.time()
+            results = db.search(query, k=args.threshold)
+            end = time.time()
+            times.append(end - start)
 
-                results = list(map(lambda r: str(r.decode('utf-8')), results))
+            results = list(map(lambda r: str(r.decode('utf-8')), results))
 
-                output_file = out_folder + '/' + query.replace(' ', '_') + '.txt'
-                write_methods_to_file(output_file, results)
+            output_file = out_folder + '/' + query.replace(' ', '_') + '.txt'
+            write_methods_to_file(output_file, results)
 
-            print('Average Query Time: {0}s'.format(np.average(times)))
-        if opt in ('-r', '--overlap'):
-            if len(restore_dir) == 0:
-                print('Must specify a model to use.')
-                sys.exit(0)
-            if len(inpt) == 0:
-                print('Must specify an input folder.')
-                sys.exit(0)
+        print('Average Query Time: {0}s'.format(np.average(times)))
+    elif args.overlap:
+        if len(args.model) == 0:
+            print('Must specify a model to use.')
+            return
+        if len(args.input) == 0:
+            print('Must specify an input folder.')
+            return
 
-            inpt = add_slash_to_end(inpt)
-            restore_dir = add_slash_to_end(restore_dir)
+        args.input = add_slash_to_end(args.input)
+        args.model = add_slash_to_end(args.model)
+        args.output = value_if_non_empty(args.output, 'trained_models/')
+        args.output = add_slash_to_end(args.output)
 
-            train_dir = value_if_non_empty(train_dir, 'train_data/')
-            valid_dir = value_if_non_empty(valid_dir, 'validation_data/')
-            save_dir = value_if_non_empty(outpt, 'trained_models/')
-            log_dir = value_if_non_empty(log_dir, 'log/')
+        model = Model(params, args.train_dir, args.valid_dir, args.output)
+        model.restore(args.model)
 
-            model = Model(params, train_dir, valid_dir, save_dir, log_dir)
-            model.restore(restore_dir)
+        db = DeepCodeSearchDB(table=args.table, model=model,
+                              embedding_size=params.embedding_size)
+        overlaps, totals = db.vocabulary_overlap(args.input)
+        labels = ['Method Tokens', 'Method API Calls', 'Method Names', 'Total']
 
-            table_name = value_if_non_empty(table_name, 'code')
-            db = DeepCodeSearchDB(table=table_name, model=model,
-                                  embedding_size=params.embedding_size)
-            overlaps, totals = db.vocabulary_overlap(inpt)
-            labels = ['Method Tokens', 'Method API Calls', 'Method Names', 'Total']
-
-            for i in range(len(overlaps)):
-                frac = overlaps[i] / totals[i]
-                print(OVERLAP_FORMAT.format(labels[i], overlaps[i], totals[i], round(frac, 4)))
+        for i in range(len(overlaps)):
+            frac = overlaps[i] / totals[i]
+            print(OVERLAP_FORMAT.format(labels[i], overlaps[i], totals[i], round(frac, 4)))
 
 
 if __name__ == '__main__':
-    main(sys.argv[1:])
+    main()

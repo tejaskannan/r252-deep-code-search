@@ -49,7 +49,7 @@ CHAR_FORMAT = '\'{0}\''
 # Formats for training outputs
 DATE_FORMAT = '%Y-%m-%d-%H-%M-%S'
 NAME_FORMAT = '{0}-{1}-{2}'
-LOG_FORMAT = '{0}{1}-data.csv'
+LOG_FORMAT = '{0}{1}/log.csv'
 
 # DB constants
 REDIS_KEY_FORMAT = '{0}:{1}'

@@ -9,7 +9,7 @@ class TextFilter:
         self.java_keywords = set(codeutils.get_language_keywords('java'))
         self.javadoc_tags = self._load_from_file(tags_file)
         self.stopwords = self._load_from_file(stopwords_file)
-        self.token_regex = re.compile(r'[\{\}\[\]\(\)\*\n\t,><\\]')
+
         self.alpha_numeric = re.compile(r'[^a-zA-Z0-9]')
         self.camel_case = re.compile(r'([a-z])([A-Z])')
 
@@ -17,27 +17,19 @@ class TextFilter:
     def apply_to_method_name(self, method_name):
         return [t.lower() for t in self.split_camel_case(method_name.strip())]
 
-    def apply_to_api_calls(self, api_calls, lowercase_api):
-        if lowercase_api:
+    def apply_to_api_calls(self, api_calls, should_lowercase, should_subtokenize=False):
+        if should_subtokenize:
+            api_calls = self._split_token_lst(api_calls, split_chars='_.', use_camel_case=True)
+        if should_lowercase:
             return [call.strip().lower() for call in api_calls if len(call.strip()) > 0]
         return [call.strip() for call in api_calls if len(call.strip()) > 0]
 
     # Accepts a list of method tokens and returns a cleaned list
     def apply_to_token_lst(self, tokens, use_keywords=True, use_stopwords=True, use_tags=False):
-        split_on_camel_case = []
-        for token in tokens:
-            t = token.strip()
-            if len(t) > 0:
-                split_on_camel_case += self.split_camel_case(t)
-
-        split_on_underscore = []
-        for token in split_on_camel_case:
-            if len(token) > 0:
-                split_on_underscore += token.split('_')
-
-        cleaned_tokens = [self.alpha_numeric.sub('', t).lower() for t in split_on_underscore]
+        split_lst = self._split_token_lst(tokens, split_chars='_', use_camel_case=True)
+        cleaned_tokens = [self.alpha_numeric.sub('', t).lower() for t in split_lst]
         return set(filter(lambda t: self.filter_single_token(t, use_keywords, use_stopwords, use_tags),
-                           cleaned_tokens))
+                          cleaned_tokens))
 
     def apply_to_javadoc(self, javadoc_text, use_stopwords=True, use_tags=True):
         lines = javadoc_text.split('\n')
@@ -98,6 +90,21 @@ class TextFilter:
             for token in token_file:
                 tokens.add(token.strip())
         return tokens
+
+    def _split_token_lst(self, token_lst, split_chars, use_camel_case):
+        if use_camel_case:
+            split_lst = []
+            for token in token_lst:
+                split_lst += self.split_camel_case(token)
+            token_lst = split_lst
+
+        split_lst = []
+        for char in split_chars:
+            for token in token_lst:
+                split_lst += token.split(char)
+            token_lst = split_lst
+            split_lst = []
+        return token_lst
 
     def split_camel_case(self, text):
         return self.camel_case.sub(r'\1 \2', text).split()

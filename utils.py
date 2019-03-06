@@ -40,13 +40,6 @@ def cosine_similarity(u, v):
     return dot_prod / (u_norm * v_norm)
 
 
-def try_parse_int(val, default):
-    try:
-        return int(val)
-    except ValueError:
-        return default
-
-
 def value_if_non_empty(val, default):
     if val is None or len(val) == 0:
         return default

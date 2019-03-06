@@ -17,19 +17,20 @@ class Parser:
         self.text_filter = TextFilter(tags_file, stopwords_file)
         self.line_threshold = line_threshold
 
-    def generate_data_from_dir(self, base, output_folder='data'):
+    def generate_data_from_dir(self, base, output_folder, should_subtokenize=False):
         num_methods_written = 0
         num_files_processed = 0
         for root, _dirs, files in os.walk(base):
             for file_name in files:
                 file_path = root + '/' + file_name
-                num_methods_written += self.generate_data_from_file(file_path, output_folder)
+                num_methods_written += self.generate_data_from_file(file_path, output_folder,
+                                                                    should_subtokenize=should_subtokenize)
                 num_files_processed += 1
                 if (num_files_processed % REPORT_THRESHOLD == 0):
                     print('Processed {0} files'.format(num_files_processed))
         return num_methods_written
 
-    def parse_directory(self, base):
+    def parse_directory(self, base, should_subtokenize=False):
 
         method_name_tokens = []
         api_call_tokens = []
@@ -40,7 +41,8 @@ class Parser:
         for root, _dirs, files in os.walk(base):
             for file_name in files:
                 file_path = root + '/' + file_name
-                tokens, api, name, javadoc, body = self.parse_file(file_path)
+                tokens, api, name, javadoc, body = self.parse_file(file_path,
+                                                                   should_subtokenize=should_subtokenize)
 
                 method_name_tokens += tokens
                 api_call_tokens += api
@@ -50,24 +52,24 @@ class Parser:
 
         return method_tokens, api_call_tokens, method_name_tokens, javadoc_tokens, method_bodies
 
-    def generate_data_from_file(self, file_name, output_folder='data'):
-        method_name_file = output_folder + '/' + METHOD_NAME_FILE_NAME
-        method_api_file = output_folder + '/' + METHOD_API_FILE_NAME
-        method_tokens_file = output_folder + '/' + METHOD_TOKENS_FILE_NAME
-        javadoc_tokens_file = output_folder + '/' + JAVADOC_FILE_NAME
+    def generate_data_from_file(self, file_name, output_folder, should_subtokenize=False):
+        name_file = output_folder + '/' + METHOD_NAME_FILE_NAME
+        api_file = output_folder + '/' + METHOD_API_FILE_NAME
+        tokens_file = output_folder + '/' + METHOD_TOKENS_FILE_NAME
+        javadoc_file = output_folder + '/' + JAVADOC_FILE_NAME
 
-        method_tokens, api_call_tokens, method_name_tokens, javadoc_tokens, _body = self.parse_file(file_name)
+        tokens, api_calls, names, javadocs, _body = self.parse_file(file_name,
+                                                                    should_subtokenize=should_subtokenize)
 
-        if len(method_tokens) > 0 and len(api_call_tokens) > 0 and \
-           len(method_name_tokens) > 0 and len(javadoc_tokens) > 0:
-            append_to_file(method_tokens, method_tokens_file)
-            append_to_file(api_call_tokens, method_api_file)
-            append_to_file(method_name_tokens, method_name_file)
-            append_to_file(javadoc_tokens, javadoc_tokens_file)
-            return len(method_tokens)
+        if len(tokens) > 0 and len(api_calls) > 0 and len(names) > 0 and len(javadocs) > 0:
+            append_to_file(tokens, tokens_file)
+            append_to_file(api_calls, api_file)
+            append_to_file(names, name_file)
+            append_to_file(javadocs, javadoc_file)
+            return len(tokens)
         return 0
 
-    def parse_file(self, file_name, only_javadoc=True, lowercase_api=True):
+    def parse_file(self, file_name, only_javadoc=True, lowercase_api=True, should_subtokenize=False):
 
         names = []
         apis = []
@@ -89,8 +91,6 @@ class Parser:
 
             for method in method_dict.values():
 
-                # We skip very small methods because these can often be described with
-                # heuristics
                 if method.num_lines <= self.line_threshold:
                     continue
 
@@ -104,7 +104,8 @@ class Parser:
 
                 obj_init_tokens = self._get_object_inits(method.method_block, code_graph)
                 api_call_tokens += obj_init_tokens
-                api_call_tokens = self.text_filter.apply_to_api_calls(api_call_tokens, lowercase_api)
+                api_call_tokens = self.text_filter.apply_to_api_calls(api_call_tokens, lowercase_api,
+                                                                      should_subtokenize=should_subtokenize)
 
                 javadoc_tokens = []
 

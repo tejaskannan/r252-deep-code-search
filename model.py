@@ -18,14 +18,12 @@ from constants import *
 
 class Model:
 
-    def __init__(self, params, train_dir='train_data/', valid_dir='validation_data/',
-                 save_dir='trained_models/', log_dir='log/'):
+    def __init__(self, params, train_dir, valid_dir, save_dir):
         self.params = params
 
         self.train_dir = add_slash_to_end(train_dir)
         self.valid_dir = add_slash_to_end(valid_dir)
         self.save_dir = add_slash_to_end(save_dir)
-        self.log_dir = add_slash_to_end(log_dir)
 
         self.scope = 'deep-cs'
 
@@ -71,9 +69,14 @@ class Model:
             train_name = NAME_FORMAT.format(self.params.combine_type, self.params.seq_embedding, train_time)
             overfit_train_name = 'overfit-' + train_name
 
+            output_dir = self.save_dir + train_name
+            if not exists(output_dir):
+                mkdir(output_dir)
+
             # Initalize logging of this training run
-            csv_name = LOG_FORMAT.format(self.log_dir, train_name)
+            csv_name = LOG_FORMAT.format(self.save_dir, train_name)
             log_record(csv_name, ['Epoch', 'Avg Train Loss', 'Avg Validation Loss'])
+            print(csv_name)
 
             # Initialize best loss to a large value
             best_valid_loss = BIG_NUMBER
