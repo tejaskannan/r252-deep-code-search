@@ -99,27 +99,7 @@ class Model:
                 num_valid_batches = valid_batches.num_batches
 
                 for i in range(num_train_batches):
-                    jd_neg_batch, jd_neg_len_batch = \
-                            self._generate_neg_javadoc(train_batches.javadoc_batches[i],
-                                                       train_batches.javadoc_len_batches[i])
-
-                    feed_dict = {
-                        self.method_names: train_batches.name_batches[i],
-                        self.method_apis: train_batches.api_batches[i],
-                        self.method_tokens: train_batches.token_batches[i],
-                        self.description: train_batches.javadoc_batches[i],
-                        self.description_neg: jd_neg_batch,
-                        self.method_names_len: train_batches.name_len_batches[i],
-                        self.method_apis_len: train_batches.api_len_batches[i],
-                        self.method_tokens_len: train_batches.token_len_batches[i],
-                        self.description_len: train_batches.javadoc_len_batches[i],
-                        self.description_neg_len: jd_neg_len_batch,
-                        self.method_names_freq: train_batches.name_freq_batches[i],
-                        self.method_apis_freq: train_batches.api_freq_batches[i],
-                        self.method_tokens_freq: train_batches.token_freq_batches[i],
-                    }
-
-
+                    feed_dict = self._create_feed_dict_from_batch(train_batches, i)
                     ops = [self.loss_op, self.optimizer_op]
                     op_result = self._sess.run(ops, feed_dict=feed_dict)
 
@@ -131,25 +111,7 @@ class Model:
                 print(LINE)
 
                 for i in range(num_valid_batches):
-                    jd_neg_batch, jd_neg_len_batch = \
-                            self._generate_neg_javadoc(valid_batches.javadoc_batches[i],
-                                                       valid_batches.javadoc_len_batches[i])
-
-                    feed_dict = {
-                        self.method_names: valid_batches.name_batches[i],
-                        self.method_apis: valid_batches.api_batches[i],
-                        self.method_tokens: valid_batches.token_batches[i],
-                        self.description: valid_batches.javadoc_batches[i],
-                        self.description_neg: jd_neg_batch,
-                        self.method_names_len: valid_batches.name_len_batches[i],
-                        self.method_apis_len: valid_batches.api_len_batches[i],
-                        self.method_tokens_len: valid_batches.token_len_batches[i],
-                        self.description_len: valid_batches.javadoc_len_batches[i],
-                        self.description_neg_len: jd_neg_len_batch,
-                        self.method_names_freq: valid_batches.name_freq_batches[i],
-                        self.method_apis_freq: valid_batches.api_freq_batches[i],
-                        self.method_tokens_freq: valid_batches.token_freq_batches[i]
-                    }
+                    feed_dict = self._create_feed_dict_from_batch(valid_batches, i)
                     valid_result = self._sess.run(self.loss_op, feed_dict=feed_dict)
                     avg_valid_loss = valid_result / self.params.batch_size
                     valid_losses.append(avg_valid_loss)
@@ -310,7 +272,6 @@ class Model:
                 descr_embedding = self._reduction_layer(descr_emb, embed_size, name='descr-embed')
                 descr_neg_embedding = self._reduction_layer(descr_neg_emb, embed_size, name='descr-embed')
 
-
             # Create masks based on sequence length
             name_mask = self._create_mask(name_embedding, self.method_names_len)
             api_mask = self._create_mask(api_embedding, self.method_apis_len)
@@ -447,3 +408,23 @@ class Model:
         assert len(neg_javadoc) == len(javadoc)
 
         return neg_javadoc, neg_javadoc_len
+
+    def _create_feed_dict_from_batch(batches, i):
+        jd_neg_batch, jd_neg_len_batch = \
+            self._generate_neg_javadoc(batches.javadoc_batches[i],
+                                       batches.javadoc_len_batches[i])
+        return {
+            self.method_names: batches.name_batches[i],
+            self.method_apis: batches.api_batches[i],
+            self.method_tokens: batches.token_batches[i],
+            self.description: batches.javadoc_batches[i],
+            self.description_neg: jd_neg_batch,
+            self.method_names_len: batches.name_len_batches[i],
+            self.method_apis_len: batches.api_len_batches[i],
+            self.method_tokens_len: batches.token_len_batches[i],
+            self.description_len: batches.javadoc_len_batches[i],
+            self.description_neg_len: jd_neg_len_batch,
+            self.method_names_freq: batches.name_freq_batches[i],
+            self.method_apis_freq: batches.api_freq_batches[i],
+            self.method_tokens_freq: batches.token_freq_batches[i]
+        }
