@@ -54,11 +54,6 @@ class Model:
             self.description_len = tf.placeholder(dtype=tf.int32, shape=[None], name='descr-len')
             self.description_neg_len = tf.placeholder(dtype=tf.int32, shape=[None], name='descr-neg-len')
 
-            # Placeholders for Token Sequence Term Frequencies
-            self.method_names_freq = tf.placeholder(dtype=tf.float32, shape=[None, max_seq_len], name='names-freq')
-            self.method_apis_freq = tf.placeholder(dtype=tf.float32, shape=[None, max_seq_len], name='apis-freq')
-            self.method_tokens_freq = tf.placeholder(dtype=tf.float32, shape=[None, max_seq_len], name='tokens-freq')
-
             self.optimizer = tf.train.AdamOptimizer(learning_rate=self.params.step_size)
 
             self._make_model()
@@ -179,9 +174,6 @@ class Model:
         name_vec, name_len = self.dataset.create_tensor(method_name)
         api_vec, api_len = self.dataset.create_tensor(method_api)
         token_vec, token_len = self.dataset.create_tensor(method_tokens)
-
-        method = [method_name, method_api, method_tokens]
-        method_f = self.dataset.method_frequency.tf_idf_multiple(method, self.params.max_seq_length)
         
         name_tensor = np.array([name_vec])
         name_len_tensor = np.array([name_len])
@@ -195,13 +187,10 @@ class Model:
             feed_dict = {
                 self.method_names: name_tensor,
                 self.method_names_len: name_len_tensor,
-                self.method_names_freq: np.array([method_f[0]]),
                 self.method_apis: api_tensor,
                 self.method_apis_len: api_len_tensor,
-                self.method_apis_freq: np.array([method_f[1]]),
                 self.method_tokens: token_tensor,
                 self.method_tokens_len: token_len_tensor,
-                self.method_tokens_freq: np.array([method_f[2]])
             }
 
             embedding = self._sess.run(self.code_embedding, feed_dict=feed_dict)
@@ -286,16 +275,6 @@ class Model:
                 token_context = self._attention_layer(token_embedding, token_mask, name='token-attn')
                 descr_context = self._attention_layer(descr_embedding, descr_mask, name='descr-attn')
                 descr_neg_context = self._attention_layer(descr_neg_embedding, descr_neg_mask, name='descr-attn')
-            elif self.params.combine_type == 'tf-idf':
-                name_freq_expand = tf.expand_dims(self.method_names_freq, axis=2)
-                api_freq_expand = tf.expand_dims(self.method_apis_freq, axis=2)
-                token_freq_expand = tf.expand_dims(self.method_tokens_freq, axis=2)
-
-                name_context = tf.reduce_sum(name_embedding * name_freq_expand, axis=1, name='name-comb-freq')
-                api_context = tf.reduce_sum(api_embedding * api_freq_expand, axis=1, name='api-comb-freq')
-                token_context = tf.reduce_sum(token_embedding * token_freq_expand, axis=1, name='token-comb-freq')
-                descr_context = tf.reduce_max(descr_embedding + descr_mask, axis=1, name='descr-pooling')
-                descr_neg_context = tf.reduce_max(descr_neg_embedding + descr_neg_mask, axis=1, name='descr-pooling')
             else:
                 # Max Pooling
                 name_context = tf.reduce_max(name_embedding + name_mask, axis=1, name='name-pooling')
@@ -409,7 +388,7 @@ class Model:
 
         return neg_javadoc, neg_javadoc_len
 
-    def _create_feed_dict_from_batch(batches, i):
+    def _create_feed_dict_from_batch(self, batches, i):
         jd_neg_batch, jd_neg_len_batch = \
             self._generate_neg_javadoc(batches.javadoc_batches[i],
                                        batches.javadoc_len_batches[i])
@@ -423,8 +402,5 @@ class Model:
             self.method_apis_len: batches.api_len_batches[i],
             self.method_tokens_len: batches.token_len_batches[i],
             self.description_len: batches.javadoc_len_batches[i],
-            self.description_neg_len: jd_neg_len_batch,
-            self.method_names_freq: batches.name_freq_batches[i],
-            self.method_apis_freq: batches.api_freq_batches[i],
-            self.method_tokens_freq: batches.token_freq_batches[i]
+            self.description_neg_len: jd_neg_len_batch
         }
