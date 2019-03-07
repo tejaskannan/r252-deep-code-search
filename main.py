@@ -56,7 +56,6 @@ def parse_args():
 
 def main():
     args = parse_args()
-    print(args)
     
     # Restore parameters from the given checkpoint
     params = default_params
@@ -106,9 +105,9 @@ def main():
 
         written = 0
         if args.input[-1] == '/':
-            written = db.index_dir(args.input)
+            written = db.index_dir(args.input, should_subtokenize=args.subtokenize)
         else:
-            written = db.index_file(args.input)
+            written = db.index_file(args.input, should_subtokenize=args.subtokenize)
         print('Indexed {0} methods into table: {1}'.format(written, args.table))
 
         # We only support hit rank calculations when indexing a directory
@@ -150,16 +149,12 @@ def main():
         if not os.path.exists(out_folder):
             os.mkdir(out_folder)
 
-        print(out_folder)
-
         times = []
         for query in search_queries:
             start = time.time()
-            results = db.search(query, k=args.threshold)
+            results = db.search(query, field=METHOD_BODY, k=args.threshold)
             end = time.time()
             times.append(end - start)
-
-            results = list(map(lambda r: str(r.decode('utf-8')), results))
 
             output_file = out_folder + '/' + query.replace(' ', '_') + '.txt'
             write_methods_to_file(output_file, results)
