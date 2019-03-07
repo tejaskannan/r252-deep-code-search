@@ -303,13 +303,25 @@ class Model:
             normalized_descr = tf.math.l2_normalize(descr_context, axis=1)
             normalized_descr_neg = tf.math.l2_normalize(descr_neg_context, axis=1)
 
-            self.loss_op = tf.reduce_sum(
-                tf.nn.relu(
-                    tf.constant(self.params.margin, dtype=tf.float32) -
-                    tf.reduce_sum(normalized_descr * normalized_code, axis=1) +
-                    tf.reduce_sum(normalized_descr_neg * normalized_code, axis=1)
+            if self.params.loss_func == 'neg_sampling':
+                sim_mat = tf.matmul(normalized_code, normalized_descr, transpose_b=True)
+
+                neg_identity = -1.0 * tf.eye(tf.shape(sim_mat)[0], dtype=tf.float32)
+                neg_sample_mask = 1.0 + neg_identity
+
+                neg_scores = tf.reduce_mean(sim_mat * neg_sample_mask, axis=1)
+                pos_scores = tf.reduce_sum(sim_mat * neg_identity, axis=1)
+
+                scores = pos_scores + neg_scores
+                self.loss_op = tf.reduce_sum(scores)
+            else:
+                self.loss_op = tf.reduce_sum(
+                    tf.nn.relu(
+                        tf.constant(self.params.margin, dtype=tf.float32) -
+                        tf.reduce_sum(normalized_descr * normalized_code, axis=1) +
+                        tf.reduce_sum(normalized_descr_neg * normalized_code, axis=1)
+                    )
                 )
-            )
 
     def _make_training_step(self):
         trainable_vars = self._sess.graph.get_collection(tf.GraphKeys.TRAINABLE_VARIABLES)

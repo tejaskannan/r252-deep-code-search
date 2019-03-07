@@ -6,7 +6,7 @@ class Parameters:
     def __init__(self, step_size, gradient_clip,
                  max_vocab_size, max_seq_length, margin, rnn_units, hidden_dense_units,
                  hidden_fusion_units, embedding_size, batch_size, num_epochs, optimizer,
-                 combine_type, seq_embedding, kernel_size):
+                 combine_type, seq_embedding, kernel_size, loss_func):
         self.step_size = step_size
         self.gradient_clip = gradient_clip
         self.margin = margin
@@ -22,6 +22,7 @@ class Parameters:
         self.combine_type = combine_type
         self.seq_embedding = seq_embedding
         self.kernel_size = kernel_size
+        self.loss_func = loss_func
 
     def as_dict(self):
         return {
@@ -39,7 +40,8 @@ class Parameters:
             'embedding_size': self.embedding_size,
             'combine_type': self.combine_type,
             'seq_embedding': self.seq_embedding,
-            'kernel_size': self.kernel_size
+            'kernel_size': self.kernel_size,
+            'loss_func': self.loss_func
         }
 
     def __str__(self):
@@ -79,5 +81,6 @@ def params_from_dict(params_dict):
             optimizer=params_dict['optimizer'],
             combine_type=params_dict['combine_type'],
             seq_embedding=params_dict['seq_embedding'],
-            kernel_size=params_dict['kernel_size']
+            kernel_size=params_dict['kernel_size'],
+            loss_func=params_dict['loss_func']
         )

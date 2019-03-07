@@ -10,7 +10,7 @@ from parameters import params_from_dict, params_dict_from_json
 from search import DeepCodeSearchDB
 from utils import value_if_non_empty, write_methods_to_file
 from utils import load_parameters, add_slash_to_end
-from constants import OVERLAP_FORMAT
+from constants import OVERLAP_FORMAT, METHOD_BODY
 
 default_params = {
     'step_size': 0.001,
@@ -27,7 +27,8 @@ default_params = {
     'optimizer': 'adam',
     'combine_type': 'max_pool',
     'seq_embedding': 'RNN',
-    'kernel_size': 5
+    'kernel_size': 5,
+    'loss_func': 'cosine'
 }
 
 def parse_args():
