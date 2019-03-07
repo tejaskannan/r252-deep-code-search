@@ -114,6 +114,7 @@ class Model:
                     avg_valid_loss = valid_result / self.params.batch_size
                     valid_losses.append(avg_valid_loss)
 
+
                     print('Validation batch {0}/{1}: {2}'.format(i, num_valid_batches-1, avg_valid_loss))
 
                 avg_valid_loss = np.average(valid_losses)
@@ -309,8 +310,16 @@ class Model:
                 neg_identity = -1.0 * tf.eye(tf.shape(sim_mat)[0], dtype=tf.float32)
                 neg_sample_mask = 1.0 + neg_identity
 
-                neg_scores = tf.reduce_mean(sim_mat * neg_sample_mask, axis=1)
+                neg_scores = tf.reduce_sum(sim_mat * neg_sample_mask, axis=1)
+                num_neg_samples = tf.cast(tf.shape(sim_mat)[1], dtype=tf.float32) - 1
+                neg_scores = neg_scores / (num_neg_samples + SMALL_NUMBER)
+
                 pos_scores = tf.reduce_sum(sim_mat * neg_identity, axis=1)
+
+                self.neg_scores = neg_scores
+                self.pos_scores = pos_scores
+
+                self.sim_mat = sim_mat
 
                 scores = pos_scores + neg_scores
                 self.loss_op = tf.reduce_sum(scores)
