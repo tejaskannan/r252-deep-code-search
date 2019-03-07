@@ -173,15 +173,11 @@ class Parser:
             type_node = self._find_variable_type(token, code_graph)
             if type_node is not None:
                 api_str = type_node.contents
-                #api_str = ' '.join([t.lower() for t in self._split_camel_case(type_node.contents)])
 
         if len(api_str) == 0:
             return api_str
 
         return API_FORMAT.format(api_str, identifier.contents)
-
-        #contents = ' '.join([t.lower() for t in self._split_camel_case(identifier.contents)])
-        #return api_str + ' ' + contents
 
     def _find_variable_type(self, variable_node, code_graph):
         node = variable_node

@@ -76,7 +76,6 @@ class Model:
             # Initalize logging of this training run
             csv_name = LOG_FORMAT.format(self.save_dir, train_name)
             log_record(csv_name, ['Epoch', 'Avg Train Loss', 'Avg Validation Loss'])
-            print(csv_name)
 
             # Initialize best loss to a large value
             best_valid_loss = BIG_NUMBER
@@ -221,7 +220,7 @@ class Model:
 
     def _make_model(self):
 
-        vocab_size = len(self.dataset.vocabulary)
+        vocab_size = self.params.max_vocab_size
         embed_size = self.params.embedding_size
 
         with tf.variable_scope(self.scope, reuse=tf.AUTO_REUSE):
@@ -299,11 +298,12 @@ class Model:
                                                   activation=tf.nn.tanh,
                                                   name='code-fusion')
 
-            # Normalize embeddings to prepare for cosine similarity
+            # Normalize embeddings to prepare for loss calculation
             normalized_code = tf.math.l2_normalize(self.code_embedding, axis=1)
             normalized_descr = tf.math.l2_normalize(descr_context, axis=1)
             normalized_descr_neg = tf.math.l2_normalize(descr_neg_context, axis=1)
 
+            # Loss Function. By default we use margin-based cosine simlarity.
             if self.params.loss_func == 'neg_sampling':
                 sim_mat = tf.matmul(normalized_code, normalized_descr, transpose_b=True)
 
@@ -315,11 +315,6 @@ class Model:
                 neg_scores = neg_scores / (num_neg_samples + SMALL_NUMBER)
 
                 pos_scores = tf.reduce_sum(sim_mat * neg_identity, axis=1)
-
-                self.neg_scores = neg_scores
-                self.pos_scores = pos_scores
-
-                self.sim_mat = sim_mat
 
                 scores = pos_scores + neg_scores
                 self.loss_op = tf.reduce_sum(scores)

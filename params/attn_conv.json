@@ -13,5 +13,6 @@
     "optimizer" : "adam",
     "combine_type": "attention",
     "seq_embedding": "conv",
-    "kernel_size": 5
+    "kernel_size": 5,
+    "loss_func": "cosine"
 }
