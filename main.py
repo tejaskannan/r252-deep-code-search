@@ -52,6 +52,7 @@ def parse_args():
     arg_parser.add_argument('--valid-dir', type=str, default='validation_data/', help='Direction with validation data.')
     arg_parser.add_argument('--hit-rank', action='store_true', help='Calculate hit ranks after indexing.')
     arg_parser.add_argument('--subtokenize', action='store_true', help='Subtokenize API calls during generation.')
+    arg_parser.add_argument('--rerank', action='store_true', help='Should re-rank searches using BM25F scores.')
 
     return arg_parser.parse_args()
 
@@ -153,7 +154,8 @@ def main():
         times = []
         for query in search_queries:
             start = time.time()
-            results = db.search(query, field=METHOD_BODY, k=args.threshold)
+            results = db.search(query, field=METHOD_BODY, k=args.threshold,
+                                should_rerank=args.rerank)
             end = time.time()
             times.append(end - start)
 

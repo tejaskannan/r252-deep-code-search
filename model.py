@@ -203,20 +203,15 @@ class Model:
     def embed_description(self, description):
         descr_vec, descr_len = self.dataset.create_tensor(description)
 
-        descr_tensor = np.array([descr_vec])
-        descr_len_tensor = np.array([descr_len])
-
         with self._sess.graph.as_default():
             feed_dict = {
-                self.description: descr_tensor,
-                self.description_len: descr_len_tensor,
-                self.description_neg: descr_tensor,
-                self.description_neg_len: descr_len_tensor
+                self.description: np.array([descr_vec]),
+                self.description_len: np.array([descr_len])
             }
 
-            embedding = self._sess.run([self.description_embedding, self.neg_descr_embedding], feed_dict=feed_dict)
+            embedding = self._sess.run(self.description_embedding, feed_dict=feed_dict)
 
-        return embedding[0][0]
+        return embedding[0]
 
     def _make_model(self):
 

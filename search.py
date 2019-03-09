@@ -18,9 +18,11 @@ class DeepCodeSearchDB:
         self.table = table
         self.data_table = table + '_data'
         self.emb_table = table + '_emb'
+
+        # Redis K-V Pairs used for BM25F Re-Ranking
         self.freq_table = table + '_freq'
         self.num_docs_table = REDIS_KEY_FORMAT.format('num_docs', table)
-        self.avg_doc_size_table = REDIS_KEY_FORMAT.format('avg_doc_size', table)
+        self.avg_length_table = REDIS_KEY_FORMAT.format('avg_len', table)
 
         self.index_path = INDEX_PATH.format(table)
         self.model = model
@@ -31,20 +33,31 @@ class DeepCodeSearchDB:
 
         self.k1 = 1.2
         self.b = 0.75
+        self.name_weight = 3
+        self.api_weight = 2
+        self.token_weight = 1
 
     def index_dir(self, dir_name, should_subtokenize=False):
         method_id = 0
         count = 0
+
+        # Dictionary to track term counts for later re-ranking
         doc_counts = {}
+        doc_lengths = {
+            METHOD_NAME: 0.0,
+            METHOD_API: 0.0,
+            METHOD_TOKENS: 0.0,
+        }
+
         total_num_tokens = 0
         for root, _dirs, files in os.walk(dir_name):
             for file_name in files:
                 file_path = root + '/' + file_name
 
-                method_id, token_count = self.index_file(file_path, method_id, doc_counts=doc_counts,
-                                                         should_subtokenize=should_subtokenize)
+                method_id = self.index_file(file_path, method_id, doc_counts=doc_counts,
+                                            doc_lengths=doc_lengths,
+                                            should_subtokenize=should_subtokenize)
                 count += 1
-                total_num_tokens += token_count
 
                 if count % REPORT_THRESHOLD == 0:
                     print('Indexed {0} files'.format(count))
@@ -52,27 +65,24 @@ class DeepCodeSearchDB:
         self.index.build(self.num_trees)
         self.index.save(self.index_path)
 
-        # Write frequency scores
-        freq_pipeline = self.redis_db.pipeline()
-        for i, (token, doc_count) in enumerate(doc_counts.items()):
-            freq_key = REDIS_KEY_FORMAT.format(self.freq_table, token)
-            freq_pipeline.set(freq_key, str(doc_count))
-            if i % REPORT_THRESHOLD:
-                freq_pipeline.execute()
-                freq_pipeline = self.redis_db.pipeline()
+        # Write term counts
+        self._write_counts_to_redis(doc_counts)
 
-        freq_pipeline.set(self.num_docs_table, str(method_id))
-        freq_pipeline.set(self.avg_doc_size_table, str(float(total_num_tokens) / method_id))
-        freq_pipeline.execute()
+        # Write average field lengths
+        pipeline = self.redis_db.pipeline()
+        pipeline.hset(self.avg_length_table, METHOD_NAME, str(doc_lengths[METHOD_NAME] / method_id))
+        pipeline.hset(self.avg_length_table, METHOD_API, str(doc_lengths[METHOD_API] / method_id))
+        pipeline.hset(self.avg_length_table, METHOD_TOKENS, str(doc_lengths[METHOD_TOKENS] / method_id))
+        pipeline.set(self.num_docs_table, str(method_id))
+        pipeline.execute()
 
         return method_id
 
     # Returns the number of methods indexed using this file
-    def index_file(self, file_name, start_index=0, doc_counts={}, should_subtokenize=False):
+    def index_file(self, file_name, start_index=0, doc_counts={}, doc_lengths={}, should_subtokenize=False):
         method_tokens, method_apis, method_names, _, method_body = self.parser.parse_file(file_name, only_javadoc=True,
                                                                                           should_subtokenize=should_subtokenize)
         index = start_index
-        total_tokens = 0
         for name, api, token, body in zip(method_names, method_apis, method_tokens, method_body):
 
             embedding = self.model.embed_method(name, api, token)
@@ -91,7 +101,13 @@ class DeepCodeSearchDB:
                     doc_counts[t] = 0
                 doc_counts[t] += 1
 
-            total_tokens += len(all_tokens)
+            # Track field lengths for later re-ranking
+            if METHOD_NAME in doc_lengths:
+                doc_lengths[METHOD_NAME] += len(name_lst)
+            if METHOD_API in doc_lengths:
+                doc_lengths[METHOD_API] += len(api_lst)
+            if METHOD_TOKENS in doc_lengths:
+                doc_lengths[METHOD_TOKENS] += len(token_lst)
 
             pipeline = self.redis_db.pipeline()
 
@@ -114,7 +130,7 @@ class DeepCodeSearchDB:
             self.index.add_item(index, normalized_embedding)
 
             index += 1
-        return index, total_tokens
+        return index
 
     # This function implements a baseline test where we use javadoc comments to search the
     # corpus and expect the corresponding method to be returned (using the full search strategy)
@@ -149,18 +165,18 @@ class DeepCodeSearchDB:
 
     # K is the max number of results to return
     # uses annoy for approximate (but faster) searching
-    def search(self, description, field, k=10):
+    def search(self, description, field, k=10, should_rerank=False):
         description = self.parser.text_filter.apply_to_javadoc(description)
         embedded_descr = self.model.embed_description(description)
         top_results = []
 
-        num_docs, avg_doc_size, freqs = self._fetch_frequencies(description)
+        num_docs, avg_lengths, freqs = self._fetch_frequencies(description)
 
         self.index.load(self.index_path)
 
         normalized_descr = embedded_descr / np.linalg.norm(embedded_descr)
-        nearest_indices, nearest_scores = self.index.get_nns_by_vector(normalized_descr, 2*k,
-                                                                       include_distances=True)
+        nearest_indices, distances = self.index.get_nns_by_vector(normalized_descr, 2*k,
+                                                                  include_distances=True)
 
         search_pipeline = self.redis_db.pipeline()
         for method_index in nearest_indices:
@@ -173,51 +189,28 @@ class DeepCodeSearchDB:
             decoded_hash = {key.decode('utf-8'): val.decode('utf-8') for key, val in redis_hash.items()}
             fetch_results.append(decoded_hash)
 
+        results = [method[field] for method in fetch_results]
+        if not should_rerank:
+            return results[:k]
+
         # Re-rank outputs by accounting for bm25 lexical match scores
-        results = []
-        scores = []
-        for dist_score, method in zip(nearest_scores, fetch_results):
-            bm25_score = self._calculate_bm25(description=description,
-                                              tokens=method[METHOD_TOKENS],
-                                              apis=method[METHOD_API],
-                                              name=method[METHOD_NAME],
-                                              num_docs=num_docs,
-                                              avg_doc_size=avg_doc_size,
-                                              doc_freqs=freqs)
-            score = bm25_score * dist_score
-            results.append(method[field])
-            scores.append(score)
+        bm25_scores = []
+        for method in fetch_results:
+            bm25_score = self._calculate_bm25f(description=description,
+                                               tokens=method[METHOD_TOKENS],
+                                               apis=method[METHOD_API],
+                                               name=method[METHOD_NAME],
+                                               avg_field_lengths=avg_lengths,
+                                               num_docs=num_docs,
+                                               doc_freqs=freqs)
+            bm25_scores.append(bm25_score)
+
+        # We normalize the bm25 scores to keep their magnitudes similar to those
+        # of the distances. We don't want to place too much stock in bm25 scores.
+        bm25_scores = bm25_scores / np.max(bm25_scores)
+        scores = [(1.0 / d) * b for d, b in zip(distances, bm25_scores)]
 
         return [res for _,res in reversed(sorted(zip(scores, results)))][:k]
-
-    # Searches for relevant answer by iterating over the entire dataset
-    def search_full(self, description, k=10):
-        description = self.parser.text_filter.apply_to_javadoc(description)
-        top_results = self._search_full(description, k)
-
-        results = []
-        while len(top_results) > 0:
-            result = heapq.heappop(top_results)
-            key = REDIS_KEY_FORMAT.format(self.data_table, get_index(result[2]))
-            method_body = self.redis_db.hget(key, METHOD_BODY)
-            results.append(method_body)
-
-        return results
-
-    # Returns the top k results as a min PQ
-    def _search_full(self, description, k):
-        embedded_descr = self.model.embed_description(description)
-        top_results = []
-
-        counter = 0
-        for key in self.redis_db.scan_iter(REDIS_KEY_FORMAT.format(self.emb_table, '*')):
-            embedded_code = list(map(lambda x: float(str(x.decode('utf-8'))), self.redis_db.lrange(key, 0, -1)))
-            sim_score = cosine_similarity(embedded_descr, embedded_code)
-            heapq.heappush(top_results, (sim_score, counter, str(key.decode('utf-8'))))
-            if len(top_results) > k:
-                heapq.heappop(top_results)
-            counter += 1
-        return top_results
 
     def vocabulary_overlap(self, dir_path):
         # In the order [token, api, name]
@@ -248,8 +241,12 @@ class DeepCodeSearchDB:
         return total, overlap
 
     def _fetch_frequencies(self, description):
+        avg_field_lengths = self.redis_db.hgetall(self.avg_length_table)
+        avg_field_lengths = {name.decode('utf-8'): float(a.decode('utf-8')) for name, a in \
+                             avg_field_lengths.items()}
+
         num_docs = self.redis_db.get(self.num_docs_table)
-        avg_doc_size = self.redis_db.get(self.avg_doc_size_table)
+        num_docs = int(num_docs.decode('utf-8'))
 
         freq_pipeline = self.redis_db.pipeline()
         for token in description:
@@ -259,24 +256,46 @@ class DeepCodeSearchDB:
         freq_results = [(int(f.decode('utf-8')) if f is not None else 0) for f in freq_results]
 
         freqs = {description[i]: freq_results[i] for i in range(len(description))}
-        return int(num_docs.decode('utf-8')), float(avg_doc_size.decode('utf-8')), freqs
+        return num_docs, avg_field_lengths, freqs
 
-    def _calculate_bm25(self, description, tokens, apis, name, num_docs, avg_doc_size, doc_freqs):
-        method = (tokens + apis + name).split()
+    def _calculate_bm25f(self, description, tokens, apis, name, num_docs, avg_field_lengths, doc_freqs):
         score = 0.0
+
+        name_lst = name.split()
+        api_lst = apis.split()
+        token_lst = tokens.split()
 
         for query_token in description:
 
-            count_in_method = float(np.sum([int(query_token == t) for t in method]))
+            name_term_freq = self._calculate_term_freq_field(query_token, name_lst,
+                                                             avg_field_lengths[METHOD_NAME])
+            api_term_freq = self._calculate_term_freq_field(query_token, api_lst,
+                                                            avg_field_lengths[METHOD_API])
+            token_term_freq = self._calculate_term_freq_field(query_token, token_lst,
+                                                              avg_field_lengths[METHOD_TOKENS]) 
 
-            doc_freq = doc_freqs[query_token] if query_token in doc_freqs else 0
+            doc_freq = doc_freqs[query_token] if query_token in doc_freqs else 0.0
             idf = np.log((num_docs - doc_freq + 0.5) / (doc_freq + 0.5))
-            method_freq = (count_in_method) / len(method)
 
-            numerator = (1 + self.k1) * method_freq
-            denominator = method_freq + self.k1 * (1 - self.b + (len(method) / avg_doc_size))
-            method_score = idf * (numerator / denominator)
+            term_score = self.name_weight * name_term_freq + self.api_weight * api_term_freq + \
+                         self.token_weight * token_term_freq
+            method_score = idf * term_score
 
             score += max(method_score, 0.0)
-        return (1 + score)
 
+        return score
+
+    def _calculate_term_freq_field(self, term, field_tokens, avg_field_len):
+        count_in_field = float(np.sum([int(term == t) for t in field_tokens]))
+        return count_in_field / (1 + self.b * ((len(field_tokens) / avg_field_len) - 1))
+
+    def _write_counts_to_redis(self, doc_counts):
+        freq_pipeline = self.redis_db.pipeline()
+
+        for i, (token, doc_count) in enumerate(doc_counts.items()):
+            freq_key = REDIS_KEY_FORMAT.format(self.freq_table, token)
+            freq_pipeline.set(freq_key, str(doc_count))
+            if i % REPORT_THRESHOLD:
+                freq_pipeline.execute()
+                freq_pipeline = self.redis_db.pipeline()
+        freq_pipeline.execute()
