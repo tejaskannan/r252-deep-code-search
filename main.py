@@ -147,7 +147,12 @@ def main():
 
         args.output = value_if_non_empty(args.output, 'searches/')
         args.output = add_slash_to_end(args.output)
-        out_folder = add_slash_to_end(args.output + args.model.split('/')[1])
+        out_folder = args.output + args.model.split('/')[1]
+
+        if args.rerank:
+            out_folder += '-reranked'
+        out_folder = add_slash_to_end(out_folder)
+
         if not os.path.exists(out_folder):
             os.mkdir(out_folder)
 

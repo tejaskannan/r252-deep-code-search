@@ -259,7 +259,6 @@ class Parser:
             # We only use identifier tokens in our method tokens
             if node.type == FeatureNode.IDENTIFIER_TOKEN:
                 tokens.append(node.contents)
-                #tokens += [token.lower() for token in self._split_camel_case(node.contents)]
             node = code_graph.get_out_neighbors_with_edge_type(node.id, FeatureEdge.NEXT_TOKEN)[0]
         return list(set(tokens))
 
@@ -286,14 +285,14 @@ class Parser:
             ret_type = code_graph.get_neighbors_with_type_content(method.id,
                                                                   neigh_type=None,
                                                                   neigh_content=RETURN_TYPE)
+
             if len(ret_type) == 0:
                 return method_str
 
             # We traverse down to the return type
             start = ret_type[0]
-            while start.type != FeatureNode.TOKEN:
+            while start.type not in (FeatureNode.TOKEN, FeatureNode.IDENTIFIER_TOKEN):
                 start = code_graph.get_out_neighbors(start.id)[0]
-
         else:
             modifiers = code_graph.get_neighbors_with_type_content(modifiers[0].id,
                                                                    neigh_type=None,

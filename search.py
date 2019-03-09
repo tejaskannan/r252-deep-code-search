@@ -33,9 +33,9 @@ class DeepCodeSearchDB:
 
         self.k1 = 1.2
         self.b = 0.75
-        self.name_weight = 3
-        self.api_weight = 2
-        self.token_weight = 1
+        self.name_weight = 1.5
+        self.api_weight = 1
+        self.token_weight = 0.5
 
     def index_dir(self, dir_name, should_subtokenize=False):
         method_id = 0
@@ -80,8 +80,11 @@ class DeepCodeSearchDB:
 
     # Returns the number of methods indexed using this file
     def index_file(self, file_name, start_index=0, doc_counts={}, doc_lengths={}, should_subtokenize=False):
-        method_tokens, method_apis, method_names, _, method_body = self.parser.parse_file(file_name, only_javadoc=True,
+        method_tokens, method_apis, method_names, _, method_body = self.parser.parse_file(file_name, only_javadoc=False,
                                                                                           should_subtokenize=should_subtokenize)
+        
+        pipeline = self.redis_db.pipeline()
+
         index = start_index
         for name, api, token, body in zip(method_names, method_apis, method_tokens, method_body):
 
@@ -89,7 +92,6 @@ class DeepCodeSearchDB:
 
             data_key = REDIS_KEY_FORMAT.format(self.data_table, index)
             emb_key = REDIS_KEY_FORMAT.format(self.emb_table, index)
-
 
             # Accumulate document counts for each token
             name_lst = name.split()
@@ -109,8 +111,6 @@ class DeepCodeSearchDB:
             if METHOD_TOKENS in doc_lengths:
                 doc_lengths[METHOD_TOKENS] += len(token_lst)
 
-            pipeline = self.redis_db.pipeline()
-
             pipeline.hset(data_key, METHOD_NAME, name)
             pipeline.hset(data_key, METHOD_API, api)
             pipeline.hset(data_key, METHOD_TOKENS, token)
@@ -124,12 +124,13 @@ class DeepCodeSearchDB:
 
             for entry in embedding:
                 pipeline.rpush(emb_key, str(entry))
-            pipeline.execute()
 
             normalized_embedding = embedding / np.linalg.norm(embedding)
             self.index.add_item(index, normalized_embedding)
 
             index += 1
+
+        pipeline.execute()
         return index
 
     # This function implements a baseline test where we use javadoc comments to search the
@@ -205,10 +206,11 @@ class DeepCodeSearchDB:
                                                doc_freqs=freqs)
             bm25_scores.append(bm25_score)
 
-        # We normalize the bm25 scores to keep their magnitudes similar to those
-        # of the distances. We don't want to place too much stock in bm25 scores.
-        bm25_scores = bm25_scores / np.max(bm25_scores)
-        scores = [(1.0 / d) * b for d, b in zip(distances, bm25_scores)]
+        transformed_distances = list(map(lambda d: (1.0 / (d + SMALL_NUMBER)) + 1.0, distances))
+
+        bm25_scores = np.array(bm25_scores) + 1.0
+        bm25_scores = bm25_scores / np.sum(bm25_scores)
+        scores = np.multiply(transformed_distances, bm25_scores)
 
         return [res for _,res in reversed(sorted(zip(scores, results)))][:k]
 

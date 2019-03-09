@@ -125,5 +125,11 @@ translate_dict = {
     'LTLTEQ': '<<=',
     'GTGTEQ': '>>=',
     'GTGTGTEQ': '>>>=',
-    'MONKEYS_AT': '@'
+    'MONKEYS_AT': '@',
+    '\n': '\\n',
+    '\t': '\\t',
+    '\r': '\\r',
+    '\b': '\\b',
+    '\a': '\\a',
+    '\f': '\\f'
 }
