@@ -1,0 +1,20 @@
+void mark ( ) { bufSplitPoint = 0 ; bufferUp ( ) ; bufMark = bufPos ; }
+--------------------------------------------------
+public String toString ( ) { if ( attributes != null && attributes . size ( ) > 0 ) return "<" + name ( ) + " " + attributes . toString ( ) + ">" ; else return "<" + name ( ) + ">" ; }
+--------------------------------------------------
+public boolean equals ( Object o ) { if ( this == o ) return true ; if ( o == null || getClass ( ) != o . getClass ( ) ) return false ; Attributes that = ( Attributes ) o ; if ( size != that . size ) return false ; if ( ! Arrays . equals ( keys , that . keys ) ) return false ; return Arrays . equals ( vals , that . vals ) ; }
+--------------------------------------------------
+public boolean is ( String query ) { Evaluator eval = QueryParser . parse ( query ) ; for ( Element e : this ) { if ( e . is ( eval ) ) return true ; } return false ; }
+--------------------------------------------------
+public boolean equals ( Object obj ) { if ( this == obj ) return true ; if ( obj == null ) return false ; if ( getClass ( ) != obj . getClass ( ) ) return false ; TypedValue other = ( TypedValue ) obj ; if ( value == null ) { return other . value == null ; } else return value . equals ( other . value ) ; }
+--------------------------------------------------
+protected void removeChild ( Node out ) { super . removeChild ( out ) ; elements . remove ( out ) ; }
+--------------------------------------------------
+public T removeHeader ( String name ) { Validate . notEmpty ( name , "header name must not be empty" ) ; Map . Entry < String , List < String >> entry = scanHeaders ( name ) ; if ( entry != null ) headers . remove ( entry . getKey ( ) ) ; return ( T ) this ; }
+--------------------------------------------------
+private void clearStackToContext ( String ... nodeNames ) { for ( int pos = stack . size ( ) - 1 ; pos >= 0 ; pos -- ) { Element next = stack . get ( pos ) ; if ( StringUtil . in ( next . normalName ( ) , nodeNames ) || next . normalName ( ) . equals ( "html" ) ) break ; else stack . remove ( pos ) ; } }
+--------------------------------------------------
+public Elements removeClass ( String className ) { for ( Element element : this ) { element . removeClass ( className ) ; } return this ; }
+--------------------------------------------------
+public String toString ( ) { if ( a == 0 ) return String . format ( ":%s(%d)" , getPseudoClass ( ) , b ) ; if ( b == 0 ) return String . format ( ":%s(%dn)" , getPseudoClass ( ) , a ) ; return String . format ( ":%s(%dn%+d)" , getPseudoClass ( ) , a , b ) ; }
+--------------------------------------------------

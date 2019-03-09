@@ -1,0 +1,20 @@
+private void clearStackToContext ( String ... nodeNames ) { for ( int pos = stack . size ( ) - 1 ; pos >= 0 ; pos -- ) { Element next = stack . get ( pos ) ; if ( StringUtil . in ( next . normalName ( ) , nodeNames ) || next . normalName ( ) . equals ( "html" ) ) break ; else stack . remove ( pos ) ; } }
+--------------------------------------------------
+public Element attr ( String attributeKey , String attributeValue ) { super . attr ( attributeKey , attributeValue ) ; return this ; }
+--------------------------------------------------
+public W3CBuilder ( Document doc ) { this . doc = doc ; this . namespacesStack . push ( new HashMap < String , String > ( ) ) ; }
+--------------------------------------------------
+public int hashCode ( ) { int result = key != null ? key . hashCode ( ) : 0 ; result = 31 * result + ( val != null ? val . hashCode ( ) : 0 ) ; return result ; }
+--------------------------------------------------
+public Elements attr ( String attributeKey , String attributeValue ) { for ( Element element : this ) { element . attr ( attributeKey , attributeValue ) ; } return this ; }
+--------------------------------------------------
+public int hashCode ( ) { int result = tagName . hashCode ( ) ; result = 31 * result + ( isBlock ? 1 : 0 ) ; result = 31 * result + ( formatAsBlock ? 1 : 0 ) ; result = 31 * result + ( canContainInline ? 1 : 0 ) ; result = 31 * result + ( empty ? 1 : 0 ) ; result = 31 * result + ( selfClosing ? 1 : 0 ) ; result = 31 * result + ( preserveWhitespace ? 1 : 0 ) ; result = 31 * result + ( formList ? 1 : 0 ) ; result = 31 * result + ( formSubmit ? 1 : 0 ) ; return result ; }
+--------------------------------------------------
+public DocumentType ( String name , String publicId , String systemId , String baseUri ) { attr ( NAME , name ) ; attr ( PUBLIC_ID , publicId ) ; if ( has ( PUBLIC_ID ) ) { attr ( PUB_SYS_KEY , PUBLIC_KEY ) ; } attr ( SYSTEM_ID , systemId ) ; }
+--------------------------------------------------
+public DocumentType ( String name , String pubSysKey , String publicId , String systemId , String baseUri ) { attr ( NAME , name ) ; if ( pubSysKey != null ) { attr ( PUB_SYS_KEY , pubSysKey ) ; } attr ( PUBLIC_ID , publicId ) ; attr ( SYSTEM_ID , systemId ) ; }
+--------------------------------------------------
+public Node attr ( String key , String value ) { if ( ! hasAttributes ( ) && key . equals ( nodeName ( ) ) ) { this . value = value ; } else { ensureAttributes ( ) ; super . attr ( key , value ) ; } return this ; }
+--------------------------------------------------
+public int hashCode ( ) { final int prime = 31 ; int result = 1 ; result = prime * result + ( ( value == null ) ? 0 : value . hashCode ( ) ) ; return result ; }
+--------------------------------------------------

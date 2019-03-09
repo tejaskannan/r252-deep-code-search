@@ -1,0 +1,20 @@
+public int hashCode ( ) { final int prime = 31 ; int result = 1 ; result = prime * result + ( ( value == null ) ? 0 : value . hashCode ( ) ) ; return result ; }
+--------------------------------------------------
+protected void doSetBaseUri ( String baseUri ) { }
+--------------------------------------------------
+protected void initialiseParse ( Reader input , String baseUri , Parser parser ) { super . initialiseParse ( input , baseUri , parser ) ; state = HtmlTreeBuilderState . Initial ; originalState = null ; baseUriSetFromDoc = false ; headElement = null ; formElement = null ; contextElement = null ; formattingElements = new ArrayList < > ( ) ; pendingTableCharacters = new ArrayList < > ( ) ; emptyEnd = new Token . EndTag ( ) ; framesetOk = true ; fosterInserts = false ; fragmentParsing = false ; }
+--------------------------------------------------
+void unconsume ( ) { if ( bufPos < 1 ) throw new UncheckedIOException ( new IOException ( "no buffer left to unconsume" ) ) ; bufPos -- ; }
+--------------------------------------------------
+static String getCharsetFromContentType ( String contentType ) { if ( contentType == null ) return null ; Matcher m = charsetPattern . matcher ( contentType ) ; if ( m . find ( ) ) { String charset = m . group ( 1 ) . trim ( ) ; charset = charset . replace ( "charset=" , "" ) ; return validateCharset ( charset ) ; } return null ; }
+--------------------------------------------------
+public void setPubSysKey ( String value ) { if ( value != null ) attr ( PUB_SYS_KEY , value ) ; }
+--------------------------------------------------
+public T url ( URL url ) { Validate . notNull ( url , "url must not be null" ) ; this . url = url ; return ( T ) this ; }
+--------------------------------------------------
+public String setValue ( String val ) { String oldVal = this . val ; if ( parent != null ) { oldVal = parent . get ( this . key ) ; int i = parent . indexOfKey ( this . key ) ; if ( i != Attributes . NotFound ) parent . vals [ i ] = val ; } this . val = val ; return Attributes . checkNotNull ( oldVal ) ; }
+--------------------------------------------------
+public String contentType ( ) { return contentType ; }
+--------------------------------------------------
+public Parser setTreeBuilder ( TreeBuilder treeBuilder ) { this . treeBuilder = treeBuilder ; treeBuilder . parser = this ; return this ; }
+--------------------------------------------------

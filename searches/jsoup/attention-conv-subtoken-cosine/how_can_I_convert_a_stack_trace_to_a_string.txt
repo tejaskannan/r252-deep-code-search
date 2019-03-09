@@ -1,0 +1,27 @@
+static void crossStreams ( final InputStream in , final OutputStream out ) throws IOException { final byte [ ] buffer = new byte [ bufferSize ] ; int len ; while ( ( len = in . read ( buffer ) ) != - 1 ) { out . write ( buffer , 0 , len ) ; } }
+--------------------------------------------------
+private static void writePost ( final Connection . Request req , final OutputStream outputStream , final String bound ) throws IOException { final Collection < Connection . KeyVal > data = req . data ( ) ; final BufferedWriter w = new BufferedWriter ( new OutputStreamWriter ( outputStream , req . postDataCharset ( ) ) ) ; if ( bound != null ) { for ( Connection . KeyVal keyVal : data ) { w . write ( "--" ) ; w . write ( bound ) ; w . write ( "
+" ) ; w . write ( "content-disposition: form-data; name="" ) ; w . write ( encodeMimeName ( keyVal . key ( ) ) ) ; w . write ( """ ) ; if ( keyVal . hasInputStream ( ) ) { w . write ( "; filename="" ) ; w . write ( encodeMimeName ( keyVal . value ( ) ) ) ; w . write ( ""
+content-type: " ) ; w . write ( keyVal . contentType ( ) != null ? keyVal . contentType ( ) : DefaultUploadType ) ; w . write ( "
+
+" ) ; w . flush ( ) ; DataUtil . crossStreams ( keyVal . inputStream ( ) , outputStream ) ; outputStream . flush ( ) ; } else { w . write ( "
+
+" ) ; w . write ( keyVal . value ( ) ) ; } w . write ( "
+" ) ; } w . write ( "--" ) ; w . write ( bound ) ; w . write ( "--" ) ; } else if ( req . requestBody ( ) != null ) { w . write ( req . requestBody ( ) ) ; } else { boolean first = true ; for ( Connection . KeyVal keyVal : data ) { if ( ! first ) w . append ( '&' ) ; else first = false ; w . write ( URLEncoder . encode ( keyVal . key ( ) , req . postDataCharset ( ) ) ) ; w . write ( '=' ) ; w . write ( URLEncoder . encode ( keyVal . value ( ) , req . postDataCharset ( ) ) ) ; } } w . close ( ) ; }
+--------------------------------------------------
+public Element empty ( ) { childNodes . clear ( ) ; return this ; }
+--------------------------------------------------
+void mark ( ) { bufSplitPoint = 0 ; bufferUp ( ) ; bufMark = bufPos ; }
+--------------------------------------------------
+public ByteBuffer readToByteBuffer ( int max ) throws IOException { Validate . isTrue ( max >= 0 , "maxsize must be 0 (unlimited) or larger" ) ; final boolean localCapped = max > 0 ; final int bufferSize = localCapped && max < DefaultSize ? max : DefaultSize ; final byte [ ] readBuffer = new byte [ bufferSize ] ; final ByteArrayOutputStream outStream = new ByteArrayOutputStream ( bufferSize ) ; int read ; int remaining = max ; while ( true ) { read = read ( readBuffer ) ; if ( read == - 1 ) break ; if ( localCapped ) { if ( read >= remaining ) { outStream . write ( readBuffer , 0 , remaining ) ; break ; } remaining -= read ; } outStream . write ( readBuffer , 0 , read ) ; } return ByteBuffer . wrap ( outStream . toByteArray ( ) ) ; }
+--------------------------------------------------
+private void byId ( ) { String id = tq . consumeCssIdentifier ( ) ; Validate . notEmpty ( id ) ; evals . add ( new Evaluator . Id ( id ) ) ; }
+--------------------------------------------------
+public String toString ( ) { return String . format ( "[%s*=%s]" , key , value ) ; }
+--------------------------------------------------
+public String toString ( ) { return String . format ( "[%s^=%s]" , key , value ) ; }
+--------------------------------------------------
+public String toString ( ) { return String . format ( "[%s=%s]" , key , value ) ; }
+--------------------------------------------------
+public String toString ( ) { return String . format ( "[%s!=%s]" , key , value ) ; }
+--------------------------------------------------

@@ -1,0 +1,20 @@
+protected boolean isSafeAttribute ( String tagName , Element el , Attribute attr ) { TagName tag = TagName . valueOf ( tagName ) ; AttributeKey key = AttributeKey . valueOf ( attr . getKey ( ) ) ; Set < AttributeKey > okSet = attributes . get ( tag ) ; if ( okSet != null && okSet . contains ( key ) ) { if ( protocols . containsKey ( tag ) ) { Map < AttributeKey , Set < Protocol >> attrProts = protocols . get ( tag ) ; return ! attrProts . containsKey ( key ) || testValidProtocol ( el , attr , attrProts . get ( key ) ) ; } else { return true ; } } Map < AttributeKey , AttributeValue > enforcedSet = enforcedAttributes . get ( tag ) ; if ( enforcedSet != null ) { Attributes expect = getEnforcedAttributes ( tagName ) ; String attrKey = attr . getKey ( ) ; if ( expect . hasKeyIgnoreCase ( attrKey ) ) { return expect . getIgnoreCase ( attrKey ) . equals ( attr . getValue ( ) ) ; } } return ! tagName . equals ( ":all" ) && isSafeAttribute ( ":all" , el , attr ) ; }
+--------------------------------------------------
+protected Element currentElement ( ) { int size = stack . size ( ) ; return size > 0 ? stack . get ( size - 1 ) : null ; }
+--------------------------------------------------
+public String consumeCssIdentifier ( ) { int start = pos ; while ( ! isEmpty ( ) && ( matchesWord ( ) || matchesAny ( '-' , '_' ) ) ) pos ++ ; return queue . substring ( start , pos ) ; }
+--------------------------------------------------
+public Element removeClass ( String className ) { Validate . notNull ( className ) ; Set < String > classes = classNames ( ) ; classes . remove ( className ) ; classNames ( classes ) ; return this ; }
+--------------------------------------------------
+final void appendTagName ( String append ) { tagName = tagName == null ? append : tagName . concat ( append ) ; normalName = lowerCase ( tagName ) ; }
+--------------------------------------------------
+public String consumeTagName ( ) { int start = pos ; while ( ! isEmpty ( ) && ( matchesWord ( ) || matchesAny ( ':' , '_' , '-' ) ) ) pos ++ ; return queue . substring ( start , pos ) ; }
+--------------------------------------------------
+public static boolean isActuallyWhitespace ( int c ) { return c == ' ' || c == '\t' || c == '\n' || c == '\f' || c == '\r' || c == 160 ; }
+--------------------------------------------------
+public String chompBalanced ( char open , char close ) { int start = - 1 ; int end = - 1 ; int depth = 0 ; char last = 0 ; boolean inSingleQuote = false ; boolean inDoubleQuote = false ; do { if ( isEmpty ( ) ) break ; Character c = consume ( ) ; if ( last == 0 || last != ESC ) { if ( c . equals ( ''' ) && c != open && ! inDoubleQuote ) inSingleQuote = ! inSingleQuote ; else if ( c . equals ( '"' ) && c != open && ! inSingleQuote ) inDoubleQuote = ! inDoubleQuote ; if ( inSingleQuote || inDoubleQuote ) continue ; if ( c . equals ( open ) ) { depth ++ ; if ( start == - 1 ) start = pos ; } else if ( c . equals ( close ) ) depth -- ; } if ( depth > 0 && last != 0 ) end = pos ; last = c ; } while ( depth > 0 ) ; final String out = ( end >= 0 ) ? queue . substring ( start , end ) : "" ; if ( depth > 0 ) { Validate . fail ( "did not find balanced marker at '" + out + "'" ) ; } return out ; }
+--------------------------------------------------
+public boolean isXmlDeclaration ( ) { String data = getData ( ) ; return ( data . length ( ) > 1 && ( data . startsWith ( "!" ) || data . startsWith ( "?" ) ) ) ; }
+--------------------------------------------------
+public E remove ( int index ) { onContentsChanged ( ) ; return super . remove ( index ) ; }
+--------------------------------------------------

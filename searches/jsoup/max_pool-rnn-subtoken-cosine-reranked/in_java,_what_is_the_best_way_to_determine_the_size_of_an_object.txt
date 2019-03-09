@@ -1,0 +1,20 @@
+String consumeLetterThenDigitSequence ( ) { bufferUp ( ) ; int start = bufPos ; while ( bufPos < bufLength ) { char c = charBuf [ bufPos ] ; if ( ( c >= 'a' && c <= 'z' ) || ( c >= 'a' && c <= 'z' ) || Character . isLetter ( c ) ) bufPos ++ ; else break ; } while ( ! isEmptyNoBufferUp ( ) ) { char c = charBuf [ bufPos ] ; if ( c >= '0' && c <= '9' ) bufPos ++ ; else break ; } return cacheString ( charBuf , stringCache , start , bufPos - start ) ; }
+--------------------------------------------------
+private void ownText ( StringBuilder accum ) { for ( Node child : childNodes ) { if ( child instanceof TextNode ) { TextNode textNode = ( TextNode ) child ; appendNormalisedText ( accum , textNode ) ; } else if ( child instanceof Element ) { appendWhitespaceIfBr ( ( Element ) child , accum ) ; } } }
+--------------------------------------------------
+String consumeLetterSequence ( ) { bufferUp ( ) ; int start = bufPos ; while ( bufPos < bufLength ) { char c = charBuf [ bufPos ] ; if ( ( c >= 'a' && c <= 'z' ) || ( c >= 'a' && c <= 'z' ) || Character . isLetter ( c ) ) bufPos ++ ; else break ; } return cacheString ( charBuf , stringCache , start , bufPos - start ) ; }
+--------------------------------------------------
+private boolean inSpecificScope ( String [ ] targetNames , String [ ] baseTypes , String [ ] extraTypes ) { final int bottom = stack . size ( ) - 1 ; final int top = bottom > MaxScopeSearchDepth ? bottom - MaxScopeSearchDepth : 0 ; for ( int pos = bottom ; pos >= top ; pos -- ) { final String elName = stack . get ( pos ) . normalName ( ) ; if ( inSorted ( elName , targetNames ) ) return true ; if ( inSorted ( elName , baseTypes ) ) return false ; if ( extraTypes != null && inSorted ( elName , extraTypes ) ) return false ; } return false ; }
+--------------------------------------------------
+public CharacterReader ( Reader input , int sz ) { Validate . notNull ( input ) ; Validate . isTrue ( input . markSupported ( ) ) ; reader = input ; charBuf = new char [ sz > maxBufferLen ? maxBufferLen : sz ] ; bufferUp ( ) ; }
+--------------------------------------------------
+public BufferedInputStream bodyStream ( ) { Validate . isTrue ( executed , "request must be executed (with .execute(), .get(), or .post() before getting response body" ) ; Validate . isFalse ( inputStreamRead , "request has already been read" ) ; inputStreamRead = true ; return ConstrainableInputStream . wrap ( bodyStream , DataUtil . bufferSize , req . maxBodySize ( ) ) ; }
+--------------------------------------------------
+String consumeHexSequence ( ) { bufferUp ( ) ; int start = bufPos ; while ( bufPos < bufLength ) { char c = charBuf [ bufPos ] ; if ( ( c >= '0' && c <= '9' ) || ( c >= 'a' && c <= 'f' ) || ( c >= 'a' && c <= 'f' ) ) bufPos ++ ; else break ; } return cacheString ( charBuf , stringCache , start , bufPos - start ) ; }
+--------------------------------------------------
+String consumeDigitSequence ( ) { bufferUp ( ) ; int start = bufPos ; while ( bufPos < bufLength ) { char c = charBuf [ bufPos ] ; if ( c >= '0' && c <= '9' ) bufPos ++ ; else break ; } return cacheString ( charBuf , stringCache , start , bufPos - start ) ; }
+--------------------------------------------------
+private boolean exitTableBody ( Token t , HtmlTreeBuilder tb ) { if ( ! ( tb . inTableScope ( "tbody" ) || tb . inTableScope ( "thead" ) || tb . inScope ( "tfoot" ) ) ) { tb . error ( this ) ; return false ; } tb . clearStackToTableBodyContext ( ) ; tb . processEndTag ( tb . currentElement ( ) . normalName ( ) ) ; return tb . process ( t ) ; }
+--------------------------------------------------
+public String ownText ( ) { StringBuilder sb = StringUtil . borrowBuilder ( ) ; ownText ( sb ) ; return StringUtil . releaseBuilder ( sb ) . trim ( ) ; }
+--------------------------------------------------

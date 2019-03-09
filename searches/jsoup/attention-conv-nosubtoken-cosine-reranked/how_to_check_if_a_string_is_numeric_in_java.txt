@@ -1,0 +1,20 @@
+public Element val ( String value ) { if ( tagName ( ) . equals ( "textarea" ) ) text ( value ) ; else attr ( "value" , value ) ; return this ; }
+--------------------------------------------------
+public Iterator < Attribute > iterator ( ) { return new Iterator < Attribute > ( ) { int i = 0 ; @ Override public boolean hasNext ( ) { return i < size ; } @ Override public Attribute next ( ) { final Attribute attr = new Attribute ( keys [ i ] , vals [ i ] , Attributes . this ) ; i ++ ; return attr ; } @ Override public void remove ( ) { Attributes . this . remove ( -- i ) ; } } ; }
+--------------------------------------------------
+public String val ( ) { if ( tagName ( ) . equals ( "textarea" ) ) return text ( ) ; else return attr ( "value" ) ; }
+--------------------------------------------------
+public boolean hasHeaderWithValue ( String name , String value ) { Validate . notEmpty ( name ) ; Validate . notEmpty ( value ) ; List < String > values = headers ( name ) ; for ( String candidate : values ) { if ( value . equalsIgnoreCase ( candidate ) ) return true ; } return false ; }
+--------------------------------------------------
+public W3CBuilder ( Document doc ) { this . doc = doc ; this . namespacesStack . push ( new HashMap < String , String > ( ) ) ; }
+--------------------------------------------------
+public Elements val ( String value ) { for ( Element element : this ) element . val ( value ) ; return this ; }
+--------------------------------------------------
+public boolean matches ( Element root , Element element ) { return ! value . equalsIgnoreCase ( element . attr ( key ) ) ; }
+--------------------------------------------------
+public String attr ( String key ) { Validate . notNull ( key ) ; if ( ! hasAttributes ( ) ) { return key . equals ( nodeName ( ) ) ? ( String ) value : EmptyString ; } return super . attr ( key ) ; }
+--------------------------------------------------
+public DocumentType ( String name , String publicId , String systemId , String baseUri ) { attr ( NAME , name ) ; attr ( PUBLIC_ID , publicId ) ; if ( has ( PUBLIC_ID ) ) { attr ( PUB_SYS_KEY , PUBLIC_KEY ) ; } attr ( SYSTEM_ID , systemId ) ; }
+--------------------------------------------------
+public DocumentType ( String name , String pubSysKey , String publicId , String systemId , String baseUri ) { attr ( NAME , name ) ; if ( pubSysKey != null ) { attr ( PUB_SYS_KEY , pubSysKey ) ; } attr ( PUBLIC_ID , publicId ) ; attr ( SYSTEM_ID , systemId ) ; }
+--------------------------------------------------

@@ -1,0 +1,20 @@
+FormElement insertForm ( Token . StartTag startTag , boolean onStack ) { Tag tag = Tag . valueOf ( startTag . name ( ) , settings ) ; FormElement el = new FormElement ( tag , baseUri , startTag . attributes ) ; setFormElement ( el ) ; insertNode ( el ) ; if ( onStack ) stack . add ( el ) ; return el ; }
+--------------------------------------------------
+public Connection cookies ( Map < String , String > cookies ) { Validate . notNull ( cookies , "cookie map must not be null" ) ; for ( Map . Entry < String , String > entry : cookies . entrySet ( ) ) { req . cookie ( entry . getKey ( ) , entry . getValue ( ) ) ; } return this ; }
+--------------------------------------------------
+public XmlDeclaration ( String name , boolean isProcessingInstruction ) { Validate . notNull ( name ) ; value = name ; this . isProcessingInstruction = isProcessingInstruction ; }
+--------------------------------------------------
+Element insertStartTag ( String startTagName ) { Element el = new Element ( Tag . valueOf ( startTagName , settings ) , baseUri ) ; insert ( el ) ; return el ; }
+--------------------------------------------------
+private void clearStackToContext ( String ... nodeNames ) { for ( int pos = stack . size ( ) - 1 ; pos >= 0 ; pos -- ) { Element next = stack . get ( pos ) ; if ( StringUtil . in ( next . normalName ( ) , nodeNames ) || next . normalName ( ) . equals ( "html" ) ) break ; else stack . remove ( pos ) ; } }
+--------------------------------------------------
+public Connection headers ( Map < String , String > headers ) { Validate . notNull ( headers , "header map must not be null" ) ; for ( Map . Entry < String , String > entry : headers . entrySet ( ) ) { req . header ( entry . getKey ( ) , entry . getValue ( ) ) ; } return this ; }
+--------------------------------------------------
+public Element val ( String value ) { if ( tagName ( ) . equals ( "textarea" ) ) text ( value ) ; else attr ( "value" , value ) ; return this ; }
+--------------------------------------------------
+void popStackToBefore ( String elName ) { for ( int pos = stack . size ( ) - 1 ; pos >= 0 ; pos -- ) { Element next = stack . get ( pos ) ; if ( next . normalName ( ) . equals ( elName ) ) { break ; } else { stack . remove ( pos ) ; } } }
+--------------------------------------------------
+void outerHtmlHead ( Appendable accum , int depth , Document . OutputSettings out ) throws IOException { accum . append ( "<" ) . append ( isProcessingInstruction ? "!" : "?" ) . append ( coreValue ( ) ) ; getWholeDeclaration ( accum , out ) ; accum . append ( isProcessingInstruction ? "!" : "?" ) . append ( ">" ) ; }
+--------------------------------------------------
+Element getFromStack ( String elName ) { for ( int pos = stack . size ( ) - 1 ; pos >= 0 ; pos -- ) { Element next = stack . get ( pos ) ; if ( next . normalName ( ) . equals ( elName ) ) { return next ; } } return null ; }
+--------------------------------------------------

@@ -1,0 +1,20 @@
+public Elements getElementsByAttributeValueMatching ( String key , String regex ) { Pattern pattern ; try { pattern = Pattern . compile ( regex ) ; } catch ( PatternSyntaxException e ) { throw new IllegalArgumentException ( "pattern syntax error: " + regex , e ) ; } return getElementsByAttributeValueMatching ( key , pattern ) ; }
+--------------------------------------------------
+public int hashCode ( ) { int result = key != null ? key . hashCode ( ) : 0 ; result = 31 * result + ( val != null ? val . hashCode ( ) : 0 ) ; return result ; }
+--------------------------------------------------
+public String toString ( ) { return String . format ( ":matchesown(%s)" , pattern ) ; }
+--------------------------------------------------
+public String toString ( ) { return String . format ( ":matches(%s)" , pattern ) ; }
+--------------------------------------------------
+public String getIgnoreCase ( String key ) { int i = indexOfKeyIgnoreCase ( key ) ; return i == NotFound ? EmptyString : checkNotNull ( vals [ i ] ) ; }
+--------------------------------------------------
+public String toString ( ) { return String . format ( "#%s" , id ) ; }
+--------------------------------------------------
+public Elements getElementsByClass ( String className ) { Validate . notEmpty ( className ) ; return Collector . collect ( new Evaluator . Class ( className ) , this ) ; }
+--------------------------------------------------
+public String toString ( ) { return String . format ( "[^%s]" , keyPrefix ) ; }
+--------------------------------------------------
+private List < String > getHeadersCaseInsensitive ( String name ) { Validate . notNull ( name ) ; for ( Map . Entry < String , List < String >> entry : headers . entrySet ( ) ) { if ( name . equalsIgnoreCase ( entry . getKey ( ) ) ) return entry . getValue ( ) ; } return Collections . emptyList ( ) ; }
+--------------------------------------------------
+public String toString ( ) { return String . format ( ":lt(%d)" , index ) ; }
+--------------------------------------------------

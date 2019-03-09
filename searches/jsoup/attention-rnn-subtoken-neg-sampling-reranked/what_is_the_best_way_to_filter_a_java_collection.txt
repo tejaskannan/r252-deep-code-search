@@ -1,0 +1,20 @@
+public boolean hasAttr ( String attributeKey ) { Validate . notNull ( attributeKey ) ; if ( attributeKey . startsWith ( "abs:" ) ) { String key = attributeKey . substring ( "abs:" . length ( ) ) ; if ( attributes ( ) . hasKeyIgnoreCase ( key ) && ! absUrl ( key ) . equals ( "" ) ) return true ; } return attributes ( ) . hasKeyIgnoreCase ( attributeKey ) ; }
+--------------------------------------------------
+public String toString ( ) { return StringUtil . join ( evaluators , ", " ) ; }
+--------------------------------------------------
+public String toString ( ) { return StringUtil . join ( evaluators , " " ) ; }
+--------------------------------------------------
+public String getPlainText ( Element element ) { FormattingVisitor formatter = new FormattingVisitor ( ) ; NodeTraversor . traverse ( formatter , element ) ; return formatter . toString ( ) ; }
+--------------------------------------------------
+public List < Attribute > asList ( ) { ArrayList < Attribute > list = new ArrayList < > ( size ) ; for ( int i = 0 ; i < size ; i ++ ) { Attribute attr = vals [ i ] == null ? new BooleanAttribute ( keys [ i ] ) : new Attribute ( keys [ i ] , vals [ i ] , Attributes . this ) ; list . add ( attr ) ; } return Collections . unmodifiableList ( list ) ; }
+--------------------------------------------------
+String consumeTagName ( ) { bufferUp ( ) ; int pos = bufPos ; final int start = pos ; final int remaining = bufLength ; final char [ ] val = charBuf ; OUTER : while ( pos < remaining ) { switch ( val [ pos ] ) { case '\t' : case '\n' : case '\r' : case '\f' : case ' ' : case '/' : case '>' : case '<' : case TokeniserState . nullChar : break OUTER ; } pos ++ ; } bufPos = pos ; return pos > start ? cacheString ( charBuf , stringCache , start , pos - start ) : "" ; }
+--------------------------------------------------
+public Element lastElementSibling ( ) { List < Element > siblings = parent ( ) . childElementsList ( ) ; return siblings . size ( ) > 1 ? siblings . get ( siblings . size ( ) - 1 ) : null ; }
+--------------------------------------------------
+public String toString ( ) { return ":root" ; }
+--------------------------------------------------
+public String toString ( ) { return ":only-of-type" ; }
+--------------------------------------------------
+public String toString ( ) { return ":only-child" ; }
+--------------------------------------------------

@@ -1,0 +1,20 @@
+public String toString ( ) { return value ; }
+--------------------------------------------------
+public String toString ( ) { if ( attributes != null && attributes . size ( ) > 0 ) return "<" + name ( ) + " " + attributes . toString ( ) + ">" ; else return "<" + name ( ) + ">" ; }
+--------------------------------------------------
+public String toString ( ) { return String . format ( "#%s" , id ) ; }
+--------------------------------------------------
+public String toString ( ) { return String . format ( ".%s" , className ) ; }
+--------------------------------------------------
+public String toString ( ) { return key + "=" + value ; }
+--------------------------------------------------
+public Connection header ( String name , String value ) { req . header ( name , value ) ; return this ; }
+--------------------------------------------------
+public String toString ( ) { return String . format ( "[%s^=%s]" , key , value ) ; }
+--------------------------------------------------
+public String toString ( ) { return String . format ( "[%s=%s]" , key , value ) ; }
+--------------------------------------------------
+public String toString ( ) { return String . format ( "[%s*=%s]" , key , value ) ; }
+--------------------------------------------------
+public String toString ( ) { return String . format ( "[%s$=%s]" , key , value ) ; }
+--------------------------------------------------

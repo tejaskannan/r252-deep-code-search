@@ -1,0 +1,20 @@
+public Attributes clone ( ) { Attributes clone ; try { clone = ( Attributes ) super . clone ( ) ; } catch ( CloneNotSupportedException e ) { throw new RuntimeException ( e ) ; } clone . size = size ; keys = copyOf ( keys , size ) ; vals = copyOf ( vals , size ) ; return clone ; }
+--------------------------------------------------
+public T removeHeader ( String name ) { Validate . notEmpty ( name , "header name must not be empty" ) ; Map . Entry < String , List < String >> entry = scanHeaders ( name ) ; if ( entry != null ) headers . remove ( entry . getKey ( ) ) ; return ( T ) this ; }
+--------------------------------------------------
+public Element removeClass ( String className ) { Validate . notNull ( className ) ; Set < String > classes = classNames ( ) ; classes . remove ( className ) ; classNames ( classes ) ; return this ; }
+--------------------------------------------------
+public W3CBuilder ( Document doc ) { this . doc = doc ; this . namespacesStack . push ( new HashMap < String , String > ( ) ) ; }
+--------------------------------------------------
+public boolean equals ( Object o ) { if ( this == o ) return true ; if ( o == null || getClass ( ) != o . getClass ( ) ) return false ; Attributes that = ( Attributes ) o ; if ( size != that . size ) return false ; if ( ! Arrays . equals ( keys , that . keys ) ) return false ; return Arrays . equals ( vals , that . vals ) ; }
+--------------------------------------------------
+public Connection header ( String name , String value ) { req . header ( name , value ) ; return this ; }
+--------------------------------------------------
+static void crossStreams ( final InputStream in , final OutputStream out ) throws IOException { final byte [ ] buffer = new byte [ bufferSize ] ; int len ; while ( ( len = in . read ( buffer ) ) != - 1 ) { out . write ( buffer , 0 , len ) ; } }
+--------------------------------------------------
+public Connection . KeyVal data ( String key ) { Validate . notEmpty ( key , "data key must not be empty" ) ; for ( Connection . KeyVal keyVal : request ( ) . data ( ) ) { if ( keyVal . key ( ) . equals ( key ) ) return keyVal ; } return null ; }
+--------------------------------------------------
+public boolean hasHeader ( String name ) { Validate . notEmpty ( name , "header name must not be empty" ) ; return getHeadersCaseInsensitive ( name ) . size ( ) != 0 ; }
+--------------------------------------------------
+public String header ( String name ) { Validate . notNull ( name , "header name must not be null" ) ; List < String > vals = getHeadersCaseInsensitive ( name ) ; if ( vals . size ( ) > 0 ) { return StringUtil . join ( vals , ", " ) ; } return null ; }
+--------------------------------------------------

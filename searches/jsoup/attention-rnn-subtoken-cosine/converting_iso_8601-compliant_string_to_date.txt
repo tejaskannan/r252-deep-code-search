@@ -1,0 +1,20 @@
+public Whitelist addTags ( String ... tags ) { Validate . notNull ( tags ) ; for ( String tagName : tags ) { Validate . notEmpty ( tagName ) ; tagNames . add ( TagName . valueOf ( tagName ) ) ; } return this ; }
+--------------------------------------------------
+public String text ( ) { return getWholeText ( ) ; }
+--------------------------------------------------
+protected static void html ( String key , String val , Appendable accum , Document . OutputSettings out ) throws IOException { accum . append ( key ) ; if ( ! shouldCollapseAttribute ( key , val , out ) ) { accum . append ( "="" ) ; Entities . escape ( accum , Attributes . checkNotNull ( val ) , out , true , false , false ) ; accum . append ( '"' ) ; } }
+--------------------------------------------------
+void resetInsertionMode ( ) { boolean last = false ; for ( int pos = stack . size ( ) - 1 ; pos >= 0 ; pos -- ) { Element node = stack . get ( pos ) ; if ( pos == 0 ) { last = true ; node = contextElement ; } String name = node . normalName ( ) ; if ( "select" . equals ( name ) ) { transition ( HtmlTreeBuilderState . InSelect ) ; break ; } else if ( ( "td" . equals ( name ) || "th" . equals ( name ) && ! last ) ) { transition ( HtmlTreeBuilderState . InCell ) ; break ; } else if ( "tr" . equals ( name ) ) { transition ( HtmlTreeBuilderState . InRow ) ; break ; } else if ( "tbody" . equals ( name ) || "thead" . equals ( name ) || "tfoot" . equals ( name ) ) { transition ( HtmlTreeBuilderState . InTableBody ) ; break ; } else if ( "caption" . equals ( name ) ) { transition ( HtmlTreeBuilderState . InCaption ) ; break ; } else if ( "colgroup" . equals ( name ) ) { transition ( HtmlTreeBuilderState . InColumnGroup ) ; break ; } else if ( "table" . equals ( name ) ) { transition ( HtmlTreeBuilderState . InTable ) ; break ; } else if ( "head" . equals ( name ) ) { transition ( HtmlTreeBuilderState . InBody ) ; break ; } else if ( "body" . equals ( name ) ) { transition ( HtmlTreeBuilderState . InBody ) ; break ; } else if ( "frameset" . equals ( name ) ) { transition ( HtmlTreeBuilderState . InFrameset ) ; break ; } else if ( "html" . equals ( name ) ) { transition ( HtmlTreeBuilderState . BeforeHead ) ; break ; } else if ( last ) { transition ( HtmlTreeBuilderState . InBody ) ; break ; } } }
+--------------------------------------------------
+public TextNode text ( String text ) { coreValue ( text ) ; return this ; }
+--------------------------------------------------
+public List < TextNode > textNodes ( ) { List < TextNode > textNodes = new ArrayList < > ( ) ; for ( Node node : childNodes ) { if ( node instanceof TextNode ) textNodes . add ( ( TextNode ) node ) ; } return Collections . unmodifiableList ( textNodes ) ; }
+--------------------------------------------------
+public Parser setTrackErrors ( int maxErrors ) { errors = maxErrors > 0 ? ParseErrorList . tracking ( maxErrors ) : ParseErrorList . noTracking ( ) ; return this ; }
+--------------------------------------------------
+final void html ( final Appendable accum , final Document . OutputSettings out ) throws IOException { final int sz = size ; for ( int i = 0 ; i < sz ; i ++ ) { final String key = keys [ i ] ; final String val = vals [ i ] ; accum . append ( ' ' ) . append ( key ) ; if ( ! Attribute . shouldCollapseAttribute ( key , val , out ) ) { accum . append ( "="" ) ; Entities . escape ( accum , val == null ? EmptyString : val , out , true , false , false ) ; accum . append ( '"' ) ; } } }
+--------------------------------------------------
+public String text ( ) { StringBuilder sb = StringUtil . borrowBuilder ( ) ; for ( Element element : this ) { if ( sb . length ( ) != 0 ) sb . append ( " " ) ; sb . append ( element . text ( ) ) ; } return StringUtil . releaseBuilder ( sb ) ; }
+--------------------------------------------------
+public static Whitelist simpleText ( ) { return new Whitelist ( ) . addTags ( "b" , "em" , "i" , "strong" , "u" ) ; }
+--------------------------------------------------

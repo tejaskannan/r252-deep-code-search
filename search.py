@@ -11,7 +11,7 @@ from constants import *
 
 class DeepCodeSearchDB:
 
-    def __init__(self, table, model, embedding_size, num_trees=32,
+    def __init__(self, table, model, embedding_size, num_trees=100,
                  host='localhost', port=6379, pwd=0):
         self.redis_db = redis.Redis(host=host, port=port, db=pwd)
 
@@ -82,7 +82,6 @@ class DeepCodeSearchDB:
     def index_file(self, file_name, start_index=0, doc_counts={}, doc_lengths={}, should_subtokenize=False):
         method_tokens, method_apis, method_names, _, method_body = self.parser.parse_file(file_name, only_javadoc=False,
                                                                                           should_subtokenize=should_subtokenize)
-        
         pipeline = self.redis_db.pipeline()
 
         index = start_index
@@ -136,9 +135,9 @@ class DeepCodeSearchDB:
     # This function implements a baseline test where we use javadoc comments to search the
     # corpus and expect the corresponding method to be returned (using the full search strategy)
     # For correct results, the given directory should be the same as that of the indexed dataset.
-    def hit_rank_over_corpus(self, corpus_dir, k=10):
-        total_hit_rank = 0.0
-        total_hits = 0.0
+    def hit_rank_over_corpus(self, corpus_dir, thresholds=[10], should_rerank=False):
+        total_hit_ranks = np.zeros_like(thresholds, dtype=float)
+        total_hits = np.zeros_like(thresholds, dtype=float)
         total_queries = SMALL_NUMBER
 
         self.index.load(self.index_path)
@@ -153,16 +152,19 @@ class DeepCodeSearchDB:
                     if len(javadoc) == 0:
                         continue
 
-                    results = self.search(' '.join(javadoc), field=METHOD_NAME, k=k)         
-                    hit_rank = get_ranking_in_array(results, name)
+                    javadoc_str = ' '.join(javadoc)
+                    for i, k in enumerate(thresholds):
+                        results = self.search(javadoc_str, field=METHOD_NAME, k=k,
+                                              should_rerank=should_rerank)         
+                        hit_rank = get_ranking_in_array(results, name)
 
-                    # This means that the method was found
-                    if hit_rank != -1:
-                        total_hits += 1.0
-                        total_hit_rank += 1.0 / (hit_rank + 1)
-                    total_queries += 1
+                        if hit_rank != -1:
+                            total_hits[i] += 1.0
+                            total_hit_ranks[i] += 1.0 / hit_rank
 
-        return total_hits / total_queries, total_hit_rank / total_queries
+                    total_queries += 1.0
+
+        return total_hits / total_queries, total_hit_ranks / total_queries
 
     # K is the max number of results to return
     # uses annoy for approximate (but faster) searching
@@ -210,7 +212,7 @@ class DeepCodeSearchDB:
 
         bm25_scores = np.array(bm25_scores) + 1.0
         bm25_scores = bm25_scores / np.sum(bm25_scores)
-        scores = np.multiply(transformed_distances, bm25_scores)
+        scores = np.add(transformed_distances, bm25_scores)
 
         return [res for _,res in reversed(sorted(zip(scores, results)))][:k]
 

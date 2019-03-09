@@ -1,0 +1,20 @@
+public String consumeToAny ( final char ... chars ) { bufferUp ( ) ; int pos = bufPos ; final int start = pos ; final int remaining = bufLength ; final char [ ] val = charBuf ; final int charLen = chars . length ; int i ; OUTER : while ( pos < remaining ) { for ( i = 0 ; i < charLen ; i ++ ) { if ( val [ pos ] == chars [ i ] ) break OUTER ; } pos ++ ; } bufPos = pos ; return pos > start ? cacheString ( charBuf , stringCache , start , pos - start ) : "" ; }
+--------------------------------------------------
+private static BomCharset detectCharsetFromBom ( final ByteBuffer byteData ) { final Buffer buffer = byteData ; buffer . mark ( ) ; byte [ ] bom = new byte [ 4 ] ; if ( byteData . remaining ( ) >= bom . length ) { byteData . get ( bom ) ; buffer . rewind ( ) ; } if ( bom [ 0 ] == 00 && bom [ 1 ] == 00 && bom [ 2 ] == ( byte ) fe && bom [ 3 ] == ( byte ) ff || bom [ 0 ] == ( byte ) ff && bom [ 1 ] == ( byte ) fe && bom [ 2 ] == 00 && bom [ 3 ] == 00 ) { return new BomCharset ( "utf-32" , false ) ; } else if ( bom [ 0 ] == ( byte ) fe && bom [ 1 ] == ( byte ) ff || bom [ 0 ] == ( byte ) ff && bom [ 1 ] == ( byte ) fe ) { return new BomCharset ( "utf-16" , false ) ; } else if ( bom [ 0 ] == ( byte ) ef && bom [ 1 ] == ( byte ) bb && bom [ 2 ] == ( byte ) bf ) { return new BomCharset ( "utf-8" , true ) ; } return null ; }
+--------------------------------------------------
+private boolean exitTableBody ( Token t , HtmlTreeBuilder tb ) { if ( ! ( tb . inTableScope ( "tbody" ) || tb . inTableScope ( "thead" ) || tb . inScope ( "tfoot" ) ) ) { tb . error ( this ) ; return false ; } tb . clearStackToTableBodyContext ( ) ; tb . processEndTag ( tb . currentElement ( ) . normalName ( ) ) ; return tb . process ( t ) ; }
+--------------------------------------------------
+String consumeLetterThenDigitSequence ( ) { bufferUp ( ) ; int start = bufPos ; while ( bufPos < bufLength ) { char c = charBuf [ bufPos ] ; if ( ( c >= 'a' && c <= 'z' ) || ( c >= 'a' && c <= 'z' ) || Character . isLetter ( c ) ) bufPos ++ ; else break ; } while ( ! isEmptyNoBufferUp ( ) ) { char c = charBuf [ bufPos ] ; if ( c >= '0' && c <= '9' ) bufPos ++ ; else break ; } return cacheString ( charBuf , stringCache , start , bufPos - start ) ; }
+--------------------------------------------------
+private void getWholeDeclaration ( Appendable accum , Document . OutputSettings out ) throws IOException { for ( Attribute attribute : attributes ( ) ) { if ( ! attribute . getKey ( ) . equals ( nodeName ( ) ) ) { accum . append ( ' ' ) ; attribute . html ( accum , out ) ; } } }
+--------------------------------------------------
+private boolean anythingElse ( Token t , TreeBuilder tb ) { boolean processed = tb . processEndTag ( "colgroup" ) ; if ( processed ) return tb . process ( t ) ; return true ; }
+--------------------------------------------------
+String consumeToAnySorted ( final char ... chars ) { bufferUp ( ) ; int pos = bufPos ; final int start = pos ; final int remaining = bufLength ; final char [ ] val = charBuf ; while ( pos < remaining ) { if ( Arrays . binarySearch ( chars , val [ pos ] ) >= 0 ) break ; pos ++ ; } bufPos = pos ; return bufPos > start ? cacheString ( charBuf , stringCache , start , pos - start ) : "" ; }
+--------------------------------------------------
+String consumeLetterSequence ( ) { bufferUp ( ) ; int start = bufPos ; while ( bufPos < bufLength ) { char c = charBuf [ bufPos ] ; if ( ( c >= 'a' && c <= 'z' ) || ( c >= 'a' && c <= 'z' ) || Character . isLetter ( c ) ) bufPos ++ ; else break ; } return cacheString ( charBuf , stringCache , start , bufPos - start ) ; }
+--------------------------------------------------
+public Node previousSibling ( ) { if ( parentNode == null ) return null ; if ( siblingIndex > 0 ) return parentNode . ensureChildNodes ( ) . get ( siblingIndex - 1 ) ; else return null ; }
+--------------------------------------------------
+private boolean anythingElse ( Token t , TreeBuilder tb ) { tb . processEndTag ( "head" ) ; return tb . process ( t ) ; }
+--------------------------------------------------

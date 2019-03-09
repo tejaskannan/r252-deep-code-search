@@ -1,0 +1,20 @@
+public String toString ( ) { return queue . substring ( pos ) ; }
+--------------------------------------------------
+public String chompTo ( String seq ) { String data = consumeTo ( seq ) ; matchChomp ( seq ) ; return data ; }
+--------------------------------------------------
+public String toString ( ) { return super . toString ( ) + ". mimetype=" + mimeType + ", url=" + url ; }
+--------------------------------------------------
+public String toString ( ) { if ( attributes != null && attributes . size ( ) > 0 ) return "<" + name ( ) + " " + attributes . toString ( ) + ">" ; else return "<" + name ( ) + ">" ; }
+--------------------------------------------------
+public String toString ( ) { return getData ( ) ; }
+--------------------------------------------------
+public String toString ( ) { return "<![cdata[" + getData ( ) + "]]>" ; }
+--------------------------------------------------
+public String toString ( ) { return "<!--" + getData ( ) + "-->" ; }
+--------------------------------------------------
+public String toString ( ) { return String . format ( ".%s" , className ) ; }
+--------------------------------------------------
+public String toString ( ) { return StringUtil . join ( evaluators , ", " ) ; }
+--------------------------------------------------
+public String toString ( ) { return StringUtil . join ( evaluators , " " ) ; }
+--------------------------------------------------

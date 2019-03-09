@@ -1,0 +1,20 @@
+protected boolean isSafeAttribute ( String tagName , Element el , Attribute attr ) { TagName tag = TagName . valueOf ( tagName ) ; AttributeKey key = AttributeKey . valueOf ( attr . getKey ( ) ) ; Set < AttributeKey > okSet = attributes . get ( tag ) ; if ( okSet != null && okSet . contains ( key ) ) { if ( protocols . containsKey ( tag ) ) { Map < AttributeKey , Set < Protocol >> attrProts = protocols . get ( tag ) ; return ! attrProts . containsKey ( key ) || testValidProtocol ( el , attr , attrProts . get ( key ) ) ; } else { return true ; } } Map < AttributeKey , AttributeValue > enforcedSet = enforcedAttributes . get ( tag ) ; if ( enforcedSet != null ) { Attributes expect = getEnforcedAttributes ( tagName ) ; String attrKey = attr . getKey ( ) ; if ( expect . hasKeyIgnoreCase ( attrKey ) ) { return expect . getIgnoreCase ( attrKey ) . equals ( attr . getValue ( ) ) ; } } return ! tagName . equals ( ":all" ) && isSafeAttribute ( ":all" , el , attr ) ; }
+--------------------------------------------------
+public static boolean isActuallyWhitespace ( int c ) { return c == ' ' || c == '\t' || c == '\n' || c == '\f' || c == '\r' || c == 160 ; }
+--------------------------------------------------
+public String consumeTagName ( ) { int start = pos ; while ( ! isEmpty ( ) && ( matchesWord ( ) || matchesAny ( ':' , '_' , '-' ) ) ) pos ++ ; return queue . substring ( start , pos ) ; }
+--------------------------------------------------
+final void appendTagName ( String append ) { tagName = tagName == null ? append : tagName . concat ( append ) ; normalName = lowerCase ( tagName ) ; }
+--------------------------------------------------
+protected Element currentElement ( ) { int size = stack . size ( ) ; return size > 0 ? stack . get ( size - 1 ) : null ; }
+--------------------------------------------------
+public Element removeClass ( String className ) { Validate . notNull ( className ) ; Set < String > classes = classNames ( ) ; classes . remove ( className ) ; classNames ( classes ) ; return this ; }
+--------------------------------------------------
+public String consumeCssIdentifier ( ) { int start = pos ; while ( ! isEmpty ( ) && ( matchesWord ( ) || matchesAny ( '-' , '_' ) ) ) pos ++ ; return queue . substring ( start , pos ) ; }
+--------------------------------------------------
+public Attributes put ( String key , boolean value ) { if ( value ) putIgnoreCase ( key , null ) ; else remove ( key ) ; return this ; }
+--------------------------------------------------
+private void getWholeDeclaration ( Appendable accum , Document . OutputSettings out ) throws IOException { for ( Attribute attribute : attributes ( ) ) { if ( ! attribute . getKey ( ) . equals ( nodeName ( ) ) ) { accum . append ( ' ' ) ; attribute . html ( accum , out ) ; } } }
+--------------------------------------------------
+public String asString ( Document doc ) { try { DOMSource domSource = new DOMSource ( doc ) ; StringWriter writer = new StringWriter ( ) ; StreamResult result = new StreamResult ( writer ) ; TransformerFactory tf = TransformerFactory . newInstance ( ) ; Transformer transformer = tf . newTransformer ( ) ; transformer . transform ( domSource , result ) ; return writer . toString ( ) ; } catch ( TransformerException e ) { throw new IllegalStateException ( e ) ; } }
+--------------------------------------------------

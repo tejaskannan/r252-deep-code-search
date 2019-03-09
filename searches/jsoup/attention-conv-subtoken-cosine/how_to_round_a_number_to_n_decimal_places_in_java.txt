@@ -1,0 +1,21 @@
+public void clear ( ) { onContentsChanged ( ) ; super . clear ( ) ; }
+--------------------------------------------------
+public Elements removeAttr ( String attributeKey ) { for ( Element element : this ) { element . removeAttr ( attributeKey ) ; } return this ; }
+--------------------------------------------------
+public static void main ( String [ ] args ) throws IOException { Document doc = Jsoup . connect ( "http://en.wikipedia.org/" ) . get ( ) ; log ( doc . title ( ) ) ; Elements newsHeadlines = doc . select ( "#mp-itn b a" ) ; for ( Element headline : newsHeadlines ) { log ( "%s
+	%s" , headline . attr ( "title" ) , headline . absUrl ( "href" ) ) ; } }
+--------------------------------------------------
+public Attributes clone ( ) { Attributes clone ; try { clone = ( Attributes ) super . clone ( ) ; } catch ( CloneNotSupportedException e ) { throw new RuntimeException ( e ) ; } clone . size = size ; keys = copyOf ( keys , size ) ; vals = copyOf ( vals , size ) ; return clone ; }
+--------------------------------------------------
+@ Override Token reset ( ) { reset ( name ) ; pubSysKey = null ; reset ( publicIdentifier ) ; reset ( systemIdentifier ) ; forceQuirks = false ; return this ; }
+--------------------------------------------------
+public boolean hasAttr ( String attributeKey ) { for ( Element element : this ) { if ( element . hasAttr ( attributeKey ) ) return true ; } return false ; }
+--------------------------------------------------
+static String mimeBoundary ( ) { final StringBuilder mime = StringUtil . borrowBuilder ( ) ; final Random rand = new Random ( ) ; for ( int i = 0 ; i < boundaryLength ; i ++ ) { mime . append ( mimeBoundaryChars [ rand . nextInt ( mimeBoundaryChars . length ) ] ) ; } return StringUtil . releaseBuilder ( mime ) ; }
+--------------------------------------------------
+public Elements attr ( String attributeKey , String attributeValue ) { for ( Element element : this ) { element . attr ( attributeKey , attributeValue ) ; } return this ; }
+--------------------------------------------------
+boolean removeFromStack ( Element el ) { for ( int pos = stack . size ( ) - 1 ; pos >= 0 ; pos -- ) { Element next = stack . get ( pos ) ; if ( next == el ) { stack . remove ( pos ) ; return true ; } } return false ; }
+--------------------------------------------------
+void resetInsertionMode ( ) { boolean last = false ; for ( int pos = stack . size ( ) - 1 ; pos >= 0 ; pos -- ) { Element node = stack . get ( pos ) ; if ( pos == 0 ) { last = true ; node = contextElement ; } String name = node . normalName ( ) ; if ( "select" . equals ( name ) ) { transition ( HtmlTreeBuilderState . InSelect ) ; break ; } else if ( ( "td" . equals ( name ) || "th" . equals ( name ) && ! last ) ) { transition ( HtmlTreeBuilderState . InCell ) ; break ; } else if ( "tr" . equals ( name ) ) { transition ( HtmlTreeBuilderState . InRow ) ; break ; } else if ( "tbody" . equals ( name ) || "thead" . equals ( name ) || "tfoot" . equals ( name ) ) { transition ( HtmlTreeBuilderState . InTableBody ) ; break ; } else if ( "caption" . equals ( name ) ) { transition ( HtmlTreeBuilderState . InCaption ) ; break ; } else if ( "colgroup" . equals ( name ) ) { transition ( HtmlTreeBuilderState . InColumnGroup ) ; break ; } else if ( "table" . equals ( name ) ) { transition ( HtmlTreeBuilderState . InTable ) ; break ; } else if ( "head" . equals ( name ) ) { transition ( HtmlTreeBuilderState . InBody ) ; break ; } else if ( "body" . equals ( name ) ) { transition ( HtmlTreeBuilderState . InBody ) ; break ; } else if ( "frameset" . equals ( name ) ) { transition ( HtmlTreeBuilderState . InFrameset ) ; break ; } else if ( "html" . equals ( name ) ) { transition ( HtmlTreeBuilderState . BeforeHead ) ; break ; } else if ( last ) { transition ( HtmlTreeBuilderState . InBody ) ; break ; } } }
+--------------------------------------------------

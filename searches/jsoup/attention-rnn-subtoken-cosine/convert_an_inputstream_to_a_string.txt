@@ -1,0 +1,20 @@
+public Document fromJsoup ( org . jsoup . nodes . Document in ) { Validate . notNull ( in ) ; DocumentBuilder builder ; try { factory . setNamespaceAware ( true ) ; builder = factory . newDocumentBuilder ( ) ; Document out = builder . newDocument ( ) ; convert ( in , out ) ; return out ; } catch ( ParserConfigurationException e ) { throw new IllegalStateException ( e ) ; } }
+--------------------------------------------------
+> parseFragment ( String inputFragment , String baseUri , Parser parser ) { initialiseParse ( new StringReader ( inputFragment ) , baseUri , parser ) ; runParser ( ) ; return doc . childNodes ( ) ; }
+--------------------------------------------------
+Element insertStartTag ( String startTagName ) { Element el = new Element ( Tag . valueOf ( startTagName , settings ) , baseUri ) ; insert ( el ) ; return el ; }
+--------------------------------------------------
+void read ( Tokeniser t , CharacterReader r ) { if ( r . matchConsume ( "--" ) ) { t . createCommentPending ( ) ; t . transition ( CommentStart ) ; } else if ( r . matchConsumeIgnoreCase ( "doctype" ) ) { t . transition ( Doctype ) ; } else if ( r . matchConsume ( "[cdata[" ) ) { t . createTempBuffer ( ) ; t . transition ( CdataSection ) ; } else { t . error ( this ) ; t . advanceTransition ( BogusComment ) ; } }
+--------------------------------------------------
+void read ( Tokeniser t , CharacterReader r ) { String value = r . consumeToAny ( attributeDoubleValueCharsSorted ) ; if ( value . length ( ) > 0 ) t . tagPending . appendAttributeValue ( value ) ; else t . tagPending . setEmptyAttributeValue ( ) ; char c = r . consume ( ) ; switch ( c ) { case '"' : t . transition ( AfterAttributeValue_quoted ) ; break ; case '&' : int [ ] ref = t . consumeCharacterReference ( '"' , true ) ; if ( ref != null ) t . tagPending . appendAttributeValue ( ref ) ; else t . tagPending . appendAttributeValue ( '&' ) ; break ; case nullChar : t . error ( this ) ; t . tagPending . appendAttributeValue ( replacementChar ) ; break ; case eof : t . eofError ( this ) ; t . transition ( Data ) ; break ; default : t . tagPending . appendAttributeValue ( c ) ; } }
+--------------------------------------------------
+void read ( Tokeniser t , CharacterReader r ) { String value = r . consumeToAny ( attributeSingleValueCharsSorted ) ; if ( value . length ( ) > 0 ) t . tagPending . appendAttributeValue ( value ) ; else t . tagPending . setEmptyAttributeValue ( ) ; char c = r . consume ( ) ; switch ( c ) { case ''' : t . transition ( AfterAttributeValue_quoted ) ; break ; case '&' : int [ ] ref = t . consumeCharacterReference ( ''' , true ) ; if ( ref != null ) t . tagPending . appendAttributeValue ( ref ) ; else t . tagPending . appendAttributeValue ( '&' ) ; break ; case nullChar : t . error ( this ) ; t . tagPending . appendAttributeValue ( replacementChar ) ; break ; case eof : t . eofError ( this ) ; t . transition ( Data ) ; break ; default : t . tagPending . appendAttributeValue ( c ) ; } }
+--------------------------------------------------
+public static List < Node > parseFragment ( String fragmentHtml , Element context , String baseUri ) { HtmlTreeBuilder treeBuilder = new HtmlTreeBuilder ( ) ; return treeBuilder . parseFragment ( fragmentHtml , context , baseUri , new Parser ( treeBuilder ) ) ; }
+--------------------------------------------------
+public String html ( ) { StringBuilder sb = StringUtil . borrowBuilder ( ) ; try { html ( sb , ( new Document ( "" ) ) . outputSettings ( ) ) ; } catch ( IOException e ) { throw new SerializationException ( e ) ; } return StringUtil . releaseBuilder ( sb ) ; }
+--------------------------------------------------
+public String text ( ) { return getWholeText ( ) ; }
+--------------------------------------------------
+public String toString ( ) { return super . toString ( ) + ". mimetype=" + mimeType + ", url=" + url ; }
+--------------------------------------------------

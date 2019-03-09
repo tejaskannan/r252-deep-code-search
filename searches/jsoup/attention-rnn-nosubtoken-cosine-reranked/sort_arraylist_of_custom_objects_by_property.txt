@@ -1,0 +1,27 @@
+void outerHtmlHead ( Appendable accum , int depth , Document . OutputSettings out ) throws IOException { accum . append ( "<" ) . append ( isProcessingInstruction ? "!" : "?" ) . append ( coreValue ( ) ) ; getWholeDeclaration ( accum , out ) ; accum . append ( isProcessingInstruction ? "!" : "?" ) . append ( ">" ) ; }
+--------------------------------------------------
+@ Override Tag reset ( ) { tagName = null ; normalName = null ; pendingAttributeName = null ; reset ( pendingAttributeValue ) ; pendingAttributeValueS = null ; hasEmptyAttributeValue = false ; hasPendingAttributeValue = false ; selfClosing = false ; attributes = null ; return this ; }
+--------------------------------------------------
+@ Override Token reset ( ) { data = null ; return this ; }
+--------------------------------------------------
+public Connection cookies ( Map < String , String > cookies ) { Validate . notNull ( cookies , "cookie map must not be null" ) ; for ( Map . Entry < String , String > entry : cookies . entrySet ( ) ) { req . cookie ( entry . getKey ( ) , entry . getValue ( ) ) ; } return this ; }
+--------------------------------------------------
+public DataNode setWholeData ( String data ) { coreValue ( data ) ; return this ; }
+--------------------------------------------------
+public Connection data ( String ... keyvals ) { Validate . notNull ( keyvals , "data key value pairs must not be null" ) ; Validate . isTrue ( keyvals . length % 2 == 0 , "must supply an even number of key value pairs" ) ; for ( int i = 0 ; i < keyvals . length ; i += 2 ) { String key = keyvals [ i ] ; String value = keyvals [ i + 1 ] ; Validate . notEmpty ( key , "data key must not be empty" ) ; Validate . notNull ( value , "data value must not be null" ) ; req . data ( KeyVal . create ( key , value ) ) ; } return this ; }
+--------------------------------------------------
+public void normalize ( ) { for ( int i = 0 ; i < size ; i ++ ) { keys [ i ] = lowerCase ( keys [ i ] ) ; } }
+--------------------------------------------------
+private static void writePost ( final Connection . Request req , final OutputStream outputStream , final String bound ) throws IOException { final Collection < Connection . KeyVal > data = req . data ( ) ; final BufferedWriter w = new BufferedWriter ( new OutputStreamWriter ( outputStream , req . postDataCharset ( ) ) ) ; if ( bound != null ) { for ( Connection . KeyVal keyVal : data ) { w . write ( "--" ) ; w . write ( bound ) ; w . write ( "
+" ) ; w . write ( "content-disposition: form-data; name="" ) ; w . write ( encodeMimeName ( keyVal . key ( ) ) ) ; w . write ( """ ) ; if ( keyVal . hasInputStream ( ) ) { w . write ( "; filename="" ) ; w . write ( encodeMimeName ( keyVal . value ( ) ) ) ; w . write ( ""
+content-type: " ) ; w . write ( keyVal . contentType ( ) != null ? keyVal . contentType ( ) : DefaultUploadType ) ; w . write ( "
+
+" ) ; w . flush ( ) ; DataUtil . crossStreams ( keyVal . inputStream ( ) , outputStream ) ; outputStream . flush ( ) ; } else { w . write ( "
+
+" ) ; w . write ( keyVal . value ( ) ) ; } w . write ( "
+" ) ; } w . write ( "--" ) ; w . write ( bound ) ; w . write ( "--" ) ; } else if ( req . requestBody ( ) != null ) { w . write ( req . requestBody ( ) ) ; } else { boolean first = true ; for ( Connection . KeyVal keyVal : data ) { if ( ! first ) w . append ( '&' ) ; else first = false ; w . write ( URLEncoder . encode ( keyVal . key ( ) , req . postDataCharset ( ) ) ) ; w . write ( '=' ) ; w . write ( URLEncoder . encode ( keyVal . value ( ) , req . postDataCharset ( ) ) ) ; } } w . close ( ) ; }
+--------------------------------------------------
+public T cookie ( String name , String value ) { Validate . notEmpty ( name , "cookie name must not be empty" ) ; Validate . notNull ( value , "cookie value must not be null" ) ; cookies . put ( name , value ) ; return ( T ) this ; }
+--------------------------------------------------
+public OutputSettings indentAmount ( int indentAmount ) { Validate . isTrue ( indentAmount >= 0 ) ; this . indentAmount = indentAmount ; return this ; }
+--------------------------------------------------

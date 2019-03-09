@@ -1,0 +1,20 @@
+public Connection url ( URL url ) { req . url ( url ) ; return this ; }
+--------------------------------------------------
+public String header ( String name ) { Validate . notNull ( name , "header name must not be null" ) ; List < String > vals = getHeadersCaseInsensitive ( name ) ; if ( vals . size ( ) > 0 ) { return StringUtil . join ( vals , ", " ) ; } return null ; }
+--------------------------------------------------
+public static void notEmpty ( String string , String msg ) { if ( string == null || string . length ( ) == 0 ) throw new IllegalArgumentException ( msg ) ; }
+--------------------------------------------------
+public Connection header ( String name , String value ) { req . header ( name , value ) ; return this ; }
+--------------------------------------------------
+public static void notEmpty ( String string ) { if ( string == null || string . length ( ) == 0 ) throw new IllegalArgumentException ( "string must not be empty" ) ; }
+--------------------------------------------------
+StartTag nameAttr ( String name , Attributes attributes ) { this . tagName = name ; this . attributes = attributes ; normalName = lowerCase ( tagName ) ; return this ; }
+--------------------------------------------------
+private static String encodeMimeName ( String val ) { if ( val == null ) return null ; return val . replaceAll ( """ , "%22" ) ; }
+--------------------------------------------------
+public Element toggleClass ( String className ) { Validate . notNull ( className ) ; Set < String > classes = classNames ( ) ; if ( classes . contains ( className ) ) classes . remove ( className ) ; else classes . add ( className ) ; classNames ( classes ) ; return this ; }
+--------------------------------------------------
+public String val ( ) { if ( tagName ( ) . equals ( "textarea" ) ) return text ( ) ; else return attr ( "value" ) ; }
+--------------------------------------------------
+public Node attr ( String key , String value ) { if ( ! hasAttributes ( ) && key . equals ( nodeName ( ) ) ) { this . value = value ; } else { ensureAttributes ( ) ; super . attr ( key , value ) ; } return this ; }
+--------------------------------------------------

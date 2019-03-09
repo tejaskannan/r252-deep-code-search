@@ -1,0 +1,20 @@
+public String attr ( String attributeKey ) { Validate . notNull ( attributeKey ) ; if ( ! hasAttributes ( ) ) return EmptyString ; String val = attributes ( ) . getIgnoreCase ( attributeKey ) ; if ( val . length ( ) > 0 ) return val ; else if ( attributeKey . startsWith ( "abs:" ) ) return absUrl ( attributeKey . substring ( "abs:" . length ( ) ) ) ; else return "" ; }
+--------------------------------------------------
+public String normalizeAttribute ( String name ) { name = name . trim ( ) ; if ( ! preserveAttributeCase ) name = lowerCase ( name ) ; return name ; }
+--------------------------------------------------
+public Attribute ( String key , String val , Attributes parent ) { Validate . notNull ( key ) ; key = key . trim ( ) ; Validate . notEmpty ( key ) ; this . key = key ; this . val = val ; this . parent = parent ; }
+--------------------------------------------------
+public static String unescape ( String in ) { StringBuilder out = StringUtil . borrowBuilder ( ) ; char last = 0 ; for ( char c : in . toCharArray ( ) ) { if ( c == ESC ) { if ( last != 0 && last == ESC ) out . append ( c ) ; } else out . append ( c ) ; last = c ; } return StringUtil . releaseBuilder ( out ) ; }
+--------------------------------------------------
+public String attr ( String key ) { Validate . notNull ( key ) ; if ( ! hasAttributes ( ) ) { return key . equals ( nodeName ( ) ) ? ( String ) value : EmptyString ; } return super . attr ( key ) ; }
+--------------------------------------------------
+public Node attr ( String key , String value ) { if ( ! hasAttributes ( ) && key . equals ( nodeName ( ) ) ) { this . value = value ; } else { ensureAttributes ( ) ; super . attr ( key , value ) ; } return this ; }
+--------------------------------------------------
+public Elements parents ( ) { HashSet < Element > combo = new LinkedHashSet < > ( ) ; for ( Element e : this ) { combo . addAll ( e . parents ( ) ) ; } return new Elements ( combo ) ; }
+--------------------------------------------------
+public String cssSelector ( ) { if ( id ( ) . length ( ) > 0 ) return "#" + id ( ) ; String tagName = tagName ( ) . replace ( ':' , '|' ) ; StringBuilder selector = new StringBuilder ( tagName ) ; String classes = StringUtil . join ( classNames ( ) , "." ) ; if ( classes . length ( ) > 0 ) selector . append ( '.' ) . append ( classes ) ; if ( parent ( ) == null || parent ( ) instanceof Document ) return selector . toString ( ) ; selector . insert ( 0 , " > " ) ; if ( parent ( ) . select ( selector . toString ( ) ) . size ( ) > 1 ) selector . append ( String . format ( ":nth-child(%d)" , elementSiblingIndex ( ) + 1 ) ) ; return parent ( ) . cssSelector ( ) + selector . toString ( ) ; }
+--------------------------------------------------
+public Element appendElement ( String tagName ) { Element child = new Element ( Tag . valueOf ( tagName , NodeUtils . parser ( this ) . settings ( ) ) , baseUri ( ) ) ; appendChild ( child ) ; return child ; }
+--------------------------------------------------
+private static void appendWhitespaceIfBr ( Element element , StringBuilder accum ) { if ( element . tag . getName ( ) . equals ( "br" ) && ! TextNode . lastCharIsWhitespace ( accum ) ) accum . append ( " " ) ; }
+--------------------------------------------------

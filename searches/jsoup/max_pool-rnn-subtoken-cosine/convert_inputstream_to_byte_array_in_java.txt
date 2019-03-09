@@ -1,0 +1,20 @@
+private void ownText ( StringBuilder accum ) { for ( Node child : childNodes ) { if ( child instanceof TextNode ) { TextNode textNode = ( TextNode ) child ; appendNormalisedText ( accum , textNode ) ; } else if ( child instanceof Element ) { appendWhitespaceIfBr ( ( Element ) child , accum ) ; } } }
+--------------------------------------------------
+private boolean anythingElse ( Token t , HtmlTreeBuilder tb ) { tb . error ( this ) ; return false ; }
+--------------------------------------------------
+String consumeLetterSequence ( ) { bufferUp ( ) ; int start = bufPos ; while ( bufPos < bufLength ) { char c = charBuf [ bufPos ] ; if ( ( c >= 'a' && c <= 'z' ) || ( c >= 'a' && c <= 'z' ) || Character . isLetter ( c ) ) bufPos ++ ; else break ; } return cacheString ( charBuf , stringCache , start , bufPos - start ) ; }
+--------------------------------------------------
+boolean anythingElse ( Token t , HtmlTreeBuilder tb ) { tb . error ( this ) ; boolean processed ; if ( StringUtil . in ( tb . currentElement ( ) . normalName ( ) , "table" , "tbody" , "tfoot" , "thead" , "tr" ) ) { tb . setFosterInserts ( true ) ; processed = tb . process ( t , InBody ) ; tb . setFosterInserts ( false ) ; } else { processed = tb . process ( t , InBody ) ; } return processed ; }
+--------------------------------------------------
+public String ownText ( ) { StringBuilder sb = StringUtil . borrowBuilder ( ) ; ownText ( sb ) ; return StringUtil . releaseBuilder ( sb ) . trim ( ) ; }
+--------------------------------------------------
+public CharacterReader ( Reader input , int sz ) { Validate . notNull ( input ) ; Validate . isTrue ( input . markSupported ( ) ) ; reader = input ; charBuf = new char [ sz > maxBufferLen ? maxBufferLen : sz ] ; bufferUp ( ) ; }
+--------------------------------------------------
+public String getPlainText ( Element element ) { FormattingVisitor formatter = new FormattingVisitor ( ) ; NodeTraversor . traverse ( formatter , element ) ; return formatter . toString ( ) ; }
+--------------------------------------------------
+private static BomCharset detectCharsetFromBom ( final ByteBuffer byteData ) { final Buffer buffer = byteData ; buffer . mark ( ) ; byte [ ] bom = new byte [ 4 ] ; if ( byteData . remaining ( ) >= bom . length ) { byteData . get ( bom ) ; buffer . rewind ( ) ; } if ( bom [ 0 ] == 00 && bom [ 1 ] == 00 && bom [ 2 ] == ( byte ) fe && bom [ 3 ] == ( byte ) ff || bom [ 0 ] == ( byte ) ff && bom [ 1 ] == ( byte ) fe && bom [ 2 ] == 00 && bom [ 3 ] == 00 ) { return new BomCharset ( "utf-32" , false ) ; } else if ( bom [ 0 ] == ( byte ) fe && bom [ 1 ] == ( byte ) ff || bom [ 0 ] == ( byte ) ff && bom [ 1 ] == ( byte ) fe ) { return new BomCharset ( "utf-16" , false ) ; } else if ( bom [ 0 ] == ( byte ) ef && bom [ 1 ] == ( byte ) bb && bom [ 2 ] == ( byte ) bf ) { return new BomCharset ( "utf-8" , true ) ; } return null ; }
+--------------------------------------------------
+private boolean anythingElse ( Token t , HtmlTreeBuilder tb ) { tb . insertStartTag ( "html" ) ; tb . transition ( BeforeHead ) ; return tb . process ( t ) ; }
+--------------------------------------------------
+String consumeLetterThenDigitSequence ( ) { bufferUp ( ) ; int start = bufPos ; while ( bufPos < bufLength ) { char c = charBuf [ bufPos ] ; if ( ( c >= 'a' && c <= 'z' ) || ( c >= 'a' && c <= 'z' ) || Character . isLetter ( c ) ) bufPos ++ ; else break ; } while ( ! isEmptyNoBufferUp ( ) ) { char c = charBuf [ bufPos ] ; if ( c >= '0' && c <= '9' ) bufPos ++ ; else break ; } return cacheString ( charBuf , stringCache , start , bufPos - start ) ; }
+--------------------------------------------------

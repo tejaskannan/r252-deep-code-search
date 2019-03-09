@@ -1,0 +1,20 @@
+public void tail ( Node node , int depth ) { String name = node . nodeName ( ) ; if ( StringUtil . in ( name , "br" , "dd" , "dt" , "p" , "h1" , "h2" , "h3" , "h4" , "h5" ) ) append ( "\n" ) ; else if ( name . equals ( "a" ) ) append ( String . format ( " <%s>" , node . absUrl ( "href" ) ) ) ; }
+--------------------------------------------------
+public Connection submit ( ) { String action = hasAttr ( "action" ) ? absUrl ( "action" ) : baseUri ( ) ; Validate . notEmpty ( action , "could not determine a form action url for submit. ensure you set a base uri when parsing." ) ; Connection . Method method = attr ( "method" ) . toUpperCase ( ) . equals ( "post" ) ? Connection . Method . POST : Connection . Method . GET ; return Jsoup . connect ( action ) . data ( formData ( ) ) . method ( method ) ; }
+--------------------------------------------------
+private static String encodeUrl ( String url ) { try { URL u = new URL ( url ) ; return encodeUrl ( u ) . toExternalForm ( ) ; } catch ( Exception e ) { return url ; } }
+--------------------------------------------------
+public String toString ( ) { return super . toString ( ) + ". mimetype=" + mimeType + ", url=" + url ; }
+--------------------------------------------------
+protected boolean process ( Token token ) { switch ( token . type ) { case StartTag : insert ( token . asStartTag ( ) ) ; break ; case EndTag : popStackToClose ( token . asEndTag ( ) ) ; break ; case Comment : insert ( token . asComment ( ) ) ; break ; case Character : insert ( token . asCharacter ( ) ) ; break ; case Doctype : insert ( token . asDoctype ( ) ) ; break ; case EOF : break ; default : Validate . fail ( "unexpected token type: " + token . type ) ; } return true ; }
+--------------------------------------------------
+public String toString ( ) { return String . format ( ".%s" , className ) ; }
+--------------------------------------------------
+public String toString ( ) { return String . format ( ":matchesown(%s)" , pattern ) ; }
+--------------------------------------------------
+public String toString ( ) { return String . format ( ":matches(%s)" , pattern ) ; }
+--------------------------------------------------
+public String toString ( ) { if ( a == 0 ) return String . format ( ":%s(%d)" , getPseudoClass ( ) , b ) ; if ( b == 0 ) return String . format ( ":%s(%dn)" , getPseudoClass ( ) , a ) ; return String . format ( ":%s(%dn%+d)" , getPseudoClass ( ) , a , b ) ; }
+--------------------------------------------------
+public String toString ( ) { return String . format ( ":prev*%s" , evaluator ) ; }
+--------------------------------------------------

@@ -1,0 +1,20 @@
+public String toString ( ) { return key + "=" + value ; }
+--------------------------------------------------
+public T header ( String name , String value ) { Validate . notEmpty ( name , "header name must not be empty" ) ; removeHeader ( name ) ; addHeader ( name , value ) ; return ( T ) this ; }
+--------------------------------------------------
+public Iterator < Attribute > iterator ( ) { return new Iterator < Attribute > ( ) { int i = 0 ; @ Override public boolean hasNext ( ) { return i < size ; } @ Override public Attribute next ( ) { final Attribute attr = new Attribute ( keys [ i ] , vals [ i ] , Attributes . this ) ; i ++ ; return attr ; } @ Override public void remove ( ) { Attributes . this . remove ( -- i ) ; } } ; }
+--------------------------------------------------
+public Element attr ( String attributeKey , String attributeValue ) { super . attr ( attributeKey , attributeValue ) ; return this ; }
+--------------------------------------------------
+public T removeHeader ( String name ) { Validate . notEmpty ( name , "header name must not be empty" ) ; Map . Entry < String , List < String >> entry = scanHeaders ( name ) ; if ( entry != null ) headers . remove ( entry . getKey ( ) ) ; return ( T ) this ; }
+--------------------------------------------------
+public Elements attr ( String attributeKey , String attributeValue ) { for ( Element element : this ) { element . attr ( attributeKey , attributeValue ) ; } return this ; }
+--------------------------------------------------
+public Element val ( String value ) { if ( tagName ( ) . equals ( "textarea" ) ) text ( value ) ; else attr ( "value" , value ) ; return this ; }
+--------------------------------------------------
+public Request proxy ( String host , int port ) { this . proxy = new Proxy ( Proxy . Type . HTTP , InetSocketAddress . createUnresolved ( host , port ) ) ; return this ; }
+--------------------------------------------------
+private static String fixHeaderEncoding ( String val ) { try { byte [ ] bytes = val . getBytes ( "iso-8859-1" ) ; if ( ! looksLikeUtf8 ( bytes ) ) return val ; return new String ( bytes , "utf-8" ) ; } catch ( UnsupportedEncodingException e ) { return val ; } }
+--------------------------------------------------
+public Elements val ( String value ) { for ( Element element : this ) element . val ( value ) ; return this ; }
+--------------------------------------------------

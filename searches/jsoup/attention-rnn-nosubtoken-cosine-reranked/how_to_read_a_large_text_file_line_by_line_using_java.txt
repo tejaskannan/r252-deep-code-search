@@ -1,0 +1,20 @@
+static void crossStreams ( final InputStream in , final OutputStream out ) throws IOException { final byte [ ] buffer = new byte [ bufferSize ] ; int len ; while ( ( len = in . read ( buffer ) ) != - 1 ) { out . write ( buffer , 0 , len ) ; } }
+--------------------------------------------------
+protected void runParser ( ) { while ( true ) { Token token = tokeniser . read ( ) ; process ( token ) ; token . reset ( ) ; if ( token . type == Token . TokenType . EOF ) break ; } }
+--------------------------------------------------
+String consumeToEnd ( ) { bufferUp ( ) ; String data = cacheString ( charBuf , stringCache , bufPos , bufLength - bufPos ) ; bufPos = bufLength ; return data ; }
+--------------------------------------------------
+@ Override void nodelistChanged ( ) { super . nodelistChanged ( ) ; shadowChildrenRef = null ; }
+--------------------------------------------------
+public void head ( Node node , int depth ) { try { node . outerHtmlHead ( accum , depth , out ) ; } catch ( IOException exception ) { throw new SerializationException ( exception ) ; } }
+--------------------------------------------------
+String consumeHexSequence ( ) { bufferUp ( ) ; int start = bufPos ; while ( bufPos < bufLength ) { char c = charBuf [ bufPos ] ; if ( ( c >= '0' && c <= '9' ) || ( c >= 'a' && c <= 'f' ) || ( c >= 'a' && c <= 'f' ) ) bufPos ++ ; else break ; } return cacheString ( charBuf , stringCache , start , bufPos - start ) ; }
+--------------------------------------------------
+public static Elements collect ( Evaluator eval , Element root ) { Elements elements = new Elements ( ) ; NodeTraversor . traverse ( new Accumulator ( root , elements , eval ) , root ) ; return elements ; }
+--------------------------------------------------
+public String consumeToAny ( final char ... chars ) { bufferUp ( ) ; int pos = bufPos ; final int start = pos ; final int remaining = bufLength ; final char [ ] val = charBuf ; final int charLen = chars . length ; int i ; OUTER : while ( pos < remaining ) { for ( i = 0 ; i < charLen ; i ++ ) { if ( val [ pos ] == chars [ i ] ) break OUTER ; } pos ++ ; } bufPos = pos ; return pos > start ? cacheString ( charBuf , stringCache , start , pos - start ) : "" ; }
+--------------------------------------------------
+public Elements parents ( ) { Elements parents = new Elements ( ) ; accumulateParents ( this , parents ) ; return parents ; }
+--------------------------------------------------
+public static void main ( String ... args ) throws IOException { Validate . isTrue ( args . length == 1 || args . length == 2 , "usage: java -cp jsoup.jar org.jsoup.examples.htmltoplaintext url [selector]" ) ; final String url = args [ 0 ] ; final String selector = args . length == 2 ? args [ 1 ] : null ; Document doc = Jsoup . connect ( url ) . userAgent ( userAgent ) . timeout ( timeout ) . get ( ) ; HtmlToPlainText formatter = new HtmlToPlainText ( ) ; if ( selector != null ) { Elements elements = doc . select ( selector ) ; for ( Element element : elements ) { String plainText = formatter . getPlainText ( element ) ; System . out . println ( plainText ) ; } } else { String plainText = formatter . getPlainText ( doc ) ; System . out . println ( plainText ) ; } }
+--------------------------------------------------

@@ -1,0 +1,20 @@
+@ Override Tag reset ( ) { tagName = null ; normalName = null ; pendingAttributeName = null ; reset ( pendingAttributeValue ) ; pendingAttributeValueS = null ; hasEmptyAttributeValue = false ; hasPendingAttributeValue = false ; selfClosing = false ; attributes = null ; return this ; }
+--------------------------------------------------
+@ Override Token reset ( ) { reset ( name ) ; pubSysKey = null ; reset ( publicIdentifier ) ; reset ( systemIdentifier ) ; forceQuirks = false ; return this ; }
+--------------------------------------------------
+public void reset ( ) throws IOException { super . reset ( ) ; remaining = maxSize - markpos ; }
+--------------------------------------------------
+@ Override Token reset ( ) { reset ( data ) ; bogus = false ; return this ; }
+--------------------------------------------------
+Element aboveOnStack ( Element el ) { assert onStack ( el ) ; for ( int pos = stack . size ( ) - 1 ; pos >= 0 ; pos -- ) { Element next = stack . get ( pos ) ; if ( next == el ) { return stack . get ( pos - 1 ) ; } } return null ; }
+--------------------------------------------------
+public static String unescape ( String in ) { StringBuilder out = StringUtil . borrowBuilder ( ) ; char last = 0 ; for ( char c : in . toCharArray ( ) ) { if ( c == ESC ) { if ( last != 0 && last == ESC ) out . append ( c ) ; } else out . append ( c ) ; last = c ; } return StringUtil . releaseBuilder ( out ) ; }
+--------------------------------------------------
+public List < DataNode > dataNodes ( ) { List < DataNode > dataNodes = new ArrayList < > ( ) ; for ( Node node : childNodes ) { if ( node instanceof DataNode ) dataNodes . add ( ( DataNode ) node ) ; } return Collections . unmodifiableList ( dataNodes ) ; }
+--------------------------------------------------
+protected void runParser ( ) { while ( true ) { Token token = tokeniser . read ( ) ; process ( token ) ; token . reset ( ) ; if ( token . type == Token . TokenType . EOF ) break ; } }
+--------------------------------------------------
+final void appendAttributeValue ( int [ ] appendCodepoints ) { ensureAttributeValue ( ) ; for ( int codepoint : appendCodepoints ) { pendingAttributeValue . appendCodePoint ( codepoint ) ; } }
+--------------------------------------------------
+void putIgnoreCase ( String key , String value ) { int i = indexOfKeyIgnoreCase ( key ) ; if ( i != NotFound ) { vals [ i ] = value ; if ( ! keys [ i ] . equals ( key ) ) keys [ i ] = key ; } else add ( key , value ) ; }
+--------------------------------------------------

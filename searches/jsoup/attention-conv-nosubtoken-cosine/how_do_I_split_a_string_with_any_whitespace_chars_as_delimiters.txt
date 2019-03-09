@@ -1,0 +1,20 @@
+Element pop ( ) { int size = stack . size ( ) ; return stack . remove ( size - 1 ) ; }
+--------------------------------------------------
+public DocumentType ( String name , String publicId , String systemId , String baseUri ) { attr ( NAME , name ) ; attr ( PUBLIC_ID , publicId ) ; if ( has ( PUBLIC_ID ) ) { attr ( PUB_SYS_KEY , PUBLIC_KEY ) ; } attr ( SYSTEM_ID , systemId ) ; }
+--------------------------------------------------
+public DocumentType ( String name , String pubSysKey , String publicId , String systemId , String baseUri ) { attr ( NAME , name ) ; if ( pubSysKey != null ) { attr ( PUB_SYS_KEY , pubSysKey ) ; } attr ( PUBLIC_ID , publicId ) ; attr ( SYSTEM_ID , systemId ) ; }
+--------------------------------------------------
+public Iterator < Attribute > iterator ( ) { return new Iterator < Attribute > ( ) { int i = 0 ; @ Override public boolean hasNext ( ) { return i < size ; } @ Override public Attribute next ( ) { final Attribute attr = new Attribute ( keys [ i ] , vals [ i ] , Attributes . this ) ; i ++ ; return attr ; } @ Override public void remove ( ) { Attributes . this . remove ( -- i ) ; } } ; }
+--------------------------------------------------
+public DocumentType ( String name , String publicId , String systemId ) { Validate . notNull ( name ) ; Validate . notNull ( publicId ) ; Validate . notNull ( systemId ) ; attr ( NAME , name ) ; attr ( PUBLIC_ID , publicId ) ; if ( has ( PUBLIC_ID ) ) { attr ( PUB_SYS_KEY , PUBLIC_KEY ) ; } attr ( SYSTEM_ID , systemId ) ; }
+--------------------------------------------------
+public OutputSettings indentAmount ( int indentAmount ) { Validate . isTrue ( indentAmount >= 0 ) ; this . indentAmount = indentAmount ; return this ; }
+--------------------------------------------------
+public W3CBuilder ( Document doc ) { this . doc = doc ; this . namespacesStack . push ( new HashMap < String , String > ( ) ) ; }
+--------------------------------------------------
+public Elements val ( String value ) { for ( Element element : this ) element . val ( value ) ; return this ; }
+--------------------------------------------------
+public int hashCode ( ) { int result = size ; result = 31 * result + Arrays . hashCode ( keys ) ; result = 31 * result + Arrays . hashCode ( vals ) ; return result ; }
+--------------------------------------------------
+CharsetEncoder prepareEncoder ( ) { CharsetEncoder encoder = charset . newEncoder ( ) ; encoderThreadLocal . set ( encoder ) ; coreCharset = Entities . CoreCharset . byName ( encoder . charset ( ) . name ( ) ) ; return encoder ; }
+--------------------------------------------------

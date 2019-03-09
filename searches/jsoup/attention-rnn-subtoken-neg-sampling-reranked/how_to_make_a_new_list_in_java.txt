@@ -1,0 +1,20 @@
+public Element clone ( ) { return ( Element ) super . clone ( ) ; }
+--------------------------------------------------
+protected Node doClone ( Node parent ) { Node clone ; try { clone = ( Node ) super . clone ( ) ; } catch ( CloneNotSupportedException e ) { throw new RuntimeException ( e ) ; } clone . parentNode = parent ; clone . siblingIndex = parent == null ? 0 : siblingIndex ; return clone ; }
+--------------------------------------------------
+public static FilterResult filter ( NodeFilter filter , Node root ) { Node node = root ; int depth = 0 ; while ( node != null ) { FilterResult result = filter . head ( node , depth ) ; if ( result == FilterResult . STOP ) return result ; if ( result == FilterResult . CONTINUE && node . childNodeSize ( ) > 0 ) { node = node . childNode ( 0 ) ; ++ depth ; continue ; } while ( node . nextSibling ( ) == null && depth > 0 ) { if ( result == FilterResult . CONTINUE || result == FilterResult . SKIP_CHILDREN ) { result = filter . tail ( node , depth ) ; if ( result == FilterResult . STOP ) return result ; } Node prev = node ; node = node . parentNode ( ) ; depth -- ; if ( result == FilterResult . REMOVE ) prev . remove ( ) ; result = FilterResult . CONTINUE ; } if ( result == FilterResult . CONTINUE || result == FilterResult . SKIP_CHILDREN ) { result = filter . tail ( node , depth ) ; if ( result == FilterResult . STOP ) return result ; } if ( node == root ) return result ; Node prev = node ; node = node . nextSibling ( ) ; if ( result == FilterResult . REMOVE ) prev . remove ( ) ; } return FilterResult . CONTINUE ; }
+--------------------------------------------------
+public List < DataNode > dataNodes ( ) { List < DataNode > dataNodes = new ArrayList < > ( ) ; for ( Node node : childNodes ) { if ( node instanceof DataNode ) dataNodes . add ( ( DataNode ) node ) ; } return Collections . unmodifiableList ( dataNodes ) ; }
+--------------------------------------------------
+private void normaliseStructure ( String tag , Element htmlEl ) { Elements elements = this . getElementsByTag ( tag ) ; Element master = elements . first ( ) ; if ( elements . size ( ) > 1 ) { List < Node > toMove = new ArrayList < > ( ) ; for ( int i = 1 ; i < elements . size ( ) ; i ++ ) { Node dupe = elements . get ( i ) ; toMove . addAll ( dupe . ensureChildNodes ( ) ) ; dupe . remove ( ) ; } for ( Node dupe : toMove ) master . appendChild ( dupe ) ; } if ( ! master . parent ( ) . equals ( htmlEl ) ) { htmlEl . appendChild ( master ) ; } }
+--------------------------------------------------
+public Node root ( ) { Node node = this ; while ( node . parentNode != null ) node = node . parentNode ; return node ; }
+--------------------------------------------------
+public Element before ( String html ) { return ( Element ) super . before ( html ) ; }
+--------------------------------------------------
+public Element after ( Node node ) { return ( Element ) super . after ( node ) ; }
+--------------------------------------------------
+void error ( String errorMsg ) { if ( errors . canAddError ( ) ) errors . add ( new ParseError ( reader . pos ( ) , errorMsg ) ) ; }
+--------------------------------------------------
+public FilterResult tail ( Node node , int depth ) { return CONTINUE ; }
+--------------------------------------------------

@@ -1,0 +1,20 @@
+public String toString ( ) { return super . toString ( ) + ". mimetype=" + mimeType + ", url=" + url ; }
+--------------------------------------------------
+public String toString ( ) { return queue . substring ( pos ) ; }
+--------------------------------------------------
+public void clear ( ) { onContentsChanged ( ) ; super . clear ( ) ; }
+--------------------------------------------------
+void mark ( ) { bufSplitPoint = 0 ; bufferUp ( ) ; bufMark = bufPos ; }
+--------------------------------------------------
+public String toString ( ) { return String . format ( ":containsown(%s)" , searchText ) ; }
+--------------------------------------------------
+public String toString ( ) { return String . format ( ":containsdata(%s)" , searchText ) ; }
+--------------------------------------------------
+public String toString ( ) { return String . format ( ":contains(%s)" , searchText ) ; }
+--------------------------------------------------
+private Response ( Response previousResponse ) throws IOException { super ( ) ; if ( previousResponse != null ) { numRedirects = previousResponse . numRedirects + 1 ; if ( numRedirects >= MAX_REDIRECTS ) throw new IOException ( String . format ( "too many redirects occurred trying to load url %s" , previousResponse . url ( ) ) ) ; } }
+--------------------------------------------------
+public String toString ( ) { return String . format ( ".%s" , className ) ; }
+--------------------------------------------------
+public String toString ( ) { return StringUtil . join ( evaluators , ", " ) ; }
+--------------------------------------------------

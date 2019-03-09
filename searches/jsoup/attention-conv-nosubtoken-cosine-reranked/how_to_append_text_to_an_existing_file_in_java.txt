@@ -1,0 +1,20 @@
+public DocumentType ( String name , String publicId , String systemId , String baseUri ) { attr ( NAME , name ) ; attr ( PUBLIC_ID , publicId ) ; if ( has ( PUBLIC_ID ) ) { attr ( PUB_SYS_KEY , PUBLIC_KEY ) ; } attr ( SYSTEM_ID , systemId ) ; }
+--------------------------------------------------
+public DocumentType ( String name , String pubSysKey , String publicId , String systemId , String baseUri ) { attr ( NAME , name ) ; if ( pubSysKey != null ) { attr ( PUB_SYS_KEY , pubSysKey ) ; } attr ( PUBLIC_ID , publicId ) ; attr ( SYSTEM_ID , systemId ) ; }
+--------------------------------------------------
+public DocumentType ( String name , String publicId , String systemId ) { Validate . notNull ( name ) ; Validate . notNull ( publicId ) ; Validate . notNull ( systemId ) ; attr ( NAME , name ) ; attr ( PUBLIC_ID , publicId ) ; if ( has ( PUBLIC_ID ) ) { attr ( PUB_SYS_KEY , PUBLIC_KEY ) ; } attr ( SYSTEM_ID , systemId ) ; }
+--------------------------------------------------
+public Element val ( String value ) { if ( tagName ( ) . equals ( "textarea" ) ) text ( value ) ; else attr ( "value" , value ) ; return this ; }
+--------------------------------------------------
+private void remove ( int index ) { Validate . isFalse ( index >= size ) ; int shifted = size - index - 1 ; if ( shifted > 0 ) { System . arraycopy ( keys , index + 1 , keys , index , shifted ) ; System . arraycopy ( vals , index + 1 , vals , index , shifted ) ; } size -- ; keys [ size ] = null ; vals [ size ] = null ; }
+--------------------------------------------------
+public E set ( int index , E element ) { onContentsChanged ( ) ; return super . set ( index , element ) ; }
+--------------------------------------------------
+public int hashCode ( ) { final int prime = 31 ; int result = 1 ; result = prime * result + ( ( value == null ) ? 0 : value . hashCode ( ) ) ; return result ; }
+--------------------------------------------------
+public void setPubSysKey ( String value ) { if ( value != null ) attr ( PUB_SYS_KEY , value ) ; }
+--------------------------------------------------
+public void remove ( String key ) { int i = indexOfKey ( key ) ; if ( i != NotFound ) remove ( i ) ; }
+--------------------------------------------------
+public E remove ( int index ) { onContentsChanged ( ) ; return super . remove ( index ) ; }
+--------------------------------------------------

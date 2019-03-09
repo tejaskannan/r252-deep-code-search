@@ -1,0 +1,20 @@
+private void byClass ( ) { String className = tq . consumeCssIdentifier ( ) ; Validate . notEmpty ( className ) ; evals . add ( new Evaluator . Class ( className . trim ( ) ) ) ; }
+--------------------------------------------------
+private static LinkedHashMap < String , List < String >> createHeaderMap ( HttpURLConnection conn ) { final LinkedHashMap < String , List < String >> headers = new LinkedHashMap < > ( ) ; int i = 0 ; while ( true ) { final String key = conn . getHeaderFieldKey ( i ) ; final String val = conn . getHeaderField ( i ) ; if ( key == null && val == null ) break ; i ++ ; if ( key == null || val == null ) continue ; if ( headers . containsKey ( key ) ) headers . get ( key ) . add ( val ) ; else { final ArrayList < String > vals = new ArrayList < > ( ) ; vals . add ( val ) ; headers . put ( key , vals ) ; } } return headers ; }
+--------------------------------------------------
+public Element val ( String value ) { if ( tagName ( ) . equals ( "textarea" ) ) text ( value ) ; else attr ( "value" , value ) ; return this ; }
+--------------------------------------------------
+public String val ( ) { if ( tagName ( ) . equals ( "textarea" ) ) return text ( ) ; else return attr ( "value" ) ; }
+--------------------------------------------------
+protected List < Node > ensureChildNodes ( ) { if ( childNodes == EMPTY_NODES ) { childNodes = new NodeList ( this , 4 ) ; } return childNodes ; }
+--------------------------------------------------
+public Element attr ( String attributeKey , String attributeValue ) { super . attr ( attributeKey , attributeValue ) ; return this ; }
+--------------------------------------------------
+public T header ( String name , String value ) { Validate . notEmpty ( name , "header name must not be empty" ) ; removeHeader ( name ) ; addHeader ( name , value ) ; return ( T ) this ; }
+--------------------------------------------------
+public Elements attr ( String attributeKey , String attributeValue ) { for ( Element element : this ) { element . attr ( attributeKey , attributeValue ) ; } return this ; }
+--------------------------------------------------
+public Request timeout ( int millis ) { Validate . isTrue ( millis >= 0 , "timeout milliseconds must be 0 (infinite) or greater" ) ; timeoutMilliseconds = millis ; return this ; }
+--------------------------------------------------
+protected List < Node > ensureChildNodes ( ) { return EmptyNodes ; }
+--------------------------------------------------

@@ -1,0 +1,20 @@
+public Document fromJsoup ( org . jsoup . nodes . Document in ) { Validate . notNull ( in ) ; DocumentBuilder builder ; try { factory . setNamespaceAware ( true ) ; builder = factory . newDocumentBuilder ( ) ; Document out = builder . newDocument ( ) ; convert ( in , out ) ; return out ; } catch ( ParserConfigurationException e ) { throw new IllegalStateException ( e ) ; } }
+--------------------------------------------------
+public Connection submit ( ) { String action = hasAttr ( "action" ) ? absUrl ( "action" ) : baseUri ( ) ; Validate . notEmpty ( action , "could not determine a form action url for submit. ensure you set a base uri when parsing." ) ; Connection . Method method = attr ( "method" ) . toUpperCase ( ) . equals ( "post" ) ? Connection . Method . POST : Connection . Method . GET ; return Jsoup . connect ( action ) . data ( formData ( ) ) . method ( method ) ; }
+--------------------------------------------------
+private static void serialiseRequestUrl ( Connection . Request req ) throws IOException { URL in = req . url ( ) ; StringBuilder url = StringUtil . borrowBuilder ( ) ; boolean first = true ; url . append ( in . getProtocol ( ) ) . append ( "://" ) . append ( in . getAuthority ( ) ) . append ( in . getPath ( ) ) . append ( "?" ) ; if ( in . getQuery ( ) != null ) { url . append ( in . getQuery ( ) ) ; first = false ; } for ( Connection . KeyVal keyVal : req . data ( ) ) { Validate . isFalse ( keyVal . hasInputStream ( ) , "inputstream data not supported in url query string." ) ; if ( ! first ) url . append ( '&' ) ; else first = false ; url . append ( URLEncoder . encode ( keyVal . key ( ) , DataUtil . defaultCharset ) ) . append ( '=' ) . append ( URLEncoder . encode ( keyVal . value ( ) , DataUtil . defaultCharset ) ) ; } req . url ( new URL ( StringUtil . releaseBuilder ( url ) ) ) ; req . data ( ) . clear ( ) ; }
+--------------------------------------------------
+public String text ( ) { StringBuilder sb = StringUtil . borrowBuilder ( ) ; for ( Element element : this ) { if ( sb . length ( ) != 0 ) sb . append ( " " ) ; sb . append ( element . text ( ) ) ; } return StringUtil . releaseBuilder ( sb ) ; }
+--------------------------------------------------
+public TextNode text ( String text ) { coreValue ( text ) ; return this ; }
+--------------------------------------------------
+public static Element selectFirst ( String cssQuery , Element root ) { Validate . notEmpty ( cssQuery ) ; return Collector . findFirst ( QueryParser . parse ( cssQuery ) , root ) ; }
+--------------------------------------------------
+public String text ( ) { return getWholeText ( ) ; }
+--------------------------------------------------
+public XmlDeclaration ( String name , boolean isProcessingInstruction ) { Validate . notNull ( name ) ; value = name ; this . isProcessingInstruction = isProcessingInstruction ; }
+--------------------------------------------------
+@ Override Tag reset ( ) { tagName = null ; normalName = null ; pendingAttributeName = null ; reset ( pendingAttributeValue ) ; pendingAttributeValueS = null ; hasEmptyAttributeValue = false ; hasPendingAttributeValue = false ; selfClosing = false ; attributes = null ; return this ; }
+--------------------------------------------------
+static String mimeBoundary ( ) { final StringBuilder mime = StringUtil . borrowBuilder ( ) ; final Random rand = new Random ( ) ; for ( int i = 0 ; i < boundaryLength ; i ++ ) { mime . append ( mimeBoundaryChars [ rand . nextInt ( mimeBoundaryChars . length ) ] ) ; } return StringUtil . releaseBuilder ( mime ) ; }
+--------------------------------------------------

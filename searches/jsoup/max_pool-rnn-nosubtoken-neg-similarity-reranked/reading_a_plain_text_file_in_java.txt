@@ -1,0 +1,20 @@
+boolean matchesIgnoreCase ( String seq ) { bufferUp ( ) ; int scanLength = seq . length ( ) ; if ( scanLength > bufLength - bufPos ) return false ; for ( int offset = 0 ; offset < scanLength ; offset ++ ) { char upScan = Character . toUpperCase ( seq . charAt ( offset ) ) ; char upTarget = Character . toUpperCase ( charBuf [ bufPos + offset ] ) ; if ( upScan != upTarget ) return false ; } return true ; }
+--------------------------------------------------
+public static void traverse ( NodeVisitor visitor , Elements elements ) { Validate . notNull ( visitor ) ; Validate . notNull ( elements ) ; for ( Element el : elements ) traverse ( visitor , el ) ; }
+--------------------------------------------------
+public boolean matches ( Element root , Element element ) { return ( element . hasClass ( className ) ) ; }
+--------------------------------------------------
+public Element append ( String html ) { Validate . notNull ( html ) ; List < Node > nodes = NodeUtils . parser ( this ) . parseFragmentInput ( html , this , baseUri ( ) ) ; addChildren ( nodes . toArray ( new Node [ 0 ] ) ) ; return this ; }
+--------------------------------------------------
+public Node attr ( String key , String value ) { if ( ! hasAttributes ( ) && key . equals ( nodeName ( ) ) ) { this . value = value ; } else { ensureAttributes ( ) ; super . attr ( key , value ) ; } return this ; }
+--------------------------------------------------
+public String attr ( String key ) { Validate . notNull ( key ) ; if ( ! hasAttributes ( ) ) { return key . equals ( nodeName ( ) ) ? ( String ) value : EmptyString ; } return super . attr ( key ) ; }
+--------------------------------------------------
+public static void notEmpty ( String string , String msg ) { if ( string == null || string . length ( ) == 0 ) throw new IllegalArgumentException ( msg ) ; }
+--------------------------------------------------
+public OutputSettings escapeMode ( Entities . EscapeMode escapeMode ) { this . escapeMode = escapeMode ; return this ; }
+--------------------------------------------------
+public XmlDeclaration ( String name , boolean isProcessingInstruction ) { Validate . notNull ( name ) ; value = name ; this . isProcessingInstruction = isProcessingInstruction ; }
+--------------------------------------------------
+public Node before ( Node node ) { Validate . notNull ( node ) ; Validate . notNull ( parentNode ) ; parentNode . addChildren ( siblingIndex , node ) ; return this ; }
+--------------------------------------------------

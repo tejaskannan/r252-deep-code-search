@@ -1,0 +1,21 @@
+public E set ( int index , E element ) { onContentsChanged ( ) ; return super . set ( index , element ) ; }
+--------------------------------------------------
+public static void main ( String [ ] args ) throws IOException { Document doc = Jsoup . connect ( "http://en.wikipedia.org/" ) . get ( ) ; log ( doc . title ( ) ) ; Elements newsHeadlines = doc . select ( "#mp-itn b a" ) ; for ( Element headline : newsHeadlines ) { log ( "%s
+	%s" , headline . attr ( "title" ) , headline . absUrl ( "href" ) ) ; } }
+--------------------------------------------------
+public E remove ( int index ) { onContentsChanged ( ) ; return super . remove ( index ) ; }
+--------------------------------------------------
+private void remove ( int index ) { Validate . isFalse ( index >= size ) ; int shifted = size - index - 1 ; if ( shifted > 0 ) { System . arraycopy ( keys , index + 1 , keys , index , shifted ) ; System . arraycopy ( vals , index + 1 , vals , index , shifted ) ; } size -- ; keys [ size ] = null ; vals [ size ] = null ; }
+--------------------------------------------------
+public boolean remove ( Object o ) { onContentsChanged ( ) ; return super . remove ( o ) ; }
+--------------------------------------------------
+public void clear ( ) { onContentsChanged ( ) ; super . clear ( ) ; }
+--------------------------------------------------
+protected void removeRange ( int fromIndex , int toIndex ) { onContentsChanged ( ) ; super . removeRange ( fromIndex , toIndex ) ; }
+--------------------------------------------------
+void mark ( ) { bufSplitPoint = 0 ; bufferUp ( ) ; bufMark = bufPos ; }
+--------------------------------------------------
+public Element removeClass ( String className ) { Validate . notNull ( className ) ; Set < String > classes = classNames ( ) ; classes . remove ( className ) ; classNames ( classes ) ; return this ; }
+--------------------------------------------------
+public boolean hasHeader ( String name ) { Validate . notEmpty ( name , "header name must not be empty" ) ; return getHeadersCaseInsensitive ( name ) . size ( ) != 0 ; }
+--------------------------------------------------

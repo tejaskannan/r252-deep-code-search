@@ -1,0 +1,20 @@
+static String mimeBoundary ( ) { final StringBuilder mime = StringUtil . borrowBuilder ( ) ; final Random rand = new Random ( ) ; for ( int i = 0 ; i < boundaryLength ; i ++ ) { mime . append ( mimeBoundaryChars [ rand . nextInt ( mimeBoundaryChars . length ) ] ) ; } return StringUtil . releaseBuilder ( mime ) ; }
+--------------------------------------------------
+public String toString ( ) { return super . toString ( ) + ". mimetype=" + mimeType + ", url=" + url ; }
+--------------------------------------------------
+static void crossStreams ( final InputStream in , final OutputStream out ) throws IOException { final byte [ ] buffer = new byte [ bufferSize ] ; int len ; while ( ( len = in . read ( buffer ) ) != - 1 ) { out . write ( buffer , 0 , len ) ; } }
+--------------------------------------------------
+public String toString ( ) { return queue . substring ( pos ) ; }
+--------------------------------------------------
+public static Elements select ( String query , Element root ) { Validate . notEmpty ( query ) ; return select ( QueryParser . parse ( query ) , root ) ; }
+--------------------------------------------------
+public String chompTo ( String seq ) { String data = consumeTo ( seq ) ; matchChomp ( seq ) ; return data ; }
+--------------------------------------------------
+public boolean hasNext ( ) { return i < size ; }
+--------------------------------------------------
+public void clear ( ) { onContentsChanged ( ) ; super . clear ( ) ; }
+--------------------------------------------------
+void popStackToClose ( String ... elNames ) { for ( int pos = stack . size ( ) - 1 ; pos >= 0 ; pos -- ) { Element next = stack . get ( pos ) ; stack . remove ( pos ) ; if ( inSorted ( next . normalName ( ) , elNames ) ) break ; } }
+--------------------------------------------------
+public String chompBalanced ( char open , char close ) { int start = - 1 ; int end = - 1 ; int depth = 0 ; char last = 0 ; boolean inSingleQuote = false ; boolean inDoubleQuote = false ; do { if ( isEmpty ( ) ) break ; Character c = consume ( ) ; if ( last == 0 || last != ESC ) { if ( c . equals ( ''' ) && c != open && ! inDoubleQuote ) inSingleQuote = ! inSingleQuote ; else if ( c . equals ( '"' ) && c != open && ! inSingleQuote ) inDoubleQuote = ! inDoubleQuote ; if ( inSingleQuote || inDoubleQuote ) continue ; if ( c . equals ( open ) ) { depth ++ ; if ( start == - 1 ) start = pos ; } else if ( c . equals ( close ) ) depth -- ; } if ( depth > 0 && last != 0 ) end = pos ; last = c ; } while ( depth > 0 ) ; final String out = ( end >= 0 ) ? queue . substring ( start , end ) : "" ; if ( depth > 0 ) { Validate . fail ( "did not find balanced marker at '" + out + "'" ) ; } return out ; }
+--------------------------------------------------

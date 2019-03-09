@@ -1,0 +1,20 @@
+public boolean equals ( Object o ) { if ( this == o ) return true ; if ( o == null || getClass ( ) != o . getClass ( ) ) return false ; Attributes that = ( Attributes ) o ; if ( size != that . size ) return false ; if ( ! Arrays . equals ( keys , that . keys ) ) return false ; return Arrays . equals ( vals , that . vals ) ; }
+--------------------------------------------------
+static String mimeBoundary ( ) { final StringBuilder mime = StringUtil . borrowBuilder ( ) ; final Random rand = new Random ( ) ; for ( int i = 0 ; i < boundaryLength ; i ++ ) { mime . append ( mimeBoundaryChars [ rand . nextInt ( mimeBoundaryChars . length ) ] ) ; } return StringUtil . releaseBuilder ( mime ) ; }
+--------------------------------------------------
+public Attributes clone ( ) { Attributes clone ; try { clone = ( Attributes ) super . clone ( ) ; } catch ( CloneNotSupportedException e ) { throw new RuntimeException ( e ) ; } clone . size = size ; keys = copyOf ( keys , size ) ; vals = copyOf ( vals , size ) ; return clone ; }
+--------------------------------------------------
+public boolean remove ( Object o ) { onContentsChanged ( ) ; return super . remove ( o ) ; }
+--------------------------------------------------
+public static List < Node > parseXmlFragment ( String fragmentXml , String baseUri ) { XmlTreeBuilder treeBuilder = new XmlTreeBuilder ( ) ; return treeBuilder . parseFragment ( fragmentXml , baseUri , new Parser ( treeBuilder ) ) ; }
+--------------------------------------------------
+public void clear ( ) { onContentsChanged ( ) ; super . clear ( ) ; }
+--------------------------------------------------
+public static List < Node > parseFragment ( String fragmentHtml , Element context , String baseUri ) { HtmlTreeBuilder treeBuilder = new HtmlTreeBuilder ( ) ; return treeBuilder . parseFragment ( fragmentHtml , context , baseUri , new Parser ( treeBuilder ) ) ; }
+--------------------------------------------------
+private void prepareByteData ( ) { Validate . isTrue ( executed , "request must be executed (with .execute(), .get(), or .post() before getting response body" ) ; if ( byteData == null ) { Validate . isFalse ( inputStreamRead , "request has already been read (with .parse())" ) ; try { byteData = DataUtil . readToByteBuffer ( bodyStream , req . maxBodySize ( ) ) ; } catch ( IOException e ) { throw new UncheckedIOException ( e ) ; } finally { inputStreamRead = true ; safeClose ( ) ; } } }
+--------------------------------------------------
+public static List < Node > parseFragment ( String fragmentHtml , Element context , String baseUri , ParseErrorList errorList ) { HtmlTreeBuilder treeBuilder = new HtmlTreeBuilder ( ) ; Parser parser = new Parser ( treeBuilder ) ; parser . errors = errorList ; return treeBuilder . parseFragment ( fragmentHtml , context , baseUri , parser ) ; }
+--------------------------------------------------
+protected void doSetBaseUri ( String baseUri ) { this . baseUri = baseUri ; }
+--------------------------------------------------

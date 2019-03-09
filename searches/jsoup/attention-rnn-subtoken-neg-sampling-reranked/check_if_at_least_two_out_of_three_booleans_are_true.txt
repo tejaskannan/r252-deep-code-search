@@ -1,0 +1,20 @@
+void popStackToClose ( String elName ) { for ( int pos = stack . size ( ) - 1 ; pos >= 0 ; pos -- ) { Element next = stack . get ( pos ) ; stack . remove ( pos ) ; if ( next . normalName ( ) . equals ( elName ) ) break ; } }
+--------------------------------------------------
+void popStackToBefore ( String elName ) { for ( int pos = stack . size ( ) - 1 ; pos >= 0 ; pos -- ) { Element next = stack . get ( pos ) ; if ( next . normalName ( ) . equals ( elName ) ) { break ; } else { stack . remove ( pos ) ; } } }
+--------------------------------------------------
+public String consumeToIgnoreCase ( String seq ) { int start = pos ; String first = seq . substring ( 0 , 1 ) ; boolean canScan = first . toLowerCase ( ) . equals ( first . toUpperCase ( ) ) ; while ( ! isEmpty ( ) ) { if ( matches ( seq ) ) break ; if ( canScan ) { int skip = queue . indexOf ( first , pos ) - pos ; if ( skip == 0 ) pos ++ ; else if ( skip < 0 ) pos = queue . length ( ) ; else pos += skip ; } else pos ++ ; } return queue . substring ( start , pos ) ; }
+--------------------------------------------------
+public boolean remove ( Object o ) { onContentsChanged ( ) ; return super . remove ( o ) ; }
+--------------------------------------------------
+private static void readCharRef ( Tokeniser t , TokeniserState advance ) { int [ ] c = t . consumeCharacterReference ( null , false ) ; if ( c == null ) t . emit ( '&' ) ; else t . emit ( c ) ; t . transition ( advance ) ; }
+--------------------------------------------------
+private static String validateCharset ( String cs ) { if ( cs == null || cs . length ( ) == 0 ) return null ; cs = cs . trim ( ) . replaceAll ( "["']" , "" ) ; try { if ( Charset . isSupported ( cs ) ) return cs ; cs = cs . toUpperCase ( Locale . ENGLISH ) ; if ( Charset . isSupported ( cs ) ) return cs ; } catch ( IllegalCharsetNameException e ) { } return null ; }
+--------------------------------------------------
+public String consumeTo ( String seq ) { int offset = queue . indexOf ( seq , pos ) ; if ( offset != - 1 ) { String consumed = queue . substring ( pos , offset ) ; pos += consumed . length ( ) ; return consumed ; } else { return remainder ( ) ; } }
+--------------------------------------------------
+public boolean matches ( Element root , Element element ) { final Element p = element . parent ( ) ; if ( p == null || p instanceof Document ) return false ; int pos = 0 ; Elements family = p . children ( ) ; for ( Element el : family ) { if ( el . tag ( ) . equals ( element . tag ( ) ) ) pos ++ ; } return pos == 1 ; }
+--------------------------------------------------
+void removeFromActiveFormattingElements ( Element el ) { for ( int pos = formattingElements . size ( ) - 1 ; pos >= 0 ; pos -- ) { Element next = formattingElements . get ( pos ) ; if ( next == el ) { formattingElements . remove ( pos ) ; break ; } } }
+--------------------------------------------------
+public boolean matches ( Element root , Element node ) { for ( int i = 0 ; i < num ; i ++ ) { Evaluator s = evaluators . get ( i ) ; if ( s . matches ( root , node ) ) return true ; } return false ; }
+--------------------------------------------------

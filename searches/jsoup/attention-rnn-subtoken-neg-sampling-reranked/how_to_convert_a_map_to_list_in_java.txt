@@ -1,0 +1,20 @@
+public boolean isXmlDeclaration ( ) { String data = getData ( ) ; return ( data . length ( ) > 1 && ( data . startsWith ( "!" ) || data . startsWith ( "?" ) ) ) ; }
+--------------------------------------------------
+public static boolean isBlank ( String string ) { if ( string == null || string . length ( ) == 0 ) return true ; int l = string . length ( ) ; for ( int i = 0 ; i < l ; i ++ ) { if ( ! StringUtil . isWhitespace ( string . codePointAt ( i ) ) ) return false ; } return true ; }
+--------------------------------------------------
+public E remove ( int index ) { onContentsChanged ( ) ; return super . remove ( index ) ; }
+--------------------------------------------------
+public String chompBalanced ( char open , char close ) { int start = - 1 ; int end = - 1 ; int depth = 0 ; char last = 0 ; boolean inSingleQuote = false ; boolean inDoubleQuote = false ; do { if ( isEmpty ( ) ) break ; Character c = consume ( ) ; if ( last == 0 || last != ESC ) { if ( c . equals ( ''' ) && c != open && ! inDoubleQuote ) inSingleQuote = ! inSingleQuote ; else if ( c . equals ( '"' ) && c != open && ! inSingleQuote ) inDoubleQuote = ! inDoubleQuote ; if ( inSingleQuote || inDoubleQuote ) continue ; if ( c . equals ( open ) ) { depth ++ ; if ( start == - 1 ) start = pos ; } else if ( c . equals ( close ) ) depth -- ; } if ( depth > 0 && last != 0 ) end = pos ; last = c ; } while ( depth > 0 ) ; final String out = ( end >= 0 ) ? queue . substring ( start , end ) : "" ; if ( depth > 0 ) { Validate . fail ( "did not find balanced marker at '" + out + "'" ) ; } return out ; }
+--------------------------------------------------
+public boolean is ( String query ) { Evaluator eval = QueryParser . parse ( query ) ; for ( Element e : this ) { if ( e . is ( eval ) ) return true ; } return false ; }
+--------------------------------------------------
+public boolean equals ( Object obj ) { if ( this == obj ) return true ; if ( obj == null ) return false ; if ( getClass ( ) != obj . getClass ( ) ) return false ; TypedValue other = ( TypedValue ) obj ; if ( value == null ) { return other . value == null ; } else return value . equals ( other . value ) ; }
+--------------------------------------------------
+public String consumeCssIdentifier ( ) { int start = pos ; while ( ! isEmpty ( ) && ( matchesWord ( ) || matchesAny ( '-' , '_' ) ) ) pos ++ ; return queue . substring ( start , pos ) ; }
+--------------------------------------------------
+public boolean matches ( Element root , Element element ) { return element . hasAttr ( key ) && lowerCase ( element . attr ( key ) ) . contains ( value ) ; }
+--------------------------------------------------
+private boolean isElementInQueue ( ArrayList < Element > queue , Element element ) { for ( int pos = queue . size ( ) - 1 ; pos >= 0 ; pos -- ) { Element next = queue . get ( pos ) ; if ( next == element ) { return true ; } } return false ; }
+--------------------------------------------------
+public static String join ( Iterator strings , String sep ) { if ( ! strings . hasNext ( ) ) return "" ; String start = strings . next ( ) . toString ( ) ; if ( ! strings . hasNext ( ) ) return start ; StringBuilder sb = StringUtil . borrowBuilder ( ) . append ( start ) ; while ( strings . hasNext ( ) ) { sb . append ( sep ) ; sb . append ( strings . next ( ) ) ; } return StringUtil . releaseBuilder ( sb ) ; }
+--------------------------------------------------

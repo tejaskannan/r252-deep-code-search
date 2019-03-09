@@ -1,0 +1,20 @@
+public boolean equals ( Object o ) { return this == o ; }
+--------------------------------------------------
+public Connection timeout ( int millis ) { req . timeout ( millis ) ; return this ; }
+--------------------------------------------------
+public Connection proxy ( Proxy proxy ) { req . proxy ( proxy ) ; return this ; }
+--------------------------------------------------
+public ConstrainableInputStream timeout ( long startTimeNanos , long timeoutMillis ) { this . startTime = startTimeNanos ; this . timeout = timeoutMillis * 1000000 ; return this ; }
+--------------------------------------------------
+public UnsupportedMimeTypeException ( String message , String mimeType , String url ) { super ( message ) ; this . mimeType = mimeType ; this . url = url ; }
+--------------------------------------------------
+public Map < String , List < String >> multiHeaders ( ) { return headers ; }
+--------------------------------------------------
+public static String normaliseWhitespace ( String string ) { StringBuilder sb = StringUtil . borrowBuilder ( ) ; appendNormalisedWhitespace ( sb , string , false ) ; return StringUtil . releaseBuilder ( sb ) ; }
+--------------------------------------------------
+protected Node doClone ( Node parent ) { Node clone ; try { clone = ( Node ) super . clone ( ) ; } catch ( CloneNotSupportedException e ) { throw new RuntimeException ( e ) ; } clone . parentNode = parent ; clone . siblingIndex = parent == null ? 0 : siblingIndex ; return clone ; }
+--------------------------------------------------
+public Request timeout ( int millis ) { Validate . isTrue ( millis >= 0 , "timeout milliseconds must be 0 (infinite) or greater" ) ; timeoutMilliseconds = millis ; return this ; }
+--------------------------------------------------
+public Document ( String baseUri ) { super ( Tag . valueOf ( "#root" , ParseSettings . htmlDefault ) , baseUri ) ; this . location = baseUri ; }
+--------------------------------------------------

@@ -1,0 +1,20 @@
+public Connection maxBodySize ( int bytes ) { req . maxBodySize ( bytes ) ; return this ; }
+--------------------------------------------------
+private static String setOutputContentType ( final Connection . Request req ) { String bound = null ; if ( req . hasHeader ( CONTENT_TYPE ) ) { if ( req . header ( CONTENT_TYPE ) . contains ( MULTIPART_FORM_DATA ) && ! req . header ( CONTENT_TYPE ) . contains ( "boundary" ) ) { bound = DataUtil . mimeBoundary ( ) ; req . header ( CONTENT_TYPE , MULTIPART_FORM_DATA + "; boundary=" + bound ) ; } } else if ( needsMultipart ( req ) ) { bound = DataUtil . mimeBoundary ( ) ; req . header ( CONTENT_TYPE , MULTIPART_FORM_DATA + "; boundary=" + bound ) ; } else { req . header ( CONTENT_TYPE , FORM_URL_ENCODED + "; charset=" + req . postDataCharset ( ) ) ; } return bound ; }
+--------------------------------------------------
+public ConstrainableInputStream timeout ( long startTimeNanos , long timeoutMillis ) { this . startTime = startTimeNanos ; this . timeout = timeoutMillis * 1000000 ; return this ; }
+--------------------------------------------------
+public Connection . Request requestBody ( String body ) { this . body = body ; return this ; }
+--------------------------------------------------
+public Parser settings ( ParseSettings settings ) { this . settings = settings ; return this ; }
+--------------------------------------------------
+public Connection timeout ( int millis ) { req . timeout ( millis ) ; return this ; }
+--------------------------------------------------
+public Connection sslSocketFactory ( SSLSocketFactory sslSocketFactory ) { req . sslSocketFactory ( sslSocketFactory ) ; return this ; }
+--------------------------------------------------
+public Connection proxy ( Proxy proxy ) { req . proxy ( proxy ) ; return this ; }
+--------------------------------------------------
+@ Override Token reset ( ) { data = null ; return this ; }
+--------------------------------------------------
+public Request proxy ( Proxy proxy ) { this . proxy = proxy ; return this ; }
+--------------------------------------------------

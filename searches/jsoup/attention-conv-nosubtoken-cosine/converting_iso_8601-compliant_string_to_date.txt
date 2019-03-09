@@ -1,0 +1,20 @@
+public Iterator < Map . Entry < String , String >> iterator ( ) { return new DatasetIterator ( ) ; }
+--------------------------------------------------
+public Iterator < Attribute > iterator ( ) { return new Iterator < Attribute > ( ) { int i = 0 ; @ Override public boolean hasNext ( ) { return i < size ; } @ Override public Attribute next ( ) { final Attribute attr = new Attribute ( keys [ i ] , vals [ i ] , Attributes . this ) ; i ++ ; return attr ; } @ Override public void remove ( ) { Attributes . this . remove ( -- i ) ; } } ; }
+--------------------------------------------------
+String nameForCodepoint ( final int codepoint ) { final int index = Arrays . binarySearch ( codeKeys , codepoint ) ; if ( index >= 0 ) { return ( index < nameVals . length - 1 && codeKeys [ index + 1 ] == codepoint ) ? nameVals [ index + 1 ] : nameVals [ index ] ; } return emptyName ; }
+--------------------------------------------------
+int codepointForName ( final String name ) { int index = Arrays . binarySearch ( nameKeys , name ) ; return index >= 0 ? codeVals [ index ] : empty ; }
+--------------------------------------------------
+public boolean removeAll ( Collection < ? > c ) { onContentsChanged ( ) ; return super . removeAll ( c ) ; }
+--------------------------------------------------
+public Element attr ( String attributeKey , String attributeValue ) { super . attr ( attributeKey , attributeValue ) ; return this ; }
+--------------------------------------------------
+private void remove ( int index ) { Validate . isFalse ( index >= size ) ; int shifted = size - index - 1 ; if ( shifted > 0 ) { System . arraycopy ( keys , index + 1 , keys , index , shifted ) ; System . arraycopy ( vals , index + 1 , vals , index , shifted ) ; } size -- ; keys [ size ] = null ; vals [ size ] = null ; }
+--------------------------------------------------
+public List < String > eachAttr ( String attributeKey ) { List < String > attrs = new ArrayList < > ( size ( ) ) ; for ( Element element : this ) { if ( element . hasAttr ( attributeKey ) ) attrs . add ( element . attr ( attributeKey ) ) ; } return attrs ; }
+--------------------------------------------------
+public boolean retainAll ( Collection < ? > c ) { onContentsChanged ( ) ; return super . retainAll ( c ) ; }
+--------------------------------------------------
+public void clear ( ) { onContentsChanged ( ) ; super . clear ( ) ; }
+--------------------------------------------------

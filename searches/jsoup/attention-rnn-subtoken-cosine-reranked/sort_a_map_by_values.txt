@@ -1,0 +1,20 @@
+Attributes getEnforcedAttributes ( String tagName ) { Attributes attrs = new Attributes ( ) ; TagName tag = TagName . valueOf ( tagName ) ; if ( enforcedAttributes . containsKey ( tag ) ) { Map < AttributeKey , AttributeValue > keyVals = enforcedAttributes . get ( tag ) ; for ( Map . Entry < AttributeKey , AttributeValue > entry : keyVals . entrySet ( ) ) { attrs . put ( entry . getKey ( ) . toString ( ) , entry . getValue ( ) . toString ( ) ) ; } } return attrs ; }
+--------------------------------------------------
+public Connection data ( Map < String , String > data ) { Validate . notNull ( data , "data map must not be null" ) ; for ( Map . Entry < String , String > entry : data . entrySet ( ) ) { req . data ( KeyVal . create ( entry . getKey ( ) , entry . getValue ( ) ) ) ; } return this ; }
+--------------------------------------------------
+public static Elements select ( String query , Iterable < Element > roots ) { Validate . notEmpty ( query ) ; Validate . notNull ( roots ) ; Evaluator evaluator = QueryParser . parse ( query ) ; ArrayList < Element > elements = new ArrayList < > ( ) ; IdentityHashMap < Element , Boolean > seenElements = new IdentityHashMap < > ( ) ; for ( Element root : roots ) { final Elements found = select ( evaluator , root ) ; for ( Element el : found ) { if ( ! seenElements . containsKey ( el ) ) { elements . add ( el ) ; seenElements . put ( el , Boolean . TRUE ) ; } } } return new Elements ( elements ) ; }
+--------------------------------------------------
+private List < String > getHeadersCaseInsensitive ( String name ) { Validate . notNull ( name ) ; for ( Map . Entry < String , List < String >> entry : headers . entrySet ( ) ) { if ( name . equalsIgnoreCase ( entry . getKey ( ) ) ) return entry . getValue ( ) ; } return Collections . emptyList ( ) ; }
+--------------------------------------------------
+public Element val ( String value ) { if ( tagName ( ) . equals ( "textarea" ) ) text ( value ) ; else attr ( "value" , value ) ; return this ; }
+--------------------------------------------------
+FormElement insertForm ( Token . StartTag startTag , boolean onStack ) { Tag tag = Tag . valueOf ( startTag . name ( ) , settings ) ; FormElement el = new FormElement ( tag , baseUri , startTag . attributes ) ; setFormElement ( el ) ; insertNode ( el ) ; if ( onStack ) stack . add ( el ) ; return el ; }
+--------------------------------------------------
+public XmlDeclaration ( String name , boolean isProcessingInstruction ) { Validate . notNull ( name ) ; value = name ; this . isProcessingInstruction = isProcessingInstruction ; }
+--------------------------------------------------
+public Elements val ( String value ) { for ( Element element : this ) element . val ( value ) ; return this ; }
+--------------------------------------------------
+private void ensureAttributes ( ) { if ( ! hasAttributes ( ) ) { Object coreValue = value ; Attributes attributes = new Attributes ( ) ; value = attributes ; if ( coreValue != null ) attributes . put ( nodeName ( ) , ( String ) coreValue ) ; } }
+--------------------------------------------------
+public Element attr ( String attributeKey , boolean attributeValue ) { attributes ( ) . put ( attributeKey , attributeValue ) ; return this ; }
+--------------------------------------------------

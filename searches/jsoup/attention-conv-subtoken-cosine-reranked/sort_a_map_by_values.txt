@@ -1,0 +1,27 @@
+public W3CBuilder ( Document doc ) { this . doc = doc ; this . namespacesStack . push ( new HashMap < String , String > ( ) ) ; }
+--------------------------------------------------
+public T removeHeader ( String name ) { Validate . notEmpty ( name , "header name must not be empty" ) ; Map . Entry < String , List < String >> entry = scanHeaders ( name ) ; if ( entry != null ) headers . remove ( entry . getKey ( ) ) ; return ( T ) this ; }
+--------------------------------------------------
+Element insert ( Token . StartTag startTag ) { if ( startTag . isSelfClosing ( ) ) { Element el = insertEmpty ( startTag ) ; stack . add ( el ) ; tokeniser . transition ( TokeniserState . Data ) ; tokeniser . emit ( emptyEnd . reset ( ) . name ( el . tagName ( ) ) ) ; return el ; } Element el = new Element ( Tag . valueOf ( startTag . name ( ) , settings ) , baseUri , settings . normalizeAttributes ( startTag . attributes ) ) ; insert ( el ) ; return el ; }
+--------------------------------------------------
+void insert ( Element el ) { insertNode ( el ) ; stack . add ( el ) ; }
+--------------------------------------------------
+private static void writePost ( final Connection . Request req , final OutputStream outputStream , final String bound ) throws IOException { final Collection < Connection . KeyVal > data = req . data ( ) ; final BufferedWriter w = new BufferedWriter ( new OutputStreamWriter ( outputStream , req . postDataCharset ( ) ) ) ; if ( bound != null ) { for ( Connection . KeyVal keyVal : data ) { w . write ( "--" ) ; w . write ( bound ) ; w . write ( "
+" ) ; w . write ( "content-disposition: form-data; name="" ) ; w . write ( encodeMimeName ( keyVal . key ( ) ) ) ; w . write ( """ ) ; if ( keyVal . hasInputStream ( ) ) { w . write ( "; filename="" ) ; w . write ( encodeMimeName ( keyVal . value ( ) ) ) ; w . write ( ""
+content-type: " ) ; w . write ( keyVal . contentType ( ) != null ? keyVal . contentType ( ) : DefaultUploadType ) ; w . write ( "
+
+" ) ; w . flush ( ) ; DataUtil . crossStreams ( keyVal . inputStream ( ) , outputStream ) ; outputStream . flush ( ) ; } else { w . write ( "
+
+" ) ; w . write ( keyVal . value ( ) ) ; } w . write ( "
+" ) ; } w . write ( "--" ) ; w . write ( bound ) ; w . write ( "--" ) ; } else if ( req . requestBody ( ) != null ) { w . write ( req . requestBody ( ) ) ; } else { boolean first = true ; for ( Connection . KeyVal keyVal : data ) { if ( ! first ) w . append ( '&' ) ; else first = false ; w . write ( URLEncoder . encode ( keyVal . key ( ) , req . postDataCharset ( ) ) ) ; w . write ( '=' ) ; w . write ( URLEncoder . encode ( keyVal . value ( ) , req . postDataCharset ( ) ) ) ; } } w . close ( ) ; }
+--------------------------------------------------
+public boolean equals ( Object o ) { if ( this == o ) return true ; if ( o == null || getClass ( ) != o . getClass ( ) ) return false ; Attributes that = ( Attributes ) o ; if ( size != that . size ) return false ; if ( ! Arrays . equals ( keys , that . keys ) ) return false ; return Arrays . equals ( vals , that . vals ) ; }
+--------------------------------------------------
+Element insert ( Token . StartTag startTag ) { Tag tag = Tag . valueOf ( startTag . name ( ) , settings ) ; Element el = new Element ( tag , baseUri , settings . normalizeAttributes ( startTag . attributes ) ) ; insertNode ( el ) ; if ( startTag . isSelfClosing ( ) ) { if ( ! tag . isKnownTag ( ) ) tag . setSelfClosing ( ) ; } else { stack . add ( el ) ; } return el ; }
+--------------------------------------------------
+public Set < Entry < String , String >> entrySet ( ) { return new EntrySet ( ) ; }
+--------------------------------------------------
+public String toString ( ) { return value ; }
+--------------------------------------------------
+public boolean hasSameValue ( Object o ) { if ( this == o ) return true ; if ( o == null || getClass ( ) != o . getClass ( ) ) return false ; return this . outerHtml ( ) . equals ( ( ( Node ) o ) . outerHtml ( ) ) ; }
+--------------------------------------------------

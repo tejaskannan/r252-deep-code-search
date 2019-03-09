@@ -1,0 +1,20 @@
+Element getFromStack ( String elName ) { for ( int pos = stack . size ( ) - 1 ; pos >= 0 ; pos -- ) { Element next = stack . get ( pos ) ; if ( next . normalName ( ) . equals ( elName ) ) { return next ; } } return null ; }
+--------------------------------------------------
+public Document get ( ) throws IOException { req . method ( Method . GET ) ; execute ( ) ; return res . parse ( ) ; }
+--------------------------------------------------
+public String toString ( ) { return key + "=" + value ; }
+--------------------------------------------------
+public static int codepointsForName ( final String name , final int [ ] codepoints ) { String val = multipoints . get ( name ) ; if ( val != null ) { codepoints [ 0 ] = val . codePointAt ( 0 ) ; codepoints [ 1 ] = val . codePointAt ( 1 ) ; return 2 ; } int codepoint = extended . codepointForName ( name ) ; if ( codepoint != empty ) { codepoints [ 0 ] = codepoint ; return 1 ; } return 0 ; }
+--------------------------------------------------
+public String toString ( ) { return queue . substring ( pos ) ; }
+--------------------------------------------------
+public String toString ( ) { return String . format ( ":lt(%d)" , index ) ; }
+--------------------------------------------------
+public String toString ( ) { return String . format ( ":gt(%d)" , index ) ; }
+--------------------------------------------------
+public String toString ( ) { return String . format ( ":eq(%d)" , index ) ; }
+--------------------------------------------------
+public int hashCode ( ) { int result = tagName . hashCode ( ) ; result = 31 * result + ( isBlock ? 1 : 0 ) ; result = 31 * result + ( formatAsBlock ? 1 : 0 ) ; result = 31 * result + ( canContainInline ? 1 : 0 ) ; result = 31 * result + ( empty ? 1 : 0 ) ; result = 31 * result + ( selfClosing ? 1 : 0 ) ; result = 31 * result + ( preserveWhitespace ? 1 : 0 ) ; result = 31 * result + ( formList ? 1 : 0 ) ; result = 31 * result + ( formSubmit ? 1 : 0 ) ; return result ; }
+--------------------------------------------------
+public String toString ( ) { return String . format ( "[%s^=%s]" , key , value ) ; }
+--------------------------------------------------

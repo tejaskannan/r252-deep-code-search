@@ -1,0 +1,20 @@
+public ConstrainableInputStream timeout ( long startTimeNanos , long timeoutMillis ) { this . startTime = startTimeNanos ; this . timeout = timeoutMillis * 1000000 ; return this ; }
+--------------------------------------------------
+public Iterator < Attribute > iterator ( ) { return new Iterator < Attribute > ( ) { int i = 0 ; @ Override public boolean hasNext ( ) { return i < size ; } @ Override public Attribute next ( ) { final Attribute attr = new Attribute ( keys [ i ] , vals [ i ] , Attributes . this ) ; i ++ ; return attr ; } @ Override public void remove ( ) { Attributes . this . remove ( -- i ) ; } } ; }
+--------------------------------------------------
+CharsetEncoder prepareEncoder ( ) { CharsetEncoder encoder = charset . newEncoder ( ) ; encoderThreadLocal . set ( encoder ) ; coreCharset = Entities . CoreCharset . byName ( encoder . charset ( ) . name ( ) ) ; return encoder ; }
+--------------------------------------------------
+public int hashCode ( ) { int result = tagName . hashCode ( ) ; result = 31 * result + ( isBlock ? 1 : 0 ) ; result = 31 * result + ( formatAsBlock ? 1 : 0 ) ; result = 31 * result + ( canContainInline ? 1 : 0 ) ; result = 31 * result + ( empty ? 1 : 0 ) ; result = 31 * result + ( selfClosing ? 1 : 0 ) ; result = 31 * result + ( preserveWhitespace ? 1 : 0 ) ; result = 31 * result + ( formList ? 1 : 0 ) ; result = 31 * result + ( formSubmit ? 1 : 0 ) ; return result ; }
+--------------------------------------------------
+private static LinkedHashMap < String , List < String >> createHeaderMap ( HttpURLConnection conn ) { final LinkedHashMap < String , List < String >> headers = new LinkedHashMap < > ( ) ; int i = 0 ; while ( true ) { final String key = conn . getHeaderFieldKey ( i ) ; final String val = conn . getHeaderField ( i ) ; if ( key == null && val == null ) break ; i ++ ; if ( key == null || val == null ) continue ; if ( headers . containsKey ( key ) ) headers . get ( key ) . add ( val ) ; else { final ArrayList < String > vals = new ArrayList < > ( ) ; vals . add ( val ) ; headers . put ( key , vals ) ; } } return headers ; }
+--------------------------------------------------
+public int hashCode ( ) { final int prime = 31 ; int result = 1 ; result = prime * result + ( ( value == null ) ? 0 : value . hashCode ( ) ) ; return result ; }
+--------------------------------------------------
+public T header ( String name , String value ) { Validate . notEmpty ( name , "header name must not be empty" ) ; removeHeader ( name ) ; addHeader ( name , value ) ; return ( T ) this ; }
+--------------------------------------------------
+public Connection header ( String name , String value ) { req . header ( name , value ) ; return this ; }
+--------------------------------------------------
+public XmlDeclaration ( String name , boolean isProcessingInstruction ) { Validate . notNull ( name ) ; value = name ; this . isProcessingInstruction = isProcessingInstruction ; }
+--------------------------------------------------
+CharsetEncoder encoder ( ) { CharsetEncoder encoder = encoderThreadLocal . get ( ) ; return encoder != null ? encoder : prepareEncoder ( ) ; }
+--------------------------------------------------

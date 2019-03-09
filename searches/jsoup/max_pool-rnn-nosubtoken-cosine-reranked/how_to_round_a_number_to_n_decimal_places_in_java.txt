@@ -1,0 +1,20 @@
+private static void appendWhitespaceIfBr ( Element element , StringBuilder accum ) { if ( element . tag . getName ( ) . equals ( "br" ) && ! TextNode . lastCharIsWhitespace ( accum ) ) accum . append ( " " ) ; }
+--------------------------------------------------
+public String normalizeAttribute ( String name ) { name = name . trim ( ) ; if ( ! preserveAttributeCase ) name = lowerCase ( name ) ; return name ; }
+--------------------------------------------------
+private static String fixHeaderEncoding ( String val ) { try { byte [ ] bytes = val . getBytes ( "iso-8859-1" ) ; if ( ! looksLikeUtf8 ( bytes ) ) return val ; return new String ( bytes , "utf-8" ) ; } catch ( UnsupportedEncodingException e ) { return val ; } }
+--------------------------------------------------
+public static void appendNormalisedWhitespace ( StringBuilder accum , String string , boolean stripLeading ) { boolean lastWasWhite = false ; boolean reachedNonWhite = false ; int len = string . length ( ) ; int c ; for ( int i = 0 ; i < len ; i += Character . charCount ( c ) ) { c = string . codePointAt ( i ) ; if ( isActuallyWhitespace ( c ) ) { if ( ( stripLeading && ! reachedNonWhite ) || lastWasWhite ) continue ; accum . append ( ' ' ) ; lastWasWhite = true ; } else if ( ! isInvisibleChar ( c ) ) { accum . appendCodePoint ( c ) ; lastWasWhite = false ; reachedNonWhite = true ; } } }
+--------------------------------------------------
+void maybeSetBaseUri ( Element base ) { if ( baseUriSetFromDoc ) return ; String href = base . absUrl ( "href" ) ; if ( href . length ( ) != 0 ) { baseUri = href ; baseUriSetFromDoc = true ; doc . setBaseUri ( href ) ; } }
+--------------------------------------------------
+public Attribute ( String key , String val , Attributes parent ) { Validate . notNull ( key ) ; key = key . trim ( ) ; Validate . notEmpty ( key ) ; this . key = key ; this . val = val ; this . parent = parent ; }
+--------------------------------------------------
+Attributes normalizeAttributes ( Attributes attributes ) { if ( ! preserveAttributeCase ) { attributes . normalize ( ) ; } return attributes ; }
+--------------------------------------------------
+public void setBaseUri ( final String baseUri ) { Validate . notNull ( baseUri ) ; traverse ( new NodeVisitor ( ) { public void head ( Node node , int depth ) { node . doSetBaseUri ( baseUri ) ; } public void tail ( Node node , int depth ) { } } ) ; }
+--------------------------------------------------
+public static String unescape ( String in ) { StringBuilder out = StringUtil . borrowBuilder ( ) ; char last = 0 ; for ( char c : in . toCharArray ( ) ) { if ( c == ESC ) { if ( last != 0 && last == ESC ) out . append ( c ) ; } else out . append ( c ) ; last = c ; } return StringUtil . releaseBuilder ( out ) ; }
+--------------------------------------------------
+public Element appendElement ( String tagName ) { Element child = new Element ( Tag . valueOf ( tagName , NodeUtils . parser ( this ) . settings ( ) ) , baseUri ( ) ) ; appendChild ( child ) ; return child ; }
+--------------------------------------------------

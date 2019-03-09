@@ -1,0 +1,20 @@
+void unconsume ( ) { if ( bufPos < 1 ) throw new UncheckedIOException ( new IOException ( "no buffer left to unconsume" ) ) ; bufPos -- ; }
+--------------------------------------------------
+public Element removeClass ( String className ) { Validate . notNull ( className ) ; Set < String > classes = classNames ( ) ; classes . remove ( className ) ; classNames ( classes ) ; return this ; }
+--------------------------------------------------
+static void crossStreams ( final InputStream in , final OutputStream out ) throws IOException { final byte [ ] buffer = new byte [ bufferSize ] ; int len ; while ( ( len = in . read ( buffer ) ) != - 1 ) { out . write ( buffer , 0 , len ) ; } }
+--------------------------------------------------
+public Element empty ( ) { childNodes . clear ( ) ; return this ; }
+--------------------------------------------------
+public boolean hasHeader ( String name ) { Validate . notEmpty ( name , "header name must not be empty" ) ; return getHeadersCaseInsensitive ( name ) . size ( ) != 0 ; }
+--------------------------------------------------
+void emit ( Token token ) { Validate . isFalse ( isEmitPending , "there is an unread token pending!" ) ; emitPending = token ; isEmitPending = true ; if ( token . type == Token . TokenType . StartTag ) { Token . StartTag startTag = ( Token . StartTag ) token ; lastStartTag = startTag . tagName ; } else if ( token . type == Token . TokenType . EndTag ) { Token . EndTag endTag = ( Token . EndTag ) token ; if ( endTag . attributes != null ) error ( "attributes incorrectly present on end tag" ) ; } }
+--------------------------------------------------
+public Attributes clone ( ) { Attributes clone ; try { clone = ( Attributes ) super . clone ( ) ; } catch ( CloneNotSupportedException e ) { throw new RuntimeException ( e ) ; } clone . size = size ; keys = copyOf ( keys , size ) ; vals = copyOf ( vals , size ) ; return clone ; }
+--------------------------------------------------
+Element insert ( Token . StartTag startTag ) { if ( startTag . isSelfClosing ( ) ) { Element el = insertEmpty ( startTag ) ; stack . add ( el ) ; tokeniser . transition ( TokeniserState . Data ) ; tokeniser . emit ( emptyEnd . reset ( ) . name ( el . tagName ( ) ) ) ; return el ; } Element el = new Element ( Tag . valueOf ( startTag . name ( ) , settings ) , baseUri , settings . normalizeAttributes ( startTag . attributes ) ) ; insert ( el ) ; return el ; }
+--------------------------------------------------
+public String chompBalanced ( char open , char close ) { int start = - 1 ; int end = - 1 ; int depth = 0 ; char last = 0 ; boolean inSingleQuote = false ; boolean inDoubleQuote = false ; do { if ( isEmpty ( ) ) break ; Character c = consume ( ) ; if ( last == 0 || last != ESC ) { if ( c . equals ( ''' ) && c != open && ! inDoubleQuote ) inSingleQuote = ! inSingleQuote ; else if ( c . equals ( '"' ) && c != open && ! inSingleQuote ) inDoubleQuote = ! inDoubleQuote ; if ( inSingleQuote || inDoubleQuote ) continue ; if ( c . equals ( open ) ) { depth ++ ; if ( start == - 1 ) start = pos ; } else if ( c . equals ( close ) ) depth -- ; } if ( depth > 0 && last != 0 ) end = pos ; last = c ; } while ( depth > 0 ) ; final String out = ( end >= 0 ) ? queue . substring ( start , end ) : "" ; if ( depth > 0 ) { Validate . fail ( "did not find balanced marker at '" + out + "'" ) ; } return out ; }
+--------------------------------------------------
+public Elements removeClass ( String className ) { for ( Element element : this ) { element . removeClass ( className ) ; } return this ; }
+--------------------------------------------------

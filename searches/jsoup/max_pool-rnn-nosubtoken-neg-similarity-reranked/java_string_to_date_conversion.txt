@@ -1,0 +1,20 @@
+public static void notEmpty ( String string , String msg ) { if ( string == null || string . length ( ) == 0 ) throw new IllegalArgumentException ( msg ) ; }
+--------------------------------------------------
+public Document clean ( Document dirtyDocument ) { Validate . notNull ( dirtyDocument ) ; Document clean = Document . createShell ( dirtyDocument . baseUri ( ) ) ; if ( dirtyDocument . body ( ) != null ) copySafeNodes ( dirtyDocument . body ( ) , clean . body ( ) ) ; return clean ; }
+--------------------------------------------------
+public FilterResult head ( Node node , int depth ) { if ( node instanceof Element ) { Element el = ( Element ) node ; if ( eval . matches ( root , el ) ) { match = el ; return STOP ; } } return CONTINUE ; }
+--------------------------------------------------
+public String attr ( String key ) { Validate . notNull ( key ) ; if ( ! hasAttributes ( ) ) { return key . equals ( nodeName ( ) ) ? ( String ) value : EmptyString ; } return super . attr ( key ) ; }
+--------------------------------------------------
+private Tag ( String tagName ) { this . tagName = tagName ; normalName = Normalizer . lowerCase ( tagName ) ; }
+--------------------------------------------------
+public String data ( ) { StringBuilder sb = StringUtil . borrowBuilder ( ) ; for ( Node childNode : childNodes ) { if ( childNode instanceof DataNode ) { DataNode data = ( DataNode ) childNode ; sb . append ( data . getWholeData ( ) ) ; } else if ( childNode instanceof Comment ) { Comment comment = ( Comment ) childNode ; sb . append ( comment . getData ( ) ) ; } else if ( childNode instanceof Element ) { Element element = ( Element ) childNode ; String elementData = element . data ( ) ; sb . append ( elementData ) ; } else if ( childNode instanceof CDataNode ) { CDataNode cDataNode = ( CDataNode ) childNode ; sb . append ( cDataNode . getWholeText ( ) ) ; } } return StringUtil . releaseBuilder ( sb ) ; }
+--------------------------------------------------
+public static Tag valueOf ( String tagName , ParseSettings settings ) { Validate . notNull ( tagName ) ; Tag tag = tags . get ( tagName ) ; if ( tag == null ) { tagName = settings . normalizeTag ( tagName ) ; Validate . notEmpty ( tagName ) ; tag = tags . get ( tagName ) ; if ( tag == null ) { tag = new Tag ( tagName ) ; tag . isBlock = false ; } } return tag ; }
+--------------------------------------------------
+public OutputSettings escapeMode ( Entities . EscapeMode escapeMode ) { this . escapeMode = escapeMode ; return this ; }
+--------------------------------------------------
+private void normaliseTextNodes ( Element element ) { List < Node > toMove = new ArrayList < > ( ) ; for ( Node node : element . childNodes ) { if ( node instanceof TextNode ) { TextNode tn = ( TextNode ) node ; if ( ! tn . isBlank ( ) ) toMove . add ( tn ) ; } } for ( int i = toMove . size ( ) - 1 ; i >= 0 ; i -- ) { Node node = toMove . get ( i ) ; element . removeChild ( node ) ; body ( ) . prependChild ( new TextNode ( " " ) ) ; body ( ) . prependChild ( node ) ; } }
+--------------------------------------------------
+public Node previousSibling ( ) { if ( parentNode == null ) return null ; if ( siblingIndex > 0 ) return parentNode . ensureChildNodes ( ) . get ( siblingIndex - 1 ) ; else return null ; }
+--------------------------------------------------

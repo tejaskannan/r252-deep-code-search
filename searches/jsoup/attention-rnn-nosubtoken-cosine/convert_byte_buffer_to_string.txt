@@ -1,0 +1,20 @@
+public static ByteBuffer readToByteBuffer ( InputStream inStream , int maxSize ) throws IOException { Validate . isTrue ( maxSize >= 0 , "maxsize must be 0 (unlimited) or larger" ) ; final ConstrainableInputStream input = ConstrainableInputStream . wrap ( inStream , bufferSize , maxSize ) ; return input . readToByteBuffer ( maxSize ) ; }
+--------------------------------------------------
+public ByteBuffer readToByteBuffer ( int max ) throws IOException { Validate . isTrue ( max >= 0 , "maxsize must be 0 (unlimited) or larger" ) ; final boolean localCapped = max > 0 ; final int bufferSize = localCapped && max < DefaultSize ? max : DefaultSize ; final byte [ ] readBuffer = new byte [ bufferSize ] ; final ByteArrayOutputStream outStream = new ByteArrayOutputStream ( bufferSize ) ; int read ; int remaining = max ; while ( true ) { read = read ( readBuffer ) ; if ( read == - 1 ) break ; if ( localCapped ) { if ( read >= remaining ) { outStream . write ( readBuffer , 0 , remaining ) ; break ; } remaining -= read ; } outStream . write ( readBuffer , 0 , read ) ; } return ByteBuffer . wrap ( outStream . toByteArray ( ) ) ; }
+--------------------------------------------------
+public boolean isEmpty ( ) { bufferUp ( ) ; return bufPos >= bufLength ; }
+--------------------------------------------------
+static void crossStreams ( final InputStream in , final OutputStream out ) throws IOException { final byte [ ] buffer = new byte [ bufferSize ] ; int len ; while ( ( len = in . read ( buffer ) ) != - 1 ) { out . write ( buffer , 0 , len ) ; } }
+--------------------------------------------------
+public char current ( ) { bufferUp ( ) ; return isEmptyNoBufferUp ( ) ? EOF : charBuf [ bufPos ] ; }
+--------------------------------------------------
+public static ConstrainableInputStream wrap ( InputStream in , int bufferSize , int maxSize ) { return in instanceof ConstrainableInputStream ? ( ConstrainableInputStream ) in : new ConstrainableInputStream ( in , bufferSize , maxSize ) ; }
+--------------------------------------------------
+private static String cacheString ( final char [ ] charBuf , final String [ ] stringCache , final int start , final int count ) { if ( count > maxStringCacheLen ) return new String ( charBuf , start , count ) ; if ( count < 1 ) return "" ; int hash = 0 ; int offset = start ; for ( int i = 0 ; i < count ; i ++ ) { hash = 31 * hash + charBuf [ offset ++ ] ; } final int index = hash & stringCache . length - 1 ; String cached = stringCache [ index ] ; if ( cached == null ) { cached = new String ( charBuf , start , count ) ; stringCache [ index ] = cached ; } else { if ( rangeEquals ( charBuf , start , count , cached ) ) { return cached ; } else { cached = new String ( charBuf , start , count ) ; stringCache [ index ] = cached ; } } return cached ; }
+--------------------------------------------------
+public String consumeToAny ( final char ... chars ) { bufferUp ( ) ; int pos = bufPos ; final int start = pos ; final int remaining = bufLength ; final char [ ] val = charBuf ; final int charLen = chars . length ; int i ; OUTER : while ( pos < remaining ) { for ( i = 0 ; i < charLen ; i ++ ) { if ( val [ pos ] == chars [ i ] ) break OUTER ; } pos ++ ; } bufPos = pos ; return pos > start ? cacheString ( charBuf , stringCache , start , pos - start ) : "" ; }
+--------------------------------------------------
+public String asString ( Document doc ) { try { DOMSource domSource = new DOMSource ( doc ) ; StringWriter writer = new StringWriter ( ) ; StreamResult result = new StreamResult ( writer ) ; TransformerFactory tf = TransformerFactory . newInstance ( ) ; Transformer transformer = tf . newTransformer ( ) ; transformer . transform ( domSource , result ) ; return writer . toString ( ) ; } catch ( TransformerException e ) { throw new IllegalStateException ( e ) ; } }
+--------------------------------------------------
+public String chompTo ( String seq ) { String data = consumeTo ( seq ) ; matchChomp ( seq ) ; return data ; }
+--------------------------------------------------

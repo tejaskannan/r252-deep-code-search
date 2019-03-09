@@ -1,0 +1,20 @@
+public Connection proxy ( String host , int port ) { req . proxy ( host , port ) ; return this ; }
+--------------------------------------------------
+Element pop ( ) { int size = stack . size ( ) ; return stack . remove ( size - 1 ) ; }
+--------------------------------------------------
+public Iterator < Map . Entry < String , String >> iterator ( ) { return new DatasetIterator ( ) ; }
+--------------------------------------------------
+public Document ( String baseUri ) { super ( Tag . valueOf ( "#root" , ParseSettings . htmlDefault ) , baseUri ) ; this . location = baseUri ; }
+--------------------------------------------------
+private int indexOfKeyIgnoreCase ( String key ) { Validate . notNull ( key ) ; for ( int i = 0 ; i < size ; i ++ ) { if ( key . equalsIgnoreCase ( keys [ i ] ) ) return i ; } return NotFound ; }
+--------------------------------------------------
+public Connection ignoreContentType ( boolean ignoreContentType ) { req . ignoreContentType ( ignoreContentType ) ; return this ; }
+--------------------------------------------------
+protected Node doClone ( Node parent ) { Node clone ; try { clone = ( Node ) super . clone ( ) ; } catch ( CloneNotSupportedException e ) { throw new RuntimeException ( e ) ; } clone . parentNode = parent ; clone . siblingIndex = parent == null ? 0 : siblingIndex ; return clone ; }
+--------------------------------------------------
+public Connection method ( Method method ) { req . method ( method ) ; return this ; }
+--------------------------------------------------
+public DocumentType ( String name , String publicId , String systemId , String baseUri ) { attr ( NAME , name ) ; attr ( PUBLIC_ID , publicId ) ; if ( has ( PUBLIC_ID ) ) { attr ( PUB_SYS_KEY , PUBLIC_KEY ) ; } attr ( SYSTEM_ID , systemId ) ; }
+--------------------------------------------------
+public DocumentType ( String name , String pubSysKey , String publicId , String systemId , String baseUri ) { attr ( NAME , name ) ; if ( pubSysKey != null ) { attr ( PUB_SYS_KEY , pubSysKey ) ; } attr ( PUBLIC_ID , publicId ) ; attr ( SYSTEM_ID , systemId ) ; }
+--------------------------------------------------

@@ -1,0 +1,20 @@
+public Document clone ( ) { Document clone = ( Document ) super . clone ( ) ; clone . outputSettings = this . outputSettings . clone ( ) ; return clone ; }
+--------------------------------------------------
+private Base ( ) { headers = new LinkedHashMap < > ( ) ; cookies = new LinkedHashMap < > ( ) ; }
+--------------------------------------------------
+public Attributes clone ( ) { Attributes clone ; try { clone = ( Attributes ) super . clone ( ) ; } catch ( CloneNotSupportedException e ) { throw new RuntimeException ( e ) ; } clone . size = size ; keys = copyOf ( keys , size ) ; vals = copyOf ( vals , size ) ; return clone ; }
+--------------------------------------------------
+@ Override Token reset ( ) { reset ( name ) ; pubSysKey = null ; reset ( publicIdentifier ) ; reset ( systemIdentifier ) ; forceQuirks = false ; return this ; }
+--------------------------------------------------
+public BufferedInputStream bodyStream ( ) { Validate . isTrue ( executed , "request must be executed (with .execute(), .get(), or .post() before getting response body" ) ; Validate . isFalse ( inputStreamRead , "request has already been read" ) ; inputStreamRead = true ; return ConstrainableInputStream . wrap ( bodyStream , DataUtil . bufferSize , req . maxBodySize ( ) ) ; }
+--------------------------------------------------
+public void setBaseUri ( final String baseUri ) { Validate . notNull ( baseUri ) ; traverse ( new NodeVisitor ( ) { public void head ( Node node , int depth ) { node . doSetBaseUri ( baseUri ) ; } public void tail ( Node node , int depth ) { } } ) ; }
+--------------------------------------------------
+public void head ( Node node , int depth ) { if ( node instanceof Element ) { Element el = ( Element ) node ; if ( eval . matches ( root , el ) ) elements . add ( el ) ; } }
+--------------------------------------------------
+public OutputSettings indentAmount ( int indentAmount ) { Validate . isTrue ( indentAmount >= 0 ) ; this . indentAmount = indentAmount ; return this ; }
+--------------------------------------------------
+public Document normalise ( ) { Element htmlEl = findFirstElementByTagName ( "html" , this ) ; if ( htmlEl == null ) htmlEl = appendElement ( "html" ) ; if ( head ( ) == null ) htmlEl . prependElement ( "head" ) ; if ( body ( ) == null ) htmlEl . appendElement ( "body" ) ; normaliseTextNodes ( head ( ) ) ; normaliseTextNodes ( htmlEl ) ; normaliseTextNodes ( this ) ; normaliseStructure ( "head" , htmlEl ) ; normaliseStructure ( "body" , htmlEl ) ; ensureMetaCharsetElement ( ) ; return this ; }
+--------------------------------------------------
+static void crossStreams ( final InputStream in , final OutputStream out ) throws IOException { final byte [ ] buffer = new byte [ bufferSize ] ; int len ; while ( ( len = in . read ( buffer ) ) != - 1 ) { out . write ( buffer , 0 , len ) ; } }
+--------------------------------------------------

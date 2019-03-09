@@ -1,0 +1,20 @@
+public Map < String , List < String >> multiHeaders ( ) { return headers ; }
+--------------------------------------------------
+public Document ( String baseUri ) { super ( Tag . valueOf ( "#root" , ParseSettings . htmlDefault ) , baseUri ) ; this . location = baseUri ; }
+--------------------------------------------------
+public ConstrainableInputStream timeout ( long startTimeNanos , long timeoutMillis ) { this . startTime = startTimeNanos ; this . timeout = timeoutMillis * 1000000 ; return this ; }
+--------------------------------------------------
+protected Node doClone ( Node parent ) { Node clone ; try { clone = ( Node ) super . clone ( ) ; } catch ( CloneNotSupportedException e ) { throw new RuntimeException ( e ) ; } clone . parentNode = parent ; clone . siblingIndex = parent == null ? 0 : siblingIndex ; return clone ; }
+--------------------------------------------------
+Element pop ( ) { int size = stack . size ( ) ; return stack . remove ( size - 1 ) ; }
+--------------------------------------------------
+public Iterator < Map . Entry < String , String >> iterator ( ) { return new DatasetIterator ( ) ; }
+--------------------------------------------------
+private int indexOfKeyIgnoreCase ( String key ) { Validate . notNull ( key ) ; for ( int i = 0 ; i < size ; i ++ ) { if ( key . equalsIgnoreCase ( keys [ i ] ) ) return i ; } return NotFound ; }
+--------------------------------------------------
+public void title ( String title ) { Validate . notNull ( title ) ; Element titleEl = getElementsByTag ( "title" ) . first ( ) ; if ( titleEl == null ) { head ( ) . appendElement ( "title" ) . text ( title ) ; } else { titleEl . text ( title ) ; } }
+--------------------------------------------------
+public Connection proxy ( String host , int port ) { req . proxy ( host , port ) ; return this ; }
+--------------------------------------------------
+final void finaliseTag ( ) { if ( pendingAttributeName != null ) { newAttribute ( ) ; } }
+--------------------------------------------------

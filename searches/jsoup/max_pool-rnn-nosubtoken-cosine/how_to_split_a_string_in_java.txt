@@ -1,0 +1,20 @@
+private static void appendWhitespaceIfBr ( Element element , StringBuilder accum ) { if ( element . tag . getName ( ) . equals ( "br" ) && ! TextNode . lastCharIsWhitespace ( accum ) ) accum . append ( " " ) ; }
+--------------------------------------------------
+public String normalizeAttribute ( String name ) { name = name . trim ( ) ; if ( ! preserveAttributeCase ) name = lowerCase ( name ) ; return name ; }
+--------------------------------------------------
+@ Override Tag reset ( ) { tagName = null ; normalName = null ; pendingAttributeName = null ; reset ( pendingAttributeValue ) ; pendingAttributeValueS = null ; hasEmptyAttributeValue = false ; hasPendingAttributeValue = false ; selfClosing = false ; attributes = null ; return this ; }
+--------------------------------------------------
+public static String unescape ( String in ) { StringBuilder out = StringUtil . borrowBuilder ( ) ; char last = 0 ; for ( char c : in . toCharArray ( ) ) { if ( c == ESC ) { if ( last != 0 && last == ESC ) out . append ( c ) ; } else out . append ( c ) ; last = c ; } return StringUtil . releaseBuilder ( out ) ; }
+--------------------------------------------------
+public Element appendElement ( String tagName ) { Element child = new Element ( Tag . valueOf ( tagName , NodeUtils . parser ( this ) . settings ( ) ) , baseUri ( ) ) ; appendChild ( child ) ; return child ; }
+--------------------------------------------------
+public Elements parents ( ) { HashSet < Element > combo = new LinkedHashSet < > ( ) ; for ( Element e : this ) { combo . addAll ( e . parents ( ) ) ; } return new Elements ( combo ) ; }
+--------------------------------------------------
+public Attribute ( String key , String val , Attributes parent ) { Validate . notNull ( key ) ; key = key . trim ( ) ; Validate . notEmpty ( key ) ; this . key = key ; this . val = val ; this . parent = parent ; }
+--------------------------------------------------
+private static String encodeUrl ( String url ) { try { URL u = new URL ( url ) ; return encodeUrl ( u ) . toExternalForm ( ) ; } catch ( Exception e ) { return url ; } }
+--------------------------------------------------
+static URL encodeUrl ( URL u ) { try { String urlS = u . toExternalForm ( ) ; urlS = urlS . replaceAll ( " " , "%20" ) ; final URI uri = new URI ( urlS ) ; return new URL ( uri . toASCIIString ( ) ) ; } catch ( Exception e ) { return u ; } }
+--------------------------------------------------
+public static String escape ( String string , Document . OutputSettings out ) { if ( string == null ) return "" ; StringBuilder accum = StringUtil . borrowBuilder ( ) ; try { escape ( accum , string , out , false , false , false ) ; } catch ( IOException e ) { throw new SerializationException ( e ) ; } return StringUtil . releaseBuilder ( accum ) ; }
+--------------------------------------------------

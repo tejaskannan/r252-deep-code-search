@@ -1,0 +1,20 @@
+private void byTag ( ) { String tagName = tq . consumeElementSelector ( ) ; Validate . notEmpty ( tagName ) ; if ( tagName . startsWith ( "*|" ) ) { evals . add ( new CombiningEvaluator . Or ( new Evaluator . Tag ( normalize ( tagName ) ) , new Evaluator . TagEndsWith ( normalize ( tagName . replace ( "*|" , ":" ) ) ) ) ) ; } else { if ( tagName . contains ( "|" ) ) tagName = tagName . replace ( "|" , ":" ) ; evals . add ( new Evaluator . Tag ( tagName . trim ( ) ) ) ; } }
+--------------------------------------------------
+boolean matchesAnySorted ( char [ ] seq ) { bufferUp ( ) ; return ! isEmpty ( ) && Arrays . binarySearch ( seq , charBuf [ bufPos ] ) >= 0 ; }
+--------------------------------------------------
+void read ( Tokeniser t , CharacterReader r ) { String value = r . consumeToAnySorted ( attributeValueUnquoted ) ; if ( value . length ( ) > 0 ) t . tagPending . appendAttributeValue ( value ) ; char c = r . consume ( ) ; switch ( c ) { case '\t' : case '\n' : case '\r' : case '\f' : case ' ' : t . transition ( BeforeAttributeName ) ; break ; case '&' : int [ ] ref = t . consumeCharacterReference ( '>' , true ) ; if ( ref != null ) t . tagPending . appendAttributeValue ( ref ) ; else t . tagPending . appendAttributeValue ( '&' ) ; break ; case '>' : t . emitTagPending ( ) ; t . transition ( Data ) ; break ; case nullChar : t . error ( this ) ; t . tagPending . appendAttributeValue ( replacementChar ) ; break ; case eof : t . eofError ( this ) ; t . transition ( Data ) ; break ; case '"' : case ''' : case '<' : case '=' : case '`' : t . error ( this ) ; t . tagPending . appendAttributeValue ( c ) ; break ; default : t . tagPending . appendAttributeValue ( c ) ; } }
+--------------------------------------------------
+protected boolean processEndTag ( String name ) { if ( currentToken == end ) { return process ( new Token . EndTag ( ) . name ( name ) ) ; } return process ( end . reset ( ) . name ( name ) ) ; }
+--------------------------------------------------
+boolean matchesAny ( char ... seq ) { if ( isEmpty ( ) ) return false ; bufferUp ( ) ; char c = charBuf [ bufPos ] ; for ( char seek : seq ) { if ( seek == c ) return true ; } return false ; }
+--------------------------------------------------
+void generateImpliedEndTags ( String excludeTag ) { while ( ( excludeTag != null && ! currentElement ( ) . normalName ( ) . equals ( excludeTag ) ) && inSorted ( currentElement ( ) . normalName ( ) , TagSearchEndTags ) ) pop ( ) ; }
+--------------------------------------------------
+Token read ( ) { while ( ! isEmitPending ) state . read ( this , reader ) ; if ( charsBuilder . length ( ) > 0 ) { String str = charsBuilder . toString ( ) ; charsBuilder . delete ( 0 , charsBuilder . length ( ) ) ; charsString = null ; return charPending . data ( str ) ; } else if ( charsString != null ) { Token token = charPending . data ( charsString ) ; charsString = null ; return token ; } else { isEmitPending = false ; return emitPending ; } }
+--------------------------------------------------
+private void ensureAttributes ( ) { if ( ! hasAttributes ( ) ) { Object coreValue = value ; Attributes attributes = new Attributes ( ) ; value = attributes ; if ( coreValue != null ) attributes . put ( nodeName ( ) , ( String ) coreValue ) ; } }
+--------------------------------------------------
+public Node nextSibling ( ) { if ( parentNode == null ) return null ; final List < Node > siblings = parentNode . ensureChildNodes ( ) ; final int index = siblingIndex + 1 ; if ( siblings . size ( ) > index ) return siblings . get ( index ) ; else return null ; }
+--------------------------------------------------
+void advanceTransition ( TokeniserState state ) { reader . advance ( ) ; this . state = state ; }
+--------------------------------------------------

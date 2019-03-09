@@ -1,0 +1,20 @@
+public Iterator < Attribute > iterator ( ) { return new Iterator < Attribute > ( ) { int i = 0 ; @ Override public boolean hasNext ( ) { return i < size ; } @ Override public Attribute next ( ) { final Attribute attr = new Attribute ( keys [ i ] , vals [ i ] , Attributes . this ) ; i ++ ; return attr ; } @ Override public void remove ( ) { Attributes . this . remove ( -- i ) ; } } ; }
+--------------------------------------------------
+public int hashCode ( ) { int result = key != null ? key . hashCode ( ) : 0 ; result = 31 * result + ( val != null ? val . hashCode ( ) : 0 ) ; return result ; }
+--------------------------------------------------
+public int hashCode ( ) { int result = tagName . hashCode ( ) ; result = 31 * result + ( isBlock ? 1 : 0 ) ; result = 31 * result + ( formatAsBlock ? 1 : 0 ) ; result = 31 * result + ( canContainInline ? 1 : 0 ) ; result = 31 * result + ( empty ? 1 : 0 ) ; result = 31 * result + ( selfClosing ? 1 : 0 ) ; result = 31 * result + ( preserveWhitespace ? 1 : 0 ) ; result = 31 * result + ( formList ? 1 : 0 ) ; result = 31 * result + ( formSubmit ? 1 : 0 ) ; return result ; }
+--------------------------------------------------
+private void byClass ( ) { String className = tq . consumeCssIdentifier ( ) ; Validate . notEmpty ( className ) ; evals . add ( new Evaluator . Class ( className . trim ( ) ) ) ; }
+--------------------------------------------------
+public Attribute ( String key , String val , Attributes parent ) { Validate . notNull ( key ) ; key = key . trim ( ) ; Validate . notEmpty ( key ) ; this . key = key ; this . val = val ; this . parent = parent ; }
+--------------------------------------------------
+CharsetEncoder prepareEncoder ( ) { CharsetEncoder encoder = charset . newEncoder ( ) ; encoderThreadLocal . set ( encoder ) ; coreCharset = Entities . CoreCharset . byName ( encoder . charset ( ) . name ( ) ) ; return encoder ; }
+--------------------------------------------------
+public Connection cookies ( Map < String , String > cookies ) { Validate . notNull ( cookies , "cookie map must not be null" ) ; for ( Map . Entry < String , String > entry : cookies . entrySet ( ) ) { req . cookie ( entry . getKey ( ) , entry . getValue ( ) ) ; } return this ; }
+--------------------------------------------------
+public DocumentType ( String name , String publicId , String systemId , String baseUri ) { attr ( NAME , name ) ; attr ( PUBLIC_ID , publicId ) ; if ( has ( PUBLIC_ID ) ) { attr ( PUB_SYS_KEY , PUBLIC_KEY ) ; } attr ( SYSTEM_ID , systemId ) ; }
+--------------------------------------------------
+public DocumentType ( String name , String pubSysKey , String publicId , String systemId , String baseUri ) { attr ( NAME , name ) ; if ( pubSysKey != null ) { attr ( PUB_SYS_KEY , pubSysKey ) ; } attr ( PUBLIC_ID , publicId ) ; attr ( SYSTEM_ID , systemId ) ; }
+--------------------------------------------------
+public String attr ( String attributeKey ) { for ( Element element : this ) { if ( element . hasAttr ( attributeKey ) ) return element . attr ( attributeKey ) ; } return "" ; }
+--------------------------------------------------

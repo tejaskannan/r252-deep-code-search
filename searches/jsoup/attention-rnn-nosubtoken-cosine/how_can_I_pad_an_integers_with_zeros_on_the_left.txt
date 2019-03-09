@@ -1,0 +1,20 @@
+static void reset ( StringBuilder sb ) { if ( sb != null ) { sb . delete ( 0 , sb . length ( ) ) ; } }
+--------------------------------------------------
+public Connection cookies ( Map < String , String > cookies ) { Validate . notNull ( cookies , "cookie map must not be null" ) ; for ( Map . Entry < String , String > entry : cookies . entrySet ( ) ) { req . cookie ( entry . getKey ( ) , entry . getValue ( ) ) ; } return this ; }
+--------------------------------------------------
+@ Override Tag reset ( ) { tagName = null ; normalName = null ; pendingAttributeName = null ; reset ( pendingAttributeValue ) ; pendingAttributeValueS = null ; hasEmptyAttributeValue = false ; hasPendingAttributeValue = false ; selfClosing = false ; attributes = null ; return this ; }
+--------------------------------------------------
+public void reset ( ) throws IOException { super . reset ( ) ; remaining = maxSize - markpos ; }
+--------------------------------------------------
+public Attribute clone ( ) { try { return ( Attribute ) super . clone ( ) ; } catch ( CloneNotSupportedException e ) { throw new RuntimeException ( e ) ; } }
+--------------------------------------------------
+@ Override Token reset ( ) { reset ( name ) ; pubSysKey = null ; reset ( publicIdentifier ) ; reset ( systemIdentifier ) ; forceQuirks = false ; return this ; }
+--------------------------------------------------
+public OutputSettings indentAmount ( int indentAmount ) { Validate . isTrue ( indentAmount >= 0 ) ; this . indentAmount = indentAmount ; return this ; }
+--------------------------------------------------
+@ Override Token reset ( ) { return this ; }
+--------------------------------------------------
+public OutputSettings clone ( ) { OutputSettings clone ; try { clone = ( OutputSettings ) super . clone ( ) ; } catch ( CloneNotSupportedException e ) { throw new RuntimeException ( e ) ; } clone . charset ( charset . name ( ) ) ; clone . escapeMode = Entities . EscapeMode . valueOf ( escapeMode . name ( ) ) ; return clone ; }
+--------------------------------------------------
+void popStackToClose ( String ... elNames ) { for ( int pos = stack . size ( ) - 1 ; pos >= 0 ; pos -- ) { Element next = stack . get ( pos ) ; stack . remove ( pos ) ; if ( inSorted ( next . normalName ( ) , elNames ) ) break ; } }
+--------------------------------------------------

@@ -1,0 +1,20 @@
+FormElement insertForm ( Token . StartTag startTag , boolean onStack ) { Tag tag = Tag . valueOf ( startTag . name ( ) , settings ) ; FormElement el = new FormElement ( tag , baseUri , startTag . attributes ) ; setFormElement ( el ) ; insertNode ( el ) ; if ( onStack ) stack . add ( el ) ; return el ; }
+--------------------------------------------------
+Element insertStartTag ( String startTagName ) { Element el = new Element ( Tag . valueOf ( startTagName , settings ) , baseUri ) ; insert ( el ) ; return el ; }
+--------------------------------------------------
+public static List < Node > parseXmlFragment ( String fragmentXml , String baseUri ) { XmlTreeBuilder treeBuilder = new XmlTreeBuilder ( ) ; return treeBuilder . parseFragment ( fragmentXml , baseUri , new Parser ( treeBuilder ) ) ; }
+--------------------------------------------------
+public boolean matches ( Element root , Element element ) { final Element p = element . parent ( ) ; if ( p == null || p instanceof Document ) return false ; int pos = 0 ; Elements family = p . children ( ) ; for ( Element el : family ) { if ( el . tag ( ) . equals ( element . tag ( ) ) ) pos ++ ; } return pos == 1 ; }
+--------------------------------------------------
+> parseFragment ( String inputFragment , String baseUri , Parser parser ) { initialiseParse ( new StringReader ( inputFragment ) , baseUri , parser ) ; runParser ( ) ; return doc . childNodes ( ) ; }
+--------------------------------------------------
+public static Document parseBodyFragment ( String bodyHtml , String baseUri ) { Document doc = Document . createShell ( baseUri ) ; Element body = doc . body ( ) ; List < Node > nodeList = parseFragment ( bodyHtml , body , baseUri ) ; Node [ ] nodes = nodeList . toArray ( new Node [ 0 ] ) ; for ( int i = nodes . length - 1 ; i > 0 ; i -- ) { nodes [ i ] . remove ( ) ; } for ( Node node : nodes ) { body . appendChild ( node ) ; } return doc ; }
+--------------------------------------------------
+public static List < Node > parseFragment ( String fragmentHtml , Element context , String baseUri ) { HtmlTreeBuilder treeBuilder = new HtmlTreeBuilder ( ) ; return treeBuilder . parseFragment ( fragmentHtml , context , baseUri , new Parser ( treeBuilder ) ) ; }
+--------------------------------------------------
+protected int calculatePosition ( Element root , Element element ) { int pos = 0 ; Elements family = element . parent ( ) . children ( ) ; for ( Element el : family ) { if ( el . tag ( ) . equals ( element . tag ( ) ) ) pos ++ ; if ( el == element ) break ; } return pos ; }
+--------------------------------------------------
+public Connection submit ( ) { String action = hasAttr ( "action" ) ? absUrl ( "action" ) : baseUri ( ) ; Validate . notEmpty ( action , "could not determine a form action url for submit. ensure you set a base uri when parsing." ) ; Connection . Method method = attr ( "method" ) . toUpperCase ( ) . equals ( "post" ) ? Connection . Method . POST : Connection . Method . GET ; return Jsoup . connect ( action ) . data ( formData ( ) ) . method ( method ) ; }
+--------------------------------------------------
+public Element appendElement ( String tagName ) { Element child = new Element ( Tag . valueOf ( tagName , NodeUtils . parser ( this ) . settings ( ) ) , baseUri ( ) ) ; appendChild ( child ) ; return child ; }
+--------------------------------------------------

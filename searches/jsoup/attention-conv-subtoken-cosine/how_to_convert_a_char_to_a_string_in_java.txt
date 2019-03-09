@@ -1,0 +1,20 @@
+static void crossStreams ( final InputStream in , final OutputStream out ) throws IOException { final byte [ ] buffer = new byte [ bufferSize ] ; int len ; while ( ( len = in . read ( buffer ) ) != - 1 ) { out . write ( buffer , 0 , len ) ; } }
+--------------------------------------------------
+public static ByteBuffer readToByteBuffer ( InputStream inStream , int maxSize ) throws IOException { Validate . isTrue ( maxSize >= 0 , "maxsize must be 0 (unlimited) or larger" ) ; final ConstrainableInputStream input = ConstrainableInputStream . wrap ( inStream , bufferSize , maxSize ) ; return input . readToByteBuffer ( maxSize ) ; }
+--------------------------------------------------
+public ByteBuffer readToByteBuffer ( int max ) throws IOException { Validate . isTrue ( max >= 0 , "maxsize must be 0 (unlimited) or larger" ) ; final boolean localCapped = max > 0 ; final int bufferSize = localCapped && max < DefaultSize ? max : DefaultSize ; final byte [ ] readBuffer = new byte [ bufferSize ] ; final ByteArrayOutputStream outStream = new ByteArrayOutputStream ( bufferSize ) ; int read ; int remaining = max ; while ( true ) { read = read ( readBuffer ) ; if ( read == - 1 ) break ; if ( localCapped ) { if ( read >= remaining ) { outStream . write ( readBuffer , 0 , remaining ) ; break ; } remaining -= read ; } outStream . write ( readBuffer , 0 , read ) ; } return ByteBuffer . wrap ( outStream . toByteArray ( ) ) ; }
+--------------------------------------------------
+void mark ( ) { bufSplitPoint = 0 ; bufferUp ( ) ; bufMark = bufPos ; }
+--------------------------------------------------
+public String toString ( ) { return super . toString ( ) + ". mimetype=" + mimeType + ", url=" + url ; }
+--------------------------------------------------
+@ Override Token reset ( ) { reset ( name ) ; pubSysKey = null ; reset ( publicIdentifier ) ; reset ( systemIdentifier ) ; forceQuirks = false ; return this ; }
+--------------------------------------------------
+public String toString ( ) { if ( a == 0 ) return String . format ( ":%s(%d)" , getPseudoClass ( ) , b ) ; if ( b == 0 ) return String . format ( ":%s(%dn)" , getPseudoClass ( ) , a ) ; return String . format ( ":%s(%dn%+d)" , getPseudoClass ( ) , a , b ) ; }
+--------------------------------------------------
+public void clear ( ) { onContentsChanged ( ) ; super . clear ( ) ; }
+--------------------------------------------------
+public String toString ( ) { if ( attributes != null && attributes . size ( ) > 0 ) return "<" + name ( ) + " " + attributes . toString ( ) + ">" ; else return "<" + name ( ) + ">" ; }
+--------------------------------------------------
+public String toString ( ) { return queue . substring ( pos ) ; }
+--------------------------------------------------

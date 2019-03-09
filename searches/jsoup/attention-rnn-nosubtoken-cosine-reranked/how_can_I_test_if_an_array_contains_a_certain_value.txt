@@ -1,0 +1,20 @@
+private boolean testValidProtocol ( Element el , Attribute attr , Set < Protocol > protocols ) { String value = el . absUrl ( attr . getKey ( ) ) ; if ( value . length ( ) == 0 ) value = attr . getValue ( ) ; if ( ! preserveRelativeLinks ) attr . setValue ( value ) ; for ( Protocol protocol : protocols ) { String prot = protocol . toString ( ) ; if ( prot . equals ( "#" ) ) { if ( isValidAnchor ( value ) ) { return true ; } else { continue ; } } prot += ":" ; if ( lowerCase ( value ) . startsWith ( prot ) ) { return true ; } } return false ; }
+--------------------------------------------------
+public Elements getElementsByAttributeValueMatching ( String key , Pattern pattern ) { return Collector . collect ( new Evaluator . AttributeWithValueMatching ( key , pattern ) , this ) ; }
+--------------------------------------------------
+public KeyVal value ( String value ) { Validate . notNull ( value , "data value must not be null" ) ; this . value = value ; return this ; }
+--------------------------------------------------
+public boolean hasSameValue ( Object o ) { if ( this == o ) return true ; if ( o == null || getClass ( ) != o . getClass ( ) ) return false ; return this . outerHtml ( ) . equals ( ( ( Node ) o ) . outerHtml ( ) ) ; }
+--------------------------------------------------
+public String setValue ( String val ) { String oldVal = this . val ; if ( parent != null ) { oldVal = parent . get ( this . key ) ; int i = parent . indexOfKey ( this . key ) ; if ( i != Attributes . NotFound ) parent . vals [ i ] = val ; } this . val = val ; return Attributes . checkNotNull ( oldVal ) ; }
+--------------------------------------------------
+public boolean matches ( Element root , Element element ) { return element . hasAttr ( key ) && lowerCase ( element . attr ( key ) ) . contains ( value ) ; }
+--------------------------------------------------
+void putIgnoreCase ( String key , String value ) { int i = indexOfKeyIgnoreCase ( key ) ; if ( i != NotFound ) { vals [ i ] = value ; if ( ! keys [ i ] . equals ( key ) ) keys [ i ] = key ; } else add ( key , value ) ; }
+--------------------------------------------------
+void outerHtmlHead ( Appendable accum , int depth , Document . OutputSettings out ) throws IOException { accum . append ( "<" ) . append ( isProcessingInstruction ? "!" : "?" ) . append ( coreValue ( ) ) ; getWholeDeclaration ( accum , out ) ; accum . append ( isProcessingInstruction ? "!" : "?" ) . append ( ">" ) ; }
+--------------------------------------------------
+public TextNode text ( String text ) { coreValue ( text ) ; return this ; }
+--------------------------------------------------
+public boolean matches ( Element root , Element element ) { return element . hasAttr ( key ) && lowerCase ( element . attr ( key ) ) . endsWith ( value ) ; }
+--------------------------------------------------

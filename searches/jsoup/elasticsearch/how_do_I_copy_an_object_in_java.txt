@@ -1,0 +1,20 @@
+public static boolean isJavaIdentifier ( String s ) { if ( isEmpty ( s ) || ! Character . isJavaIdentifierStart ( s . charAt ( 0 ) ) ) { return false ; } for ( int i = 1 ; i < s . length ( ) ; i ++ ) { if ( ! Character . isJavaIdentifierPart ( s . charAt ( i ) ) ) { return false ; } } return true ; }
+--------------------------------------------------
+( Names names , ClassSymbol access , Symbol enclosing ) { GuardedByExpression base = thisliteral ( ) ; Symbol curr = access ; do { curr = curr . owner . enclClass ( ) ; if ( curr == null ) { break ; } base = select ( base , new EnclosingInstanceSymbol ( names , curr ) ) ; } while ( ! curr . equals ( enclosing ) ) ; checkGuardedBy ( curr != null , 'expected an enclosing class.' ) ; return base ; }
+--------------------------------------------------
+private static char [ ] zzUnpackCMap ( String packed ) { char [ ] map = new char [ 10000 ] ; int i = 0 ; int j = 0 ; while ( i < 122 ) { int count = packed . charAt ( i ++ ) ; char value = packed . charAt ( i ++ ) ; do { map [ j ++ ] = value ; } while ( -- count > 0 ) ; } return map ; }
+--------------------------------------------------
+public java . lang . String getClassName ( ) { java . lang . Object ref = className_ ; if ( ! ( ref instanceof java . lang . String ) ) { com . google . protobuf . ByteString bs = ( com . google . protobuf . ByteString ) ref ; java . lang . String s = bs . toStringUtf8 ( ) ; className_ = s ; return s ; } else { return ( java . lang . String ) ref ; } }
+--------------------------------------------------
+public java . lang . String getIdentifier ( ) { java . lang . Object ref = identifier_ ; if ( ref instanceof java . lang . String ) { return ( java . lang . String ) ref ; } else { com . google . protobuf . ByteString bs = ( com . google . protobuf . ByteString ) ref ; java . lang . String s = bs . toStringUtf8 ( ) ; identifier_ = s ; return s ; } }
+--------------------------------------------------
+public java . lang . String getClassName ( ) { java . lang . Object ref = className_ ; if ( ref instanceof java . lang . String ) { return ( java . lang . String ) ref ; } else { com . google . protobuf . ByteString bs = ( com . google . protobuf . ByteString ) ref ; java . lang . String s = bs . toStringUtf8 ( ) ; className_ = s ; return s ; } }
+--------------------------------------------------
+public void putAll ( String [ ] names , Object [ ] values ) { for ( int i = 0 , len = Math . min ( names . length , values . length ) ; i < len ; i ++ ) { mMap . put ( names [ i ] , values [ i ] ) ; } }
+--------------------------------------------------
+public Object [ ] getPropertyValues ( Object instance , String [ ] pns ) throws NoSuchPropertyException , IllegalArgumentException { Object [ ] ret = new Object [ pns . length ] ; for ( int i = 0 ; i < ret . length ; i ++ ) { ret [ i ] = getPropertyValue ( instance , pns [ i ] ) ; } return ret ; }
+--------------------------------------------------
+public java . lang . String getClassName ( ) { java . lang . Object ref = className_ ; if ( ref instanceof java . lang . String ) { return ( java . lang . String ) ref ; } else { com . google . protobuf . ByteString bs = ( com . google . protobuf . ByteString ) ref ; java . lang . String s = bs . toStringUtf8 ( ) ; className_ = s ; return s ; } }
+--------------------------------------------------
+public java . lang . String getMemberDescriptor ( ) { java . lang . Object ref = memberDescriptor_ ; if ( ref instanceof java . lang . String ) { return ( java . lang . String ) ref ; } else { com . google . protobuf . ByteString bs = ( com . google . protobuf . ByteString ) ref ; java . lang . String s = bs . toStringUtf8 ( ) ; memberDescriptor_ = s ; return s ; } }
+--------------------------------------------------

@@ -1,0 +1,20 @@
+public boolean hasAttr ( String attributeKey ) { Validate . notNull ( attributeKey ) ; if ( attributeKey . startsWith ( "abs:" ) ) { String key = attributeKey . substring ( "abs:" . length ( ) ) ; if ( attributes ( ) . hasKeyIgnoreCase ( key ) && ! absUrl ( key ) . equals ( "" ) ) return true ; } return attributes ( ) . hasKeyIgnoreCase ( attributeKey ) ; }
+--------------------------------------------------
+public String toString ( ) { return StringUtil . join ( evaluators , ", " ) ; }
+--------------------------------------------------
+public String toString ( ) { return StringUtil . join ( evaluators , " " ) ; }
+--------------------------------------------------
+public String getPlainText ( Element element ) { FormattingVisitor formatter = new FormattingVisitor ( ) ; NodeTraversor . traverse ( formatter , element ) ; return formatter . toString ( ) ; }
+--------------------------------------------------
+public Element lastElementSibling ( ) { List < Element > siblings = parent ( ) . childElementsList ( ) ; return siblings . size ( ) > 1 ? siblings . get ( siblings . size ( ) - 1 ) : null ; }
+--------------------------------------------------
+Element getActiveFormattingElement ( String nodeName ) { for ( int pos = formattingElements . size ( ) - 1 ; pos >= 0 ; pos -- ) { Element next = formattingElements . get ( pos ) ; if ( next == null ) break ; else if ( next . normalName ( ) . equals ( nodeName ) ) return next ; } return null ; }
+--------------------------------------------------
+public List < Attribute > asList ( ) { ArrayList < Attribute > list = new ArrayList < > ( size ) ; for ( int i = 0 ; i < size ; i ++ ) { Attribute attr = vals [ i ] == null ? new BooleanAttribute ( keys [ i ] ) : new Attribute ( keys [ i ] , vals [ i ] , Attributes . this ) ; list . add ( attr ) ; } return Collections . unmodifiableList ( list ) ; }
+--------------------------------------------------
+int indexOfKey ( String key ) { Validate . notNull ( key ) ; for ( int i = 0 ; i < size ; i ++ ) { if ( key . equals ( keys [ i ] ) ) return i ; } return NotFound ; }
+--------------------------------------------------
+public String toString ( ) { return ":root" ; }
+--------------------------------------------------
+public String toString ( ) { return ":only-of-type" ; }
+--------------------------------------------------

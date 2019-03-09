@@ -1,0 +1,20 @@
+public int hashCode ( ) { int result = size ; result = 31 * result + Arrays . hashCode ( keys ) ; result = 31 * result + Arrays . hashCode ( vals ) ; return result ; }
+--------------------------------------------------
+String nameForCodepoint ( final int codepoint ) { final int index = Arrays . binarySearch ( codeKeys , codepoint ) ; if ( index >= 0 ) { return ( index < nameVals . length - 1 && codeKeys [ index + 1 ] == codepoint ) ? nameVals [ index + 1 ] : nameVals [ index ] ; } return emptyName ; }
+--------------------------------------------------
+public Iterator < Attribute > iterator ( ) { return new Iterator < Attribute > ( ) { int i = 0 ; @ Override public boolean hasNext ( ) { return i < size ; } @ Override public Attribute next ( ) { final Attribute attr = new Attribute ( keys [ i ] , vals [ i ] , Attributes . this ) ; i ++ ; return attr ; } @ Override public void remove ( ) { Attributes . this . remove ( -- i ) ; } } ; }
+--------------------------------------------------
+public Element val ( String value ) { if ( tagName ( ) . equals ( "textarea" ) ) text ( value ) ; else attr ( "value" , value ) ; return this ; }
+--------------------------------------------------
+public String val ( ) { if ( tagName ( ) . equals ( "textarea" ) ) return text ( ) ; else return attr ( "value" ) ; }
+--------------------------------------------------
+public DocumentType ( String name , String publicId , String systemId , String baseUri ) { attr ( NAME , name ) ; attr ( PUBLIC_ID , publicId ) ; if ( has ( PUBLIC_ID ) ) { attr ( PUB_SYS_KEY , PUBLIC_KEY ) ; } attr ( SYSTEM_ID , systemId ) ; }
+--------------------------------------------------
+public DocumentType ( String name , String pubSysKey , String publicId , String systemId , String baseUri ) { attr ( NAME , name ) ; if ( pubSysKey != null ) { attr ( PUB_SYS_KEY , pubSysKey ) ; } attr ( PUBLIC_ID , publicId ) ; attr ( SYSTEM_ID , systemId ) ; }
+--------------------------------------------------
+CharsetEncoder prepareEncoder ( ) { CharsetEncoder encoder = charset . newEncoder ( ) ; encoderThreadLocal . set ( encoder ) ; coreCharset = Entities . CoreCharset . byName ( encoder . charset ( ) . name ( ) ) ; return encoder ; }
+--------------------------------------------------
+public int hashCode ( ) { final int prime = 31 ; int result = 1 ; result = prime * result + ( ( value == null ) ? 0 : value . hashCode ( ) ) ; return result ; }
+--------------------------------------------------
+Element pop ( ) { int size = stack . size ( ) ; return stack . remove ( size - 1 ) ; }
+--------------------------------------------------

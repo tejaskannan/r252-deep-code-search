@@ -1,0 +1,20 @@
+public Element val ( String value ) { if ( tagName ( ) . equals ( "textarea" ) ) text ( value ) ; else attr ( "value" , value ) ; return this ; }
+--------------------------------------------------
+public String val ( ) { if ( tagName ( ) . equals ( "textarea" ) ) return text ( ) ; else return attr ( "value" ) ; }
+--------------------------------------------------
+public String toString ( ) { return String . format ( "[%s*=%s]" , key , value ) ; }
+--------------------------------------------------
+public String toString ( ) { return String . format ( "[%s^=%s]" , key , value ) ; }
+--------------------------------------------------
+public String toString ( ) { return String . format ( "[%s=%s]" , key , value ) ; }
+--------------------------------------------------
+public String toString ( ) { return String . format ( "[%s!=%s]" , key , value ) ; }
+--------------------------------------------------
+public String toString ( ) { return String . format ( "[%s$=%s]" , key , value ) ; }
+--------------------------------------------------
+private static String fixHeaderEncoding ( String val ) { try { byte [ ] bytes = val . getBytes ( "iso-8859-1" ) ; if ( ! looksLikeUtf8 ( bytes ) ) return val ; return new String ( bytes , "utf-8" ) ; } catch ( UnsupportedEncodingException e ) { return val ; } }
+--------------------------------------------------
+public String toString ( ) { return String . format ( "[^%s]" , keyPrefix ) ; }
+--------------------------------------------------
+public String toString ( ) { return String . format ( "[%s]" , key ) ; }
+--------------------------------------------------

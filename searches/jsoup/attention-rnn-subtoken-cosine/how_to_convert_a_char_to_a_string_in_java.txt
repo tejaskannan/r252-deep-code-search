@@ -1,0 +1,20 @@
+> parseFragment ( String inputFragment , String baseUri , Parser parser ) { initialiseParse ( new StringReader ( inputFragment ) , baseUri , parser ) ; runParser ( ) ; return doc . childNodes ( ) ; }
+--------------------------------------------------
+public Document fromJsoup ( org . jsoup . nodes . Document in ) { Validate . notNull ( in ) ; DocumentBuilder builder ; try { factory . setNamespaceAware ( true ) ; builder = factory . newDocumentBuilder ( ) ; Document out = builder . newDocument ( ) ; convert ( in , out ) ; return out ; } catch ( ParserConfigurationException e ) { throw new IllegalStateException ( e ) ; } }
+--------------------------------------------------
+public String toString ( ) { return super . toString ( ) + ". mimetype=" + mimeType + ", url=" + url ; }
+--------------------------------------------------
+public static List < Node > parseFragment ( String fragmentHtml , Element context , String baseUri ) { HtmlTreeBuilder treeBuilder = new HtmlTreeBuilder ( ) ; return treeBuilder . parseFragment ( fragmentHtml , context , baseUri , new Parser ( treeBuilder ) ) ; }
+--------------------------------------------------
+public static List < Node > parseXmlFragment ( String fragmentXml , String baseUri ) { XmlTreeBuilder treeBuilder = new XmlTreeBuilder ( ) ; return treeBuilder . parseFragment ( fragmentXml , baseUri , new Parser ( treeBuilder ) ) ; }
+--------------------------------------------------
+public String cssSelector ( ) { if ( id ( ) . length ( ) > 0 ) return "#" + id ( ) ; String tagName = tagName ( ) . replace ( ':' , '|' ) ; StringBuilder selector = new StringBuilder ( tagName ) ; String classes = StringUtil . join ( classNames ( ) , "." ) ; if ( classes . length ( ) > 0 ) selector . append ( '.' ) . append ( classes ) ; if ( parent ( ) == null || parent ( ) instanceof Document ) return selector . toString ( ) ; selector . insert ( 0 , " > " ) ; if ( parent ( ) . select ( selector . toString ( ) ) . size ( ) > 1 ) selector . append ( String . format ( ":nth-child(%d)" , elementSiblingIndex ( ) + 1 ) ) ; return parent ( ) . cssSelector ( ) + selector . toString ( ) ; }
+--------------------------------------------------
+Element insertStartTag ( String startTagName ) { Element el = new Element ( Tag . valueOf ( startTagName , settings ) , baseUri ) ; insert ( el ) ; return el ; }
+--------------------------------------------------
+public Document parse ( ) throws IOException { Validate . isTrue ( executed , "request must be executed (with .execute(), .get(), or .post() before parsing response" ) ; if ( byteData != null ) { bodyStream = new ByteArrayInputStream ( byteData . array ( ) ) ; inputStreamRead = false ; } Validate . isFalse ( inputStreamRead , "input stream already read and parsed, cannot re-read." ) ; Document doc = DataUtil . parseInputStream ( bodyStream , charset , url . toExternalForm ( ) , req . parser ( ) ) ; charset = doc . outputSettings ( ) . charset ( ) . name ( ) ; inputStreamRead = true ; safeClose ( ) ; return doc ; }
+--------------------------------------------------
+public static List < Node > parseFragment ( String fragmentHtml , Element context , String baseUri , ParseErrorList errorList ) { HtmlTreeBuilder treeBuilder = new HtmlTreeBuilder ( ) ; Parser parser = new Parser ( treeBuilder ) ; parser . errors = errorList ; return treeBuilder . parseFragment ( fragmentHtml , context , baseUri , parser ) ; }
+--------------------------------------------------
+public boolean removeAll ( Collection < ? > c ) { onContentsChanged ( ) ; return super . removeAll ( c ) ; }
+--------------------------------------------------

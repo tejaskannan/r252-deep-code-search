@@ -1,0 +1,20 @@
+public String toString ( ) { return value ; }
+--------------------------------------------------
+public String toString ( ) { return String . format ( "#%s" , id ) ; }
+--------------------------------------------------
+public String toString ( ) { if ( attributes != null && attributes . size ( ) > 0 ) return "<" + name ( ) + " " + attributes . toString ( ) + ">" ; else return "<" + name ( ) + ">" ; }
+--------------------------------------------------
+public String toString ( ) { return String . format ( ".%s" , className ) ; }
+--------------------------------------------------
+public Connection header ( String name , String value ) { req . header ( name , value ) ; return this ; }
+--------------------------------------------------
+public T header ( String name , String value ) { Validate . notEmpty ( name , "header name must not be empty" ) ; removeHeader ( name ) ; addHeader ( name , value ) ; return ( T ) this ; }
+--------------------------------------------------
+static void crossStreams ( final InputStream in , final OutputStream out ) throws IOException { final byte [ ] buffer = new byte [ bufferSize ] ; int len ; while ( ( len = in . read ( buffer ) ) != - 1 ) { out . write ( buffer , 0 , len ) ; } }
+--------------------------------------------------
+public String toString ( ) { return "</" + name ( ) + ">" ; }
+--------------------------------------------------
+int codepointForName ( final String name ) { int index = Arrays . binarySearch ( nameKeys , name ) ; return index >= 0 ? codeVals [ index ] : empty ; }
+--------------------------------------------------
+public String toString ( ) { return String . format ( "[%s*=%s]" , key , value ) ; }
+--------------------------------------------------

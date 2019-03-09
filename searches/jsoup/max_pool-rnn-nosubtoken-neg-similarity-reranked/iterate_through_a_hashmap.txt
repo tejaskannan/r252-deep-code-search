@@ -1,0 +1,20 @@
+public Iterator < Attribute > iterator ( ) { return new Iterator < Attribute > ( ) { int i = 0 ; @ Override public boolean hasNext ( ) { return i < size ; } @ Override public Attribute next ( ) { final Attribute attr = new Attribute ( keys [ i ] , vals [ i ] , Attributes . this ) ; i ++ ; return attr ; } @ Override public void remove ( ) { Attributes . this . remove ( -- i ) ; } } ; }
+--------------------------------------------------
+public String attr ( String attributeKey ) { for ( Element element : this ) { if ( element . hasAttr ( attributeKey ) ) return element . attr ( attributeKey ) ; } return "" ; }
+--------------------------------------------------
+boolean matchesIgnoreCase ( String seq ) { bufferUp ( ) ; int scanLength = seq . length ( ) ; if ( scanLength > bufLength - bufPos ) return false ; for ( int offset = 0 ; offset < scanLength ; offset ++ ) { char upScan = Character . toUpperCase ( seq . charAt ( offset ) ) ; char upTarget = Character . toUpperCase ( charBuf [ bufPos + offset ] ) ; if ( upScan != upTarget ) return false ; } return true ; }
+--------------------------------------------------
+void error ( HtmlTreeBuilderState state ) { if ( parser . getErrors ( ) . canAddError ( ) ) parser . getErrors ( ) . add ( new ParseError ( reader . pos ( ) , "unexpected token [%s] when in state [%s]" , currentToken . tokenType ( ) , state ) ) ; }
+--------------------------------------------------
+public Elements empty ( ) { for ( Element element : this ) { element . empty ( ) ; } return this ; }
+--------------------------------------------------
+public Node before ( Node node ) { Validate . notNull ( node ) ; Validate . notNull ( parentNode ) ; parentNode . addChildren ( siblingIndex , node ) ; return this ; }
+--------------------------------------------------
+public Node attr ( String key , String value ) { if ( ! hasAttributes ( ) && key . equals ( nodeName ( ) ) ) { this . value = value ; } else { ensureAttributes ( ) ; super . attr ( key , value ) ; } return this ; }
+--------------------------------------------------
+static boolean rangeEquals ( final char [ ] charBuf , final int start , int count , final String cached ) { if ( count == cached . length ( ) ) { int i = start ; int j = 0 ; while ( count -- != 0 ) { if ( charBuf [ i ++ ] != cached . charAt ( j ++ ) ) return false ; } return true ; } return false ; }
+--------------------------------------------------
+public String attr ( String key ) { Validate . notNull ( key ) ; if ( ! hasAttributes ( ) ) { return key . equals ( nodeName ( ) ) ? ( String ) value : EmptyString ; } return super . attr ( key ) ; }
+--------------------------------------------------
+public Elements not ( String query ) { Elements out = Selector . select ( query , this ) ; return Selector . filterOut ( this , out ) ; }
+--------------------------------------------------

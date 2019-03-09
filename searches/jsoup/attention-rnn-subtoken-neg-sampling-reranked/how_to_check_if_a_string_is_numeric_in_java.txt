@@ -1,0 +1,20 @@
+public T removeHeader ( String name ) { Validate . notEmpty ( name , "header name must not be empty" ) ; Map . Entry < String , List < String >> entry = scanHeaders ( name ) ; if ( entry != null ) headers . remove ( entry . getKey ( ) ) ; return ( T ) this ; }
+--------------------------------------------------
+public Whitelist removeEnforcedAttribute ( String tag , String attribute ) { Validate . notEmpty ( tag ) ; Validate . notEmpty ( attribute ) ; TagName tagName = TagName . valueOf ( tag ) ; if ( tagNames . contains ( tagName ) && enforcedAttributes . containsKey ( tagName ) ) { AttributeKey attrKey = AttributeKey . valueOf ( attribute ) ; Map < AttributeKey , AttributeValue > attrMap = enforcedAttributes . get ( tagName ) ; attrMap . remove ( attrKey ) ; if ( attrMap . isEmpty ( ) ) enforcedAttributes . remove ( tagName ) ; } return this ; }
+--------------------------------------------------
+private static void appendWhitespaceIfBr ( Element element , StringBuilder accum ) { if ( element . tag . getName ( ) . equals ( "br" ) && ! TextNode . lastCharIsWhitespace ( accum ) ) accum . append ( " " ) ; }
+--------------------------------------------------
+public boolean matches ( Element root , Element element ) { Matcher m = pattern . matcher ( element . text ( ) ) ; return m . find ( ) ; }
+--------------------------------------------------
+public boolean matches ( Element root , Element element ) { Matcher m = pattern . matcher ( element . ownText ( ) ) ; return m . find ( ) ; }
+--------------------------------------------------
+private void ensureAttributeValue ( ) { hasPendingAttributeValue = true ; if ( pendingAttributeValueS != null ) { pendingAttributeValue . append ( pendingAttributeValueS ) ; pendingAttributeValueS = null ; } }
+--------------------------------------------------
+public ParseSettings ( boolean tag , boolean attribute ) { preserveTagCase = tag ; preserveAttributeCase = attribute ; }
+--------------------------------------------------
+public boolean matches ( Element root , Element element ) { return ( element . hasClass ( className ) ) ; }
+--------------------------------------------------
+public static void appendNormalisedWhitespace ( StringBuilder accum , String string , boolean stripLeading ) { boolean lastWasWhite = false ; boolean reachedNonWhite = false ; int len = string . length ( ) ; int c ; for ( int i = 0 ; i < len ; i += Character . charCount ( c ) ) { c = string . codePointAt ( i ) ; if ( isActuallyWhitespace ( c ) ) { if ( ( stripLeading && ! reachedNonWhite ) || lastWasWhite ) continue ; accum . append ( ' ' ) ; lastWasWhite = true ; } else if ( ! isInvisibleChar ( c ) ) { accum . appendCodePoint ( c ) ; lastWasWhite = false ; reachedNonWhite = true ; } } }
+--------------------------------------------------
+public boolean matches ( Element root , Element element ) { if ( element instanceof PseudoTextElement ) return true ; List < TextNode > textNodes = element . textNodes ( ) ; for ( TextNode textNode : textNodes ) { PseudoTextElement pel = new PseudoTextElement ( org . jsoup . parser . Tag . valueOf ( element . tagName ( ) ) , element . baseUri ( ) , element . attributes ( ) ) ; textNode . replaceWith ( pel ) ; pel . appendChild ( textNode ) ; } return false ; }
+--------------------------------------------------

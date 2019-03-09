@@ -1,0 +1,27 @@
+private static void writePost ( final Connection . Request req , final OutputStream outputStream , final String bound ) throws IOException { final Collection < Connection . KeyVal > data = req . data ( ) ; final BufferedWriter w = new BufferedWriter ( new OutputStreamWriter ( outputStream , req . postDataCharset ( ) ) ) ; if ( bound != null ) { for ( Connection . KeyVal keyVal : data ) { w . write ( "--" ) ; w . write ( bound ) ; w . write ( "
+" ) ; w . write ( "content-disposition: form-data; name="" ) ; w . write ( encodeMimeName ( keyVal . key ( ) ) ) ; w . write ( """ ) ; if ( keyVal . hasInputStream ( ) ) { w . write ( "; filename="" ) ; w . write ( encodeMimeName ( keyVal . value ( ) ) ) ; w . write ( ""
+content-type: " ) ; w . write ( keyVal . contentType ( ) != null ? keyVal . contentType ( ) : DefaultUploadType ) ; w . write ( "
+
+" ) ; w . flush ( ) ; DataUtil . crossStreams ( keyVal . inputStream ( ) , outputStream ) ; outputStream . flush ( ) ; } else { w . write ( "
+
+" ) ; w . write ( keyVal . value ( ) ) ; } w . write ( "
+" ) ; } w . write ( "--" ) ; w . write ( bound ) ; w . write ( "--" ) ; } else if ( req . requestBody ( ) != null ) { w . write ( req . requestBody ( ) ) ; } else { boolean first = true ; for ( Connection . KeyVal keyVal : data ) { if ( ! first ) w . append ( '&' ) ; else first = false ; w . write ( URLEncoder . encode ( keyVal . key ( ) , req . postDataCharset ( ) ) ) ; w . write ( '=' ) ; w . write ( URLEncoder . encode ( keyVal . value ( ) , req . postDataCharset ( ) ) ) ; } } w . close ( ) ; }
+--------------------------------------------------
+public void clear ( ) { onContentsChanged ( ) ; super . clear ( ) ; }
+--------------------------------------------------
+static String mimeBoundary ( ) { final StringBuilder mime = StringUtil . borrowBuilder ( ) ; final Random rand = new Random ( ) ; for ( int i = 0 ; i < boundaryLength ; i ++ ) { mime . append ( mimeBoundaryChars [ rand . nextInt ( mimeBoundaryChars . length ) ] ) ; } return StringUtil . releaseBuilder ( mime ) ; }
+--------------------------------------------------
+public String toString ( ) { return super . toString ( ) + ". mimetype=" + mimeType + ", url=" + url ; }
+--------------------------------------------------
+private static String encodeUrl ( String url ) { try { URL u = new URL ( url ) ; return encodeUrl ( u ) . toExternalForm ( ) ; } catch ( Exception e ) { return url ; } }
+--------------------------------------------------
+private void remove ( int index ) { Validate . isFalse ( index >= size ) ; int shifted = size - index - 1 ; if ( shifted > 0 ) { System . arraycopy ( keys , index + 1 , keys , index , shifted ) ; System . arraycopy ( vals , index + 1 , vals , index , shifted ) ; } size -- ; keys [ size ] = null ; vals [ size ] = null ; }
+--------------------------------------------------
+static void crossStreams ( final InputStream in , final OutputStream out ) throws IOException { final byte [ ] buffer = new byte [ bufferSize ] ; int len ; while ( ( len = in . read ( buffer ) ) != - 1 ) { out . write ( buffer , 0 , len ) ; } }
+--------------------------------------------------
+public Elements removeClass ( String className ) { for ( Element element : this ) { element . removeClass ( className ) ; } return this ; }
+--------------------------------------------------
+public String toString ( ) { return String . format ( "#%s" , id ) ; }
+--------------------------------------------------
+public static List < Node > parseXmlFragment ( String fragmentXml , String baseUri ) { XmlTreeBuilder treeBuilder = new XmlTreeBuilder ( ) ; return treeBuilder . parseFragment ( fragmentXml , baseUri , new Parser ( treeBuilder ) ) ; }
+--------------------------------------------------

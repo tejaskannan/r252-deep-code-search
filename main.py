@@ -40,6 +40,7 @@ def parse_args():
     arg_parser.add_argument('--index', action='store_true', help='Index a corpus.')
     arg_parser.add_argument('--search', action='store_true', help='Execute a search query.')
     arg_parser.add_argument('--overlap', action='store_true', help='Compute vocabulary overlap.')
+    arg_parser.add_argument('--hit-rank', action='store_true', help='Calculate hit ranks after indexing.')
 
     # Input Arguments
     arg_parser.add_argument('--input', type=str, default='', help='Input file, folder, or string.')
@@ -50,9 +51,9 @@ def parse_args():
     arg_parser.add_argument('--threshold', type=int, default=2, help='Threshold value for methods or search results.')
     arg_parser.add_argument('--train-dir', type=str, default='train_data/', help='Directory with training data.')
     arg_parser.add_argument('--valid-dir', type=str, default='validation_data/', help='Direction with validation data.')
-    arg_parser.add_argument('--hit-rank', action='store_true', help='Calculate hit ranks after indexing.')
     arg_parser.add_argument('--subtokenize', action='store_true', help='Subtokenize API calls during generation.')
     arg_parser.add_argument('--rerank', action='store_true', help='Should re-rank searches using BM25F scores.')
+    arg_parser.add_argument('--top-k', nargs='+', default=[10], type=int, help='Top result cutoffs used to calculate hit ranks.')
 
     return arg_parser.parse_args()
 
@@ -111,13 +112,6 @@ def main():
         else:
             written = db.index_file(args.input, should_subtokenize=args.subtokenize)
         print('Indexed {0} methods into table: {1}'.format(written, args.table))
-
-        # We only support hit rank calculations when indexing a directory
-        if args.hit_rank and args.input[-1] == '/':
-            print('Calculating Hit Ranks')
-            success_hit_rank, mean_hit_rank = db.hit_rank_over_corpus(args.input)
-            print('Success Hit Rank: {0}'.format(success_hit_rank))
-            print('Mean Hit Rank: {0}'.format(mean_hit_rank))
     elif args.search:
         if len(args.input) == 0:
             print('Must specify a query or query file.')
@@ -192,6 +186,32 @@ def main():
         for i in range(len(overlaps)):
             frac = overlaps[i] / totals[i]
             print(OVERLAP_FORMAT.format(labels[i], overlaps[i], totals[i], round(frac, 4)))
+            # We only support hit rank calculations when indexing a directory
+    elif args.hit_rank:
+        if len(args.model) == 0:
+            print('Must specify a model to use.')
+            return
+        if len(args.input) == 0:
+            print('Must specify an input corpus.')
+            return
+
+        args.input = add_slash_to_end(args.input)
+        args.model = add_slash_to_end(args.model)
+        args.output = value_if_non_empty(args.output, 'trained_models/')
+        args.output = add_slash_to_end(args.output)
+
+        model = Model(params, args.train_dir, args.valid_dir, args.output)
+        model.restore(args.model)
+
+        db = DeepCodeSearchDB(table=args.table, model=model,
+                              embedding_size=params.embedding_size)
+
+        print('Calculating Hit Ranks')
+        success_hit_rank, mean_hit_rank = db.hit_rank_over_corpus(args.input,
+                                                                  thresholds=args.top_k,
+                                                                  should_rerank=args.rerank)
+        print('Success Hit Rank: {0}'.format(success_hit_rank))
+        print('Mean Hit Rank: {0}'.format(mean_hit_rank))
 
 
 if __name__ == '__main__':

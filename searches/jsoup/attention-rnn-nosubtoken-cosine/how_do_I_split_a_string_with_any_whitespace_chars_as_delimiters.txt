@@ -1,0 +1,20 @@
+public String toString ( ) { return String . format ( "[%s*=%s]" , key , value ) ; }
+--------------------------------------------------
+public String toString ( ) { return String . format ( "[%s^=%s]" , key , value ) ; }
+--------------------------------------------------
+public String toString ( ) { return String . format ( "[%s=%s]" , key , value ) ; }
+--------------------------------------------------
+public String toString ( ) { return String . format ( "[%s!=%s]" , key , value ) ; }
+--------------------------------------------------
+public String toString ( ) { return String . format ( "[%s$=%s]" , key , value ) ; }
+--------------------------------------------------
+public String toString ( ) { return String . format ( "[^%s]" , keyPrefix ) ; }
+--------------------------------------------------
+public String toString ( ) { return String . format ( "[%s~=%s]" , key , pattern . toString ( ) ) ; }
+--------------------------------------------------
+public String toString ( ) { return String . format ( "[%s]" , key ) ; }
+--------------------------------------------------
+public String toString ( ) { return key + "=" + value ; }
+--------------------------------------------------
+public String toString ( ) { if ( a == 0 ) return String . format ( ":%s(%d)" , getPseudoClass ( ) , b ) ; if ( b == 0 ) return String . format ( ":%s(%dn)" , getPseudoClass ( ) , a ) ; return String . format ( ":%s(%dn%+d)" , getPseudoClass ( ) , a , b ) ; }
+--------------------------------------------------

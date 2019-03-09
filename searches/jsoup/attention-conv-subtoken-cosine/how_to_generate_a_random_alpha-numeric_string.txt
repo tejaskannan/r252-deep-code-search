@@ -1,0 +1,20 @@
+static void crossStreams ( final InputStream in , final OutputStream out ) throws IOException { final byte [ ] buffer = new byte [ bufferSize ] ; int len ; while ( ( len = in . read ( buffer ) ) != - 1 ) { out . write ( buffer , 0 , len ) ; } }
+--------------------------------------------------
+public static Elements select ( String query , Element root ) { Validate . notEmpty ( query ) ; return select ( QueryParser . parse ( query ) , root ) ; }
+--------------------------------------------------
+public String toString ( ) { return super . toString ( ) + ". mimetype=" + mimeType + ", url=" + url ; }
+--------------------------------------------------
+static String mimeBoundary ( ) { final StringBuilder mime = StringUtil . borrowBuilder ( ) ; final Random rand = new Random ( ) ; for ( int i = 0 ; i < boundaryLength ; i ++ ) { mime . append ( mimeBoundaryChars [ rand . nextInt ( mimeBoundaryChars . length ) ] ) ; } return StringUtil . releaseBuilder ( mime ) ; }
+--------------------------------------------------
+public boolean hasNext ( ) { return i < size ; }
+--------------------------------------------------
+public String chompTo ( String seq ) { String data = consumeTo ( seq ) ; matchChomp ( seq ) ; return data ; }
+--------------------------------------------------
+public void clear ( ) { onContentsChanged ( ) ; super . clear ( ) ; }
+--------------------------------------------------
+void popStackToClose ( String ... elNames ) { for ( int pos = stack . size ( ) - 1 ; pos >= 0 ; pos -- ) { Element next = stack . get ( pos ) ; stack . remove ( pos ) ; if ( inSorted ( next . normalName ( ) , elNames ) ) break ; } }
+--------------------------------------------------
+public static Element selectFirst ( String cssQuery , Element root ) { Validate . notEmpty ( cssQuery ) ; return Collector . findFirst ( QueryParser . parse ( cssQuery ) , root ) ; }
+--------------------------------------------------
+public E set ( int index , E element ) { onContentsChanged ( ) ; return super . set ( index , element ) ; }
+--------------------------------------------------

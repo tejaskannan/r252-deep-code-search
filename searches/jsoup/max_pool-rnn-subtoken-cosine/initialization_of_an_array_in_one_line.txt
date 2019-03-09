@@ -1,0 +1,20 @@
+private static BomCharset detectCharsetFromBom ( final ByteBuffer byteData ) { final Buffer buffer = byteData ; buffer . mark ( ) ; byte [ ] bom = new byte [ 4 ] ; if ( byteData . remaining ( ) >= bom . length ) { byteData . get ( bom ) ; buffer . rewind ( ) ; } if ( bom [ 0 ] == 00 && bom [ 1 ] == 00 && bom [ 2 ] == ( byte ) fe && bom [ 3 ] == ( byte ) ff || bom [ 0 ] == ( byte ) ff && bom [ 1 ] == ( byte ) fe && bom [ 2 ] == 00 && bom [ 3 ] == 00 ) { return new BomCharset ( "utf-32" , false ) ; } else if ( bom [ 0 ] == ( byte ) fe && bom [ 1 ] == ( byte ) ff || bom [ 0 ] == ( byte ) ff && bom [ 1 ] == ( byte ) fe ) { return new BomCharset ( "utf-16" , false ) ; } else if ( bom [ 0 ] == ( byte ) ef && bom [ 1 ] == ( byte ) bb && bom [ 2 ] == ( byte ) bf ) { return new BomCharset ( "utf-8" , true ) ; } return null ; }
+--------------------------------------------------
+private boolean exitTableBody ( Token t , HtmlTreeBuilder tb ) { if ( ! ( tb . inTableScope ( "tbody" ) || tb . inTableScope ( "thead" ) || tb . inScope ( "tfoot" ) ) ) { tb . error ( this ) ; return false ; } tb . clearStackToTableBodyContext ( ) ; tb . processEndTag ( tb . currentElement ( ) . normalName ( ) ) ; return tb . process ( t ) ; }
+--------------------------------------------------
+public CharacterReader ( Reader input , int sz ) { Validate . notNull ( input ) ; Validate . isTrue ( input . markSupported ( ) ) ; reader = input ; charBuf = new char [ sz > maxBufferLen ? maxBufferLen : sz ] ; bufferUp ( ) ; }
+--------------------------------------------------
+public Elements getElementsByAttributeValueMatching ( String key , Pattern pattern ) { return Collector . collect ( new Evaluator . AttributeWithValueMatching ( key , pattern ) , this ) ; }
+--------------------------------------------------
+public String getPlainText ( Element element ) { FormattingVisitor formatter = new FormattingVisitor ( ) ; NodeTraversor . traverse ( formatter , element ) ; return formatter . toString ( ) ; }
+--------------------------------------------------
+private boolean anythingElse ( Token t , HtmlTreeBuilder tb ) { tb . error ( this ) ; return false ; }
+--------------------------------------------------
+public TextNode splitText ( int offset ) { final String text = coreValue ( ) ; Validate . isTrue ( offset >= 0 , "split offset must be not be negative" ) ; Validate . isTrue ( offset < text . length ( ) , "split offset must not be greater than current text length" ) ; String head = text . substring ( 0 , offset ) ; String tail = text . substring ( offset ) ; text ( head ) ; TextNode tailNode = new TextNode ( tail ) ; if ( parent ( ) != null ) parent ( ) . addChildren ( siblingIndex ( ) + 1 , tailNode ) ; return tailNode ; }
+--------------------------------------------------
+boolean anythingElse ( Token t , HtmlTreeBuilder tb ) { tb . error ( this ) ; boolean processed ; if ( StringUtil . in ( tb . currentElement ( ) . normalName ( ) , "table" , "tbody" , "tfoot" , "thead" , "tr" ) ) { tb . setFosterInserts ( true ) ; processed = tb . process ( t , InBody ) ; tb . setFosterInserts ( false ) ; } else { processed = tb . process ( t , InBody ) ; } return processed ; }
+--------------------------------------------------
+boolean anyOtherEndTag ( Token t , HtmlTreeBuilder tb ) { String name = t . asEndTag ( ) . normalName ; ArrayList < Element > stack = tb . getStack ( ) ; for ( int pos = stack . size ( ) - 1 ; pos >= 0 ; pos -- ) { Element node = stack . get ( pos ) ; if ( node . normalName ( ) . equals ( name ) ) { tb . generateImpliedEndTags ( name ) ; if ( ! name . equals ( tb . currentElement ( ) . normalName ( ) ) ) tb . error ( this ) ; tb . popStackToClose ( name ) ; break ; } else { if ( tb . isSpecial ( node ) ) { tb . error ( this ) ; return false ; } } } return true ; }
+--------------------------------------------------
+private boolean anythingElse ( Token t , HtmlTreeBuilder tb ) { tb . error ( this ) ; tb . insert ( new Token . Character ( ) . data ( t . toString ( ) ) ) ; return true ; }
+--------------------------------------------------

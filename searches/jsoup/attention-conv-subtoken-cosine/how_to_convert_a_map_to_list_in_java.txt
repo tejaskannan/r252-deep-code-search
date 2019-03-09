@@ -1,0 +1,27 @@
+private static String encodeUrl ( String url ) { try { URL u = new URL ( url ) ; return encodeUrl ( u ) . toExternalForm ( ) ; } catch ( Exception e ) { return url ; } }
+--------------------------------------------------
+void insert ( Element el ) { insertNode ( el ) ; stack . add ( el ) ; }
+--------------------------------------------------
+public Set < Entry < String , String >> entrySet ( ) { return new EntrySet ( ) ; }
+--------------------------------------------------
+public Element empty ( ) { childNodes . clear ( ) ; return this ; }
+--------------------------------------------------
+Element insert ( Token . StartTag startTag ) { if ( startTag . isSelfClosing ( ) ) { Element el = insertEmpty ( startTag ) ; stack . add ( el ) ; tokeniser . transition ( TokeniserState . Data ) ; tokeniser . emit ( emptyEnd . reset ( ) . name ( el . tagName ( ) ) ) ; return el ; } Element el = new Element ( Tag . valueOf ( startTag . name ( ) , settings ) , baseUri , settings . normalizeAttributes ( startTag . attributes ) ) ; insert ( el ) ; return el ; }
+--------------------------------------------------
+public Element removeClass ( String className ) { Validate . notNull ( className ) ; Set < String > classes = classNames ( ) ; classes . remove ( className ) ; classNames ( classes ) ; return this ; }
+--------------------------------------------------
+private static void writePost ( final Connection . Request req , final OutputStream outputStream , final String bound ) throws IOException { final Collection < Connection . KeyVal > data = req . data ( ) ; final BufferedWriter w = new BufferedWriter ( new OutputStreamWriter ( outputStream , req . postDataCharset ( ) ) ) ; if ( bound != null ) { for ( Connection . KeyVal keyVal : data ) { w . write ( "--" ) ; w . write ( bound ) ; w . write ( "
+" ) ; w . write ( "content-disposition: form-data; name="" ) ; w . write ( encodeMimeName ( keyVal . key ( ) ) ) ; w . write ( """ ) ; if ( keyVal . hasInputStream ( ) ) { w . write ( "; filename="" ) ; w . write ( encodeMimeName ( keyVal . value ( ) ) ) ; w . write ( ""
+content-type: " ) ; w . write ( keyVal . contentType ( ) != null ? keyVal . contentType ( ) : DefaultUploadType ) ; w . write ( "
+
+" ) ; w . flush ( ) ; DataUtil . crossStreams ( keyVal . inputStream ( ) , outputStream ) ; outputStream . flush ( ) ; } else { w . write ( "
+
+" ) ; w . write ( keyVal . value ( ) ) ; } w . write ( "
+" ) ; } w . write ( "--" ) ; w . write ( bound ) ; w . write ( "--" ) ; } else if ( req . requestBody ( ) != null ) { w . write ( req . requestBody ( ) ) ; } else { boolean first = true ; for ( Connection . KeyVal keyVal : data ) { if ( ! first ) w . append ( '&' ) ; else first = false ; w . write ( URLEncoder . encode ( keyVal . key ( ) , req . postDataCharset ( ) ) ) ; w . write ( '=' ) ; w . write ( URLEncoder . encode ( keyVal . value ( ) , req . postDataCharset ( ) ) ) ; } } w . close ( ) ; }
+--------------------------------------------------
+public static List < Node > parseFragment ( String fragmentHtml , Element context , String baseUri , ParseErrorList errorList ) { HtmlTreeBuilder treeBuilder = new HtmlTreeBuilder ( ) ; Parser parser = new Parser ( treeBuilder ) ; parser . errors = errorList ; return treeBuilder . parseFragment ( fragmentHtml , context , baseUri , parser ) ; }
+--------------------------------------------------
+private void remove ( int index ) { Validate . isFalse ( index >= size ) ; int shifted = size - index - 1 ; if ( shifted > 0 ) { System . arraycopy ( keys , index + 1 , keys , index , shifted ) ; System . arraycopy ( vals , index + 1 , vals , index , shifted ) ; } size -- ; keys [ size ] = null ; vals [ size ] = null ; }
+--------------------------------------------------
+void insert ( Token . Comment commentToken ) { Comment comment = new Comment ( commentToken . getData ( ) ) ; insertNode ( comment ) ; }
+--------------------------------------------------

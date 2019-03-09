@@ -1,0 +1,20 @@
+public String toString ( ) { return super . toString ( ) + ". mimetype=" + mimeType + ", url=" + url ; }
+--------------------------------------------------
+public void clear ( ) { onContentsChanged ( ) ; super . clear ( ) ; }
+--------------------------------------------------
+void mark ( ) { bufSplitPoint = 0 ; bufferUp ( ) ; bufMark = bufPos ; }
+--------------------------------------------------
+public String toString ( ) { return queue . substring ( pos ) ; }
+--------------------------------------------------
+private Response ( Response previousResponse ) throws IOException { super ( ) ; if ( previousResponse != null ) { numRedirects = previousResponse . numRedirects + 1 ; if ( numRedirects >= MAX_REDIRECTS ) throw new IOException ( String . format ( "too many redirects occurred trying to load url %s" , previousResponse . url ( ) ) ) ; } }
+--------------------------------------------------
+public String toString ( ) { return String . format ( ":containsown(%s)" , searchText ) ; }
+--------------------------------------------------
+public String toString ( ) { return String . format ( ":contains(%s)" , searchText ) ; }
+--------------------------------------------------
+public String toString ( ) { return String . format ( ":containsdata(%s)" , searchText ) ; }
+--------------------------------------------------
+public E set ( int index , E element ) { onContentsChanged ( ) ; return super . set ( index , element ) ; }
+--------------------------------------------------
+public static Document parse ( String html , String baseUri ) { TreeBuilder treeBuilder = new HtmlTreeBuilder ( ) ; return treeBuilder . parse ( new StringReader ( html ) , baseUri , new Parser ( treeBuilder ) ) ; }
+--------------------------------------------------

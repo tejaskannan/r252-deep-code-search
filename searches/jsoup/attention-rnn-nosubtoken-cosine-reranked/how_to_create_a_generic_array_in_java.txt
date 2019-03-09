@@ -1,0 +1,20 @@
+public Node attr ( String attributeKey , String attributeValue ) { attributeKey = NodeUtils . parser ( this ) . settings ( ) . normalizeAttribute ( attributeKey ) ; attributes ( ) . putIgnoreCase ( attributeKey , attributeValue ) ; return this ; }
+--------------------------------------------------
+final void html ( final Appendable accum , final Document . OutputSettings out ) throws IOException { final int sz = size ; for ( int i = 0 ; i < sz ; i ++ ) { final String key = keys [ i ] ; final String val = vals [ i ] ; accum . append ( ' ' ) . append ( key ) ; if ( ! Attribute . shouldCollapseAttribute ( key , val , out ) ) { accum . append ( "="" ) ; Entities . escape ( accum , val == null ? EmptyString : val , out , true , false , false ) ; accum . append ( '"' ) ; } } }
+--------------------------------------------------
+protected static void html ( String key , String val , Appendable accum , Document . OutputSettings out ) throws IOException { accum . append ( key ) ; if ( ! shouldCollapseAttribute ( key , val , out ) ) { accum . append ( "="" ) ; Entities . escape ( accum , Attributes . checkNotNull ( val ) , out , true , false , false ) ; accum . append ( '"' ) ; } }
+--------------------------------------------------
+private ElementMeta createSafeElement ( Element sourceEl ) { String sourceTag = sourceEl . tagName ( ) ; Attributes destAttrs = new Attributes ( ) ; Element dest = new Element ( Tag . valueOf ( sourceTag ) , sourceEl . baseUri ( ) , destAttrs ) ; int numDiscarded = 0 ; Attributes sourceAttrs = sourceEl . attributes ( ) ; for ( Attribute sourceAttr : sourceAttrs ) { if ( whitelist . isSafeAttribute ( sourceTag , sourceEl , sourceAttr ) ) destAttrs . put ( sourceAttr ) ; else numDiscarded ++ ; } Attributes enforcedAttrs = whitelist . getEnforcedAttributes ( sourceTag ) ; destAttrs . addAll ( enforcedAttrs ) ; return new ElementMeta ( dest , numDiscarded ) ; }
+--------------------------------------------------
+public static Document createShell ( String baseUri ) { Validate . notNull ( baseUri ) ; Document doc = new Document ( baseUri ) ; doc . parser = doc . parser ( ) ; Element html = doc . appendElement ( "html" ) ; html . appendElement ( "head" ) ; html . appendElement ( "body" ) ; return doc ; }
+--------------------------------------------------
+public Elements attr ( String attributeKey , String attributeValue ) { for ( Element element : this ) { element . attr ( attributeKey , attributeValue ) ; } return this ; }
+--------------------------------------------------
+public Element attr ( String attributeKey , boolean attributeValue ) { attributes ( ) . put ( attributeKey , attributeValue ) ; return this ; }
+--------------------------------------------------
+public Element attr ( String attributeKey , String attributeValue ) { super . attr ( attributeKey , attributeValue ) ; return this ; }
+--------------------------------------------------
+public static TextNode createFromEncoded ( String encodedText , String baseUri ) { String text = Entities . unescape ( encodedText ) ; return new TextNode ( text ) ; }
+--------------------------------------------------
+public static TextNode createFromEncoded ( String encodedText ) { String text = Entities . unescape ( encodedText ) ; return new TextNode ( text ) ; }
+--------------------------------------------------

@@ -1,0 +1,20 @@
+public String toString ( ) { return String . format ( "[%s^=%s]" , key , value ) ; }
+--------------------------------------------------
+public String toString ( ) { return String . format ( "[%s=%s]" , key , value ) ; }
+--------------------------------------------------
+public String toString ( ) { return String . format ( "[%s*=%s]" , key , value ) ; }
+--------------------------------------------------
+public String toString ( ) { return String . format ( "[%s$=%s]" , key , value ) ; }
+--------------------------------------------------
+public String toString ( ) { return String . format ( "[%s!=%s]" , key , value ) ; }
+--------------------------------------------------
+public String toString ( ) { return String . format ( "[^%s]" , keyPrefix ) ; }
+--------------------------------------------------
+public String toString ( ) { return key + "=" + value ; }
+--------------------------------------------------
+public String toString ( ) { return String . format ( "[%s~=%s]" , key , pattern . toString ( ) ) ; }
+--------------------------------------------------
+public String toString ( ) { return String . format ( "#%s" , id ) ; }
+--------------------------------------------------
+public String toString ( ) { return String . format ( "[%s]" , key ) ; }
+--------------------------------------------------

@@ -1,0 +1,20 @@
+private void checkCapacity ( int minNewSize ) { Validate . isTrue ( minNewSize >= size ) ; int curSize = keys . length ; if ( curSize >= minNewSize ) return ; int newSize = curSize >= InitialCapacity ? size * GrowthFactor : InitialCapacity ; if ( minNewSize > newSize ) newSize = minNewSize ; keys = copyOf ( keys , newSize ) ; vals = copyOf ( vals , newSize ) ; }
+--------------------------------------------------
+static String mimeBoundary ( ) { final StringBuilder mime = StringUtil . borrowBuilder ( ) ; final Random rand = new Random ( ) ; for ( int i = 0 ; i < boundaryLength ; i ++ ) { mime . append ( mimeBoundaryChars [ rand . nextInt ( mimeBoundaryChars . length ) ] ) ; } return StringUtil . releaseBuilder ( mime ) ; }
+--------------------------------------------------
+private ConstrainableInputStream ( InputStream in , int bufferSize , int maxSize ) { super ( in , bufferSize ) ; Validate . isTrue ( maxSize >= 0 ) ; this . maxSize = maxSize ; remaining = maxSize ; capped = maxSize != 0 ; startTime = System . nanoTime ( ) ; }
+--------------------------------------------------
+static void crossStreams ( final InputStream in , final OutputStream out ) throws IOException { final byte [ ] buffer = new byte [ bufferSize ] ; int len ; while ( ( len = in . read ( buffer ) ) != - 1 ) { out . write ( buffer , 0 , len ) ; } }
+--------------------------------------------------
+public String toString ( ) { return super . toString ( ) + ". mimetype=" + mimeType + ", url=" + url ; }
+--------------------------------------------------
+public boolean is ( String query ) { Evaluator eval = QueryParser . parse ( query ) ; for ( Element e : this ) { if ( e . is ( eval ) ) return true ; } return false ; }
+--------------------------------------------------
+public void clear ( ) { onContentsChanged ( ) ; super . clear ( ) ; }
+--------------------------------------------------
+public boolean hasAttr ( String attributeKey ) { for ( Element element : this ) { if ( element . hasAttr ( attributeKey ) ) return true ; } return false ; }
+--------------------------------------------------
+void resetInsertionMode ( ) { boolean last = false ; for ( int pos = stack . size ( ) - 1 ; pos >= 0 ; pos -- ) { Element node = stack . get ( pos ) ; if ( pos == 0 ) { last = true ; node = contextElement ; } String name = node . normalName ( ) ; if ( "select" . equals ( name ) ) { transition ( HtmlTreeBuilderState . InSelect ) ; break ; } else if ( ( "td" . equals ( name ) || "th" . equals ( name ) && ! last ) ) { transition ( HtmlTreeBuilderState . InCell ) ; break ; } else if ( "tr" . equals ( name ) ) { transition ( HtmlTreeBuilderState . InRow ) ; break ; } else if ( "tbody" . equals ( name ) || "thead" . equals ( name ) || "tfoot" . equals ( name ) ) { transition ( HtmlTreeBuilderState . InTableBody ) ; break ; } else if ( "caption" . equals ( name ) ) { transition ( HtmlTreeBuilderState . InCaption ) ; break ; } else if ( "colgroup" . equals ( name ) ) { transition ( HtmlTreeBuilderState . InColumnGroup ) ; break ; } else if ( "table" . equals ( name ) ) { transition ( HtmlTreeBuilderState . InTable ) ; break ; } else if ( "head" . equals ( name ) ) { transition ( HtmlTreeBuilderState . InBody ) ; break ; } else if ( "body" . equals ( name ) ) { transition ( HtmlTreeBuilderState . InBody ) ; break ; } else if ( "frameset" . equals ( name ) ) { transition ( HtmlTreeBuilderState . InFrameset ) ; break ; } else if ( "html" . equals ( name ) ) { transition ( HtmlTreeBuilderState . BeforeHead ) ; break ; } else if ( last ) { transition ( HtmlTreeBuilderState . InBody ) ; break ; } } }
+--------------------------------------------------
+public boolean hasNext ( ) { return i < size ; }
+--------------------------------------------------

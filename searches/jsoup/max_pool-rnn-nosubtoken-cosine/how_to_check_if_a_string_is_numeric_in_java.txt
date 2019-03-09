@@ -1,0 +1,20 @@
+private static void appendWhitespaceIfBr ( Element element , StringBuilder accum ) { if ( element . tag . getName ( ) . equals ( "br" ) && ! TextNode . lastCharIsWhitespace ( accum ) ) accum . append ( " " ) ; }
+--------------------------------------------------
+public String normalizeAttribute ( String name ) { name = name . trim ( ) ; if ( ! preserveAttributeCase ) name = lowerCase ( name ) ; return name ; }
+--------------------------------------------------
+private static String validateCharset ( String cs ) { if ( cs == null || cs . length ( ) == 0 ) return null ; cs = cs . trim ( ) . replaceAll ( "["']" , "" ) ; try { if ( Charset . isSupported ( cs ) ) return cs ; cs = cs . toUpperCase ( Locale . ENGLISH ) ; if ( Charset . isSupported ( cs ) ) return cs ; } catch ( IllegalCharsetNameException e ) { } return null ; }
+--------------------------------------------------
+private static String fixHeaderEncoding ( String val ) { try { byte [ ] bytes = val . getBytes ( "iso-8859-1" ) ; if ( ! looksLikeUtf8 ( bytes ) ) return val ; return new String ( bytes , "utf-8" ) ; } catch ( UnsupportedEncodingException e ) { return val ; } }
+--------------------------------------------------
+boolean matchesIgnoreCase ( String seq ) { bufferUp ( ) ; int scanLength = seq . length ( ) ; if ( scanLength > bufLength - bufPos ) return false ; for ( int offset = 0 ; offset < scanLength ; offset ++ ) { char upScan = Character . toUpperCase ( seq . charAt ( offset ) ) ; char upTarget = Character . toUpperCase ( charBuf [ bufPos + offset ] ) ; if ( upScan != upTarget ) return false ; } return true ; }
+--------------------------------------------------
+Attributes normalizeAttributes ( Attributes attributes ) { if ( ! preserveAttributeCase ) { attributes . normalize ( ) ; } return attributes ; }
+--------------------------------------------------
+public static void appendNormalisedWhitespace ( StringBuilder accum , String string , boolean stripLeading ) { boolean lastWasWhite = false ; boolean reachedNonWhite = false ; int len = string . length ( ) ; int c ; for ( int i = 0 ; i < len ; i += Character . charCount ( c ) ) { c = string . codePointAt ( i ) ; if ( isActuallyWhitespace ( c ) ) { if ( ( stripLeading && ! reachedNonWhite ) || lastWasWhite ) continue ; accum . append ( ' ' ) ; lastWasWhite = true ; } else if ( ! isInvisibleChar ( c ) ) { accum . appendCodePoint ( c ) ; lastWasWhite = false ; reachedNonWhite = true ; } } }
+--------------------------------------------------
+public boolean matches ( Element root , Element element ) { return ! value . equalsIgnoreCase ( element . attr ( key ) ) ; }
+--------------------------------------------------
+public Element appendElement ( String tagName ) { Element child = new Element ( Tag . valueOf ( tagName , NodeUtils . parser ( this ) . settings ( ) ) , baseUri ( ) ) ; appendChild ( child ) ; return child ; }
+--------------------------------------------------
+void putIgnoreCase ( String key , String value ) { int i = indexOfKeyIgnoreCase ( key ) ; if ( i != NotFound ) { vals [ i ] = value ; if ( ! keys [ i ] . equals ( key ) ) keys [ i ] = key ; } else add ( key , value ) ; }
+--------------------------------------------------

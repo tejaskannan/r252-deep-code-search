@@ -1,0 +1,20 @@
+public List < String > headers ( String name ) { Validate . notEmpty ( name ) ; return getHeadersCaseInsensitive ( name ) ; }
+--------------------------------------------------
+public Element val ( String value ) { if ( tagName ( ) . equals ( "textarea" ) ) text ( value ) ; else attr ( "value" , value ) ; return this ; }
+--------------------------------------------------
+public String val ( ) { if ( tagName ( ) . equals ( "textarea" ) ) return text ( ) ; else return attr ( "value" ) ; }
+--------------------------------------------------
+public Iterator < Attribute > iterator ( ) { return new Iterator < Attribute > ( ) { int i = 0 ; @ Override public boolean hasNext ( ) { return i < size ; } @ Override public Attribute next ( ) { final Attribute attr = new Attribute ( keys [ i ] , vals [ i ] , Attributes . this ) ; i ++ ; return attr ; } @ Override public void remove ( ) { Attributes . this . remove ( -- i ) ; } } ; }
+--------------------------------------------------
+public Elements val ( String value ) { for ( Element element : this ) element . val ( value ) ; return this ; }
+--------------------------------------------------
+public int hashCode ( ) { int result = size ; result = 31 * result + Arrays . hashCode ( keys ) ; result = 31 * result + Arrays . hashCode ( vals ) ; return result ; }
+--------------------------------------------------
+public Elements attr ( String attributeKey , String attributeValue ) { for ( Element element : this ) { element . attr ( attributeKey , attributeValue ) ; } return this ; }
+--------------------------------------------------
+public String val ( ) { if ( size ( ) > 0 ) return first ( ) . val ( ) ; else return "" ; }
+--------------------------------------------------
+public boolean hasHeader ( String name ) { Validate . notEmpty ( name , "header name must not be empty" ) ; return getHeadersCaseInsensitive ( name ) . size ( ) != 0 ; }
+--------------------------------------------------
+Element pop ( ) { int size = stack . size ( ) ; return stack . remove ( size - 1 ) ; }
+--------------------------------------------------

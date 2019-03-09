@@ -1,0 +1,20 @@
+public String text ( ) { StringBuilder sb = StringUtil . borrowBuilder ( ) ; for ( Element element : this ) { if ( sb . length ( ) != 0 ) sb . append ( " " ) ; sb . append ( element . text ( ) ) ; } return StringUtil . releaseBuilder ( sb ) ; }
+--------------------------------------------------
+public String toString ( ) { if ( attributes != null && attributes . size ( ) > 0 ) return "<" + name ( ) + " " + attributes . toString ( ) + ">" ; else return "<" + name ( ) + ">" ; }
+--------------------------------------------------
+public String toString ( ) { return String . format ( ".%s" , className ) ; }
+--------------------------------------------------
+public String toString ( ) { return String . format ( "%s" , tagName ) ; }
+--------------------------------------------------
+public String toString ( ) { return String . format ( "%s" , tagName ) ; }
+--------------------------------------------------
+public TextNode text ( String text ) { coreValue ( text ) ; return this ; }
+--------------------------------------------------
+public String ownText ( ) { StringBuilder sb = StringUtil . borrowBuilder ( ) ; ownText ( sb ) ; return StringUtil . releaseBuilder ( sb ) . trim ( ) ; }
+--------------------------------------------------
+void emit ( final String str ) { if ( charsString == null ) { charsString = str ; } else { if ( charsBuilder . length ( ) == 0 ) { charsBuilder . append ( charsString ) ; } charsBuilder . append ( str ) ; } }
+--------------------------------------------------
+public Connection cookie ( String name , String value ) { req . cookie ( name , value ) ; return this ; }
+--------------------------------------------------
+public String toString ( ) { return super . toString ( ) + ". mimetype=" + mimeType + ", url=" + url ; }
+--------------------------------------------------

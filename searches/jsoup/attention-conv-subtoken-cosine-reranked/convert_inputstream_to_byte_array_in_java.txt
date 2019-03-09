@@ -1,0 +1,20 @@
+static void crossStreams ( final InputStream in , final OutputStream out ) throws IOException { final byte [ ] buffer = new byte [ bufferSize ] ; int len ; while ( ( len = in . read ( buffer ) ) != - 1 ) { out . write ( buffer , 0 , len ) ; } }
+--------------------------------------------------
+private void prepareByteData ( ) { Validate . isTrue ( executed , "request must be executed (with .execute(), .get(), or .post() before getting response body" ) ; if ( byteData == null ) { Validate . isFalse ( inputStreamRead , "request has already been read (with .parse())" ) ; try { byteData = DataUtil . readToByteBuffer ( bodyStream , req . maxBodySize ( ) ) ; } catch ( IOException e ) { throw new UncheckedIOException ( e ) ; } finally { inputStreamRead = true ; safeClose ( ) ; } } }
+--------------------------------------------------
+public Element empty ( ) { childNodes . clear ( ) ; return this ; }
+--------------------------------------------------
+private Response ( Response previousResponse ) throws IOException { super ( ) ; if ( previousResponse != null ) { numRedirects = previousResponse . numRedirects + 1 ; if ( numRedirects >= MAX_REDIRECTS ) throw new IOException ( String . format ( "too many redirects occurred trying to load url %s" , previousResponse . url ( ) ) ) ; } }
+--------------------------------------------------
+Element insert ( Token . StartTag startTag ) { if ( startTag . isSelfClosing ( ) ) { Element el = insertEmpty ( startTag ) ; stack . add ( el ) ; tokeniser . transition ( TokeniserState . Data ) ; tokeniser . emit ( emptyEnd . reset ( ) . name ( el . tagName ( ) ) ) ; return el ; } Element el = new Element ( Tag . valueOf ( startTag . name ( ) , settings ) , baseUri , settings . normalizeAttributes ( startTag . attributes ) ) ; insert ( el ) ; return el ; }
+--------------------------------------------------
+boolean removeFromStack ( Element el ) { for ( int pos = stack . size ( ) - 1 ; pos >= 0 ; pos -- ) { Element next = stack . get ( pos ) ; if ( next == el ) { stack . remove ( pos ) ; return true ; } } return false ; }
+--------------------------------------------------
+void insert ( Token . Character token ) { final String data = token . getData ( ) ; insertNode ( token . isCData ( ) ? new CDataNode ( data ) : new TextNode ( data ) ) ; }
+--------------------------------------------------
+private QueryParser ( String query ) { this . query = query ; this . tq = new TokenQueue ( query ) ; }
+--------------------------------------------------
+public Connection data ( String key , String filename , InputStream inputStream , String contentType ) { req . data ( KeyVal . create ( key , filename , inputStream ) . contentType ( contentType ) ) ; return this ; }
+--------------------------------------------------
+void insert ( Token . Doctype d ) { DocumentType doctypeNode = new DocumentType ( settings . normalizeTag ( d . getName ( ) ) , d . getPublicIdentifier ( ) , d . getSystemIdentifier ( ) ) ; doctypeNode . setPubSysKey ( d . getPubSysKey ( ) ) ; insertNode ( doctypeNode ) ; }
+--------------------------------------------------

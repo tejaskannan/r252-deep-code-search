@@ -1,0 +1,20 @@
+static String mimeBoundary ( ) { final StringBuilder mime = StringUtil . borrowBuilder ( ) ; final Random rand = new Random ( ) ; for ( int i = 0 ; i < boundaryLength ; i ++ ) { mime . append ( mimeBoundaryChars [ rand . nextInt ( mimeBoundaryChars . length ) ] ) ; } return StringUtil . releaseBuilder ( mime ) ; }
+--------------------------------------------------
+public Element removeClass ( String className ) { Validate . notNull ( className ) ; Set < String > classes = classNames ( ) ; classes . remove ( className ) ; classNames ( classes ) ; return this ; }
+--------------------------------------------------
+final void finaliseTag ( ) { if ( pendingAttributeName != null ) { newAttribute ( ) ; } }
+--------------------------------------------------
+public boolean hasHeader ( String name ) { Validate . notEmpty ( name , "header name must not be empty" ) ; return getHeadersCaseInsensitive ( name ) . size ( ) != 0 ; }
+--------------------------------------------------
+public Attributes clone ( ) { Attributes clone ; try { clone = ( Attributes ) super . clone ( ) ; } catch ( CloneNotSupportedException e ) { throw new RuntimeException ( e ) ; } clone . size = size ; keys = copyOf ( keys , size ) ; vals = copyOf ( vals , size ) ; return clone ; }
+--------------------------------------------------
+private static String encodeUrl ( String url ) { try { URL u = new URL ( url ) ; return encodeUrl ( u ) . toExternalForm ( ) ; } catch ( Exception e ) { return url ; } }
+--------------------------------------------------
+public Request proxy ( String host , int port ) { this . proxy = new Proxy ( Proxy . Type . HTTP , InetSocketAddress . createUnresolved ( host , port ) ) ; return this ; }
+--------------------------------------------------
+Element insertStartTag ( String startTagName ) { Element el = new Element ( Tag . valueOf ( startTagName , settings ) , baseUri ) ; insert ( el ) ; return el ; }
+--------------------------------------------------
+public static List < Node > parseXmlFragment ( String fragmentXml , String baseUri ) { XmlTreeBuilder treeBuilder = new XmlTreeBuilder ( ) ; return treeBuilder . parseFragment ( fragmentXml , baseUri , new Parser ( treeBuilder ) ) ; }
+--------------------------------------------------
+public boolean is ( String query ) { Evaluator eval = QueryParser . parse ( query ) ; for ( Element e : this ) { if ( e . is ( eval ) ) return true ; } return false ; }
+--------------------------------------------------

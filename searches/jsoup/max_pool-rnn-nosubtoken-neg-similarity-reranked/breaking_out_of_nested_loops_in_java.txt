@@ -1,0 +1,20 @@
+public String attr ( String key ) { Validate . notNull ( key ) ; if ( ! hasAttributes ( ) ) { return key . equals ( nodeName ( ) ) ? ( String ) value : EmptyString ; } return super . attr ( key ) ; }
+--------------------------------------------------
+public Node attr ( String key , String value ) { if ( ! hasAttributes ( ) && key . equals ( nodeName ( ) ) ) { this . value = value ; } else { ensureAttributes ( ) ; super . attr ( key , value ) ; } return this ; }
+--------------------------------------------------
+private Tag ( String tagName ) { this . tagName = tagName ; normalName = Normalizer . lowerCase ( tagName ) ; }
+--------------------------------------------------
+public Node before ( Node node ) { Validate . notNull ( node ) ; Validate . notNull ( parentNode ) ; parentNode . addChildren ( siblingIndex , node ) ; return this ; }
+--------------------------------------------------
+public String html ( ) { StringBuilder accum = StringUtil . borrowBuilder ( ) ; html ( accum ) ; String html = StringUtil . releaseBuilder ( accum ) ; return NodeUtils . outputSettings ( this ) . prettyPrint ( ) ? html . trim ( ) : html ; }
+--------------------------------------------------
+public Node traverse ( NodeVisitor nodeVisitor ) { Validate . notNull ( nodeVisitor ) ; NodeTraversor . traverse ( nodeVisitor , this ) ; return this ; }
+--------------------------------------------------
+public boolean retainAll ( Collection < ? > c ) { onContentsChanged ( ) ; return super . retainAll ( c ) ; }
+--------------------------------------------------
+public static void notEmpty ( String string , String msg ) { if ( string == null || string . length ( ) == 0 ) throw new IllegalArgumentException ( msg ) ; }
+--------------------------------------------------
+public Elements not ( String query ) { Elements out = Selector . select ( query , this ) ; return Selector . filterOut ( this , out ) ; }
+--------------------------------------------------
+public boolean hasAttr ( String key ) { ensureAttributes ( ) ; return super . hasAttr ( key ) ; }
+--------------------------------------------------

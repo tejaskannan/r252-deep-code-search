@@ -1,0 +1,20 @@
+private static String [ ] copyOf ( String [ ] orig , int size ) { final String [ ] copy = new String [ size ] ; System . arraycopy ( orig , 0 , copy , 0 , Math . min ( orig . length , size ) ) ; return copy ; }
+--------------------------------------------------
+public Elements getElementsByAttributeValueMatching ( String key , String regex ) { Pattern pattern ; try { pattern = Pattern . compile ( regex ) ; } catch ( PatternSyntaxException e ) { throw new IllegalArgumentException ( "pattern syntax error: " + regex , e ) ; } return getElementsByAttributeValueMatching ( key , pattern ) ; }
+--------------------------------------------------
+private List < String > getHeadersCaseInsensitive ( String name ) { Validate . notNull ( name ) ; for ( Map . Entry < String , List < String >> entry : headers . entrySet ( ) ) { if ( name . equalsIgnoreCase ( entry . getKey ( ) ) ) return entry . getValue ( ) ; } return Collections . emptyList ( ) ; }
+--------------------------------------------------
+public static String getByName ( String name ) { String val = multipoints . get ( name ) ; if ( val != null ) return val ; int codepoint = extended . codepointForName ( name ) ; if ( codepoint != empty ) return new String ( new int [ ] { codepoint } , 0 , 1 ) ; return emptyName ; }
+--------------------------------------------------
+public Whitelist removeEnforcedAttribute ( String tag , String attribute ) { Validate . notEmpty ( tag ) ; Validate . notEmpty ( attribute ) ; TagName tagName = TagName . valueOf ( tag ) ; if ( tagNames . contains ( tagName ) && enforcedAttributes . containsKey ( tagName ) ) { AttributeKey attrKey = AttributeKey . valueOf ( attribute ) ; Map < AttributeKey , AttributeValue > attrMap = enforcedAttributes . get ( tagName ) ; attrMap . remove ( attrKey ) ; if ( attrMap . isEmpty ( ) ) enforcedAttributes . remove ( tagName ) ; } return this ; }
+--------------------------------------------------
+public boolean hasHeaderWithValue ( String name , String value ) { Validate . notEmpty ( name ) ; Validate . notEmpty ( value ) ; List < String > values = headers ( name ) ; for ( String candidate : values ) { if ( value . equalsIgnoreCase ( candidate ) ) return true ; } return false ; }
+--------------------------------------------------
+Attributes getEnforcedAttributes ( String tagName ) { Attributes attrs = new Attributes ( ) ; TagName tag = TagName . valueOf ( tagName ) ; if ( enforcedAttributes . containsKey ( tag ) ) { Map < AttributeKey , AttributeValue > keyVals = enforcedAttributes . get ( tag ) ; for ( Map . Entry < AttributeKey , AttributeValue > entry : keyVals . entrySet ( ) ) { attrs . put ( entry . getKey ( ) . toString ( ) , entry . getValue ( ) . toString ( ) ) ; } } return attrs ; }
+--------------------------------------------------
+public String attr ( String key ) { Validate . notNull ( key ) ; if ( ! hasAttributes ( ) ) { return key . equals ( nodeName ( ) ) ? ( String ) value : EmptyString ; } return super . attr ( key ) ; }
+--------------------------------------------------
+public Elements getElementsByAttributeValueMatching ( String key , Pattern pattern ) { return Collector . collect ( new Evaluator . AttributeWithValueMatching ( key , pattern ) , this ) ; }
+--------------------------------------------------
+private static void appendWhitespaceIfBr ( Element element , StringBuilder accum ) { if ( element . tag . getName ( ) . equals ( "br" ) && ! TextNode . lastCharIsWhitespace ( accum ) ) accum . append ( " " ) ; }
+--------------------------------------------------

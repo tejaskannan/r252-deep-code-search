@@ -1,0 +1,20 @@
+FormElement insertForm ( Token . StartTag startTag , boolean onStack ) { Tag tag = Tag . valueOf ( startTag . name ( ) , settings ) ; FormElement el = new FormElement ( tag , baseUri , startTag . attributes ) ; setFormElement ( el ) ; insertNode ( el ) ; if ( onStack ) stack . add ( el ) ; return el ; }
+--------------------------------------------------
+void generateImpliedEndTags ( String excludeTag ) { while ( ( excludeTag != null && ! currentElement ( ) . normalName ( ) . equals ( excludeTag ) ) && inSorted ( currentElement ( ) . normalName ( ) , TagSearchEndTags ) ) pop ( ) ; }
+--------------------------------------------------
+public List < String > eachText ( ) { ArrayList < String > texts = new ArrayList < > ( size ( ) ) ; for ( Element el : this ) { if ( el . hasText ( ) ) texts . add ( el . text ( ) ) ; } return texts ; }
+--------------------------------------------------
+Element insertStartTag ( String startTagName ) { Element el = new Element ( Tag . valueOf ( startTagName , settings ) , baseUri ) ; insert ( el ) ; return el ; }
+--------------------------------------------------
+@ Override Tag reset ( ) { tagName = null ; normalName = null ; pendingAttributeName = null ; reset ( pendingAttributeValue ) ; pendingAttributeValueS = null ; hasEmptyAttributeValue = false ; hasPendingAttributeValue = false ; selfClosing = false ; attributes = null ; return this ; }
+--------------------------------------------------
+public Whitelist addTags ( String ... tags ) { Validate . notNull ( tags ) ; for ( String tagName : tags ) { Validate . notEmpty ( tagName ) ; tagNames . add ( TagName . valueOf ( tagName ) ) ; } return this ; }
+--------------------------------------------------
+public Document fromJsoup ( org . jsoup . nodes . Document in ) { Validate . notNull ( in ) ; DocumentBuilder builder ; try { factory . setNamespaceAware ( true ) ; builder = factory . newDocumentBuilder ( ) ; Document out = builder . newDocument ( ) ; convert ( in , out ) ; return out ; } catch ( ParserConfigurationException e ) { throw new IllegalStateException ( e ) ; } }
+--------------------------------------------------
+public String text ( ) { return getWholeText ( ) ; }
+--------------------------------------------------
+public List < TextNode > textNodes ( ) { List < TextNode > textNodes = new ArrayList < > ( ) ; for ( Node node : childNodes ) { if ( node instanceof TextNode ) textNodes . add ( ( TextNode ) node ) ; } return Collections . unmodifiableList ( textNodes ) ; }
+--------------------------------------------------
+public String attr ( String key ) { Validate . notNull ( key ) ; if ( ! hasAttributes ( ) ) { return key . equals ( nodeName ( ) ) ? ( String ) value : EmptyString ; } return super . attr ( key ) ; }
+--------------------------------------------------

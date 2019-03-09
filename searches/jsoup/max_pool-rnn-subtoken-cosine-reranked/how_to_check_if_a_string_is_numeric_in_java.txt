@@ -1,0 +1,20 @@
+public String getIgnoreCase ( String key ) { int i = indexOfKeyIgnoreCase ( key ) ; return i == NotFound ? EmptyString : checkNotNull ( vals [ i ] ) ; }
+--------------------------------------------------
+public String consumeToIgnoreCase ( String seq ) { int start = pos ; String first = seq . substring ( 0 , 1 ) ; boolean canScan = first . toLowerCase ( ) . equals ( first . toUpperCase ( ) ) ; while ( ! isEmpty ( ) ) { if ( matches ( seq ) ) break ; if ( canScan ) { int skip = queue . indexOf ( first , pos ) - pos ; if ( skip == 0 ) pos ++ ; else if ( skip < 0 ) pos = queue . length ( ) ; else pos += skip ; } else pos ++ ; } return queue . substring ( start , pos ) ; }
+--------------------------------------------------
+private static String fixHeaderEncoding ( String val ) { try { byte [ ] bytes = val . getBytes ( "iso-8859-1" ) ; if ( ! looksLikeUtf8 ( bytes ) ) return val ; return new String ( bytes , "utf-8" ) ; } catch ( UnsupportedEncodingException e ) { return val ; } }
+--------------------------------------------------
+private static String validateCharset ( String cs ) { if ( cs == null || cs . length ( ) == 0 ) return null ; cs = cs . trim ( ) . replaceAll ( "["']" , "" ) ; try { if ( Charset . isSupported ( cs ) ) return cs ; cs = cs . toUpperCase ( Locale . ENGLISH ) ; if ( Charset . isSupported ( cs ) ) return cs ; } catch ( IllegalCharsetNameException e ) { } return null ; }
+--------------------------------------------------
+static boolean rangeEquals ( final char [ ] charBuf , final int start , int count , final String cached ) { if ( count == cached . length ( ) ) { int i = start ; int j = 0 ; while ( count -- != 0 ) { if ( charBuf [ i ++ ] != cached . charAt ( j ++ ) ) return false ; } return true ; } return false ; }
+--------------------------------------------------
+public String consumeToAny ( String ... seq ) { int start = pos ; while ( ! isEmpty ( ) && ! matchesAny ( seq ) ) { pos ++ ; } return queue . substring ( start , pos ) ; }
+--------------------------------------------------
+void maybeSetBaseUri ( Element base ) { if ( baseUriSetFromDoc ) return ; String href = base . absUrl ( "href" ) ; if ( href . length ( ) != 0 ) { baseUri = href ; baseUriSetFromDoc = true ; doc . setBaseUri ( href ) ; } }
+--------------------------------------------------
+String consumeLetterThenDigitSequence ( ) { bufferUp ( ) ; int start = bufPos ; while ( bufPos < bufLength ) { char c = charBuf [ bufPos ] ; if ( ( c >= 'a' && c <= 'z' ) || ( c >= 'a' && c <= 'z' ) || Character . isLetter ( c ) ) bufPos ++ ; else break ; } while ( ! isEmptyNoBufferUp ( ) ) { char c = charBuf [ bufPos ] ; if ( c >= '0' && c <= '9' ) bufPos ++ ; else break ; } return cacheString ( charBuf , stringCache , start , bufPos - start ) ; }
+--------------------------------------------------
+private boolean exitTableBody ( Token t , HtmlTreeBuilder tb ) { if ( ! ( tb . inTableScope ( "tbody" ) || tb . inTableScope ( "thead" ) || tb . inScope ( "tfoot" ) ) ) { tb . error ( this ) ; return false ; } tb . clearStackToTableBodyContext ( ) ; tb . processEndTag ( tb . currentElement ( ) . normalName ( ) ) ; return tb . process ( t ) ; }
+--------------------------------------------------
+static String mimeBoundary ( ) { final StringBuilder mime = StringUtil . borrowBuilder ( ) ; final Random rand = new Random ( ) ; for ( int i = 0 ; i < boundaryLength ; i ++ ) { mime . append ( mimeBoundaryChars [ rand . nextInt ( mimeBoundaryChars . length ) ] ) ; } return StringUtil . releaseBuilder ( mime ) ; }
+--------------------------------------------------

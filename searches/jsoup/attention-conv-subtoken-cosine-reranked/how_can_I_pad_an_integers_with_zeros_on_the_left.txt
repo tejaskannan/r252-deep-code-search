@@ -1,0 +1,20 @@
+static String mimeBoundary ( ) { final StringBuilder mime = StringUtil . borrowBuilder ( ) ; final Random rand = new Random ( ) ; for ( int i = 0 ; i < boundaryLength ; i ++ ) { mime . append ( mimeBoundaryChars [ rand . nextInt ( mimeBoundaryChars . length ) ] ) ; } return StringUtil . releaseBuilder ( mime ) ; }
+--------------------------------------------------
+public static List < Node > parseXmlFragment ( String fragmentXml , String baseUri ) { XmlTreeBuilder treeBuilder = new XmlTreeBuilder ( ) ; return treeBuilder . parseFragment ( fragmentXml , baseUri , new Parser ( treeBuilder ) ) ; }
+--------------------------------------------------
+public void clear ( ) { onContentsChanged ( ) ; super . clear ( ) ; }
+--------------------------------------------------
+static void crossStreams ( final InputStream in , final OutputStream out ) throws IOException { final byte [ ] buffer = new byte [ bufferSize ] ; int len ; while ( ( len = in . read ( buffer ) ) != - 1 ) { out . write ( buffer , 0 , len ) ; } }
+--------------------------------------------------
+public String toString ( ) { return super . toString ( ) + ". mimetype=" + mimeType + ", url=" + url ; }
+--------------------------------------------------
+public static List < Node > parseFragment ( String fragmentHtml , Element context , String baseUri ) { HtmlTreeBuilder treeBuilder = new HtmlTreeBuilder ( ) ; return treeBuilder . parseFragment ( fragmentHtml , context , baseUri , new Parser ( treeBuilder ) ) ; }
+--------------------------------------------------
+public String toString ( ) { return String . format ( "#%s" , id ) ; }
+--------------------------------------------------
+public Connection parser ( Parser parser ) { req . parser ( parser ) ; return this ; }
+--------------------------------------------------
+final void finaliseTag ( ) { if ( pendingAttributeName != null ) { newAttribute ( ) ; } }
+--------------------------------------------------
+public Parser setTreeBuilder ( TreeBuilder treeBuilder ) { this . treeBuilder = treeBuilder ; treeBuilder . parser = this ; return this ; }
+--------------------------------------------------
