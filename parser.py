@@ -292,7 +292,11 @@ class Parser:
             # We traverse down to the return type
             start = ret_type[0]
             while start.type not in (FeatureNode.TOKEN, FeatureNode.IDENTIFIER_TOKEN):
-                start = code_graph.get_out_neighbors(start.id)[0]
+                out_neighbors = code_graph.get_out_neighbors(start.id)
+                start = out_neighbors[0]
+                for i in range(1, len(out_neighbors)):
+                    if start.startPosition > out_neighbors[i].startPosition:
+                        start = out_neighbors[i]
         else:
             modifiers = code_graph.get_neighbors_with_type_content(modifiers[0].id,
                                                                    neigh_type=None,
@@ -317,8 +321,14 @@ class Parser:
         while (node.id != end.id):
             contents = node.contents
             if node.type == FeatureNode.TOKEN:
-                if contents in translate_dict:
-                    contents = translate_dict[contents]
+                if node.contents in translate_dict:
+                    contents = translate_dict[node.contents]
+                else:
+                    contents = ''
+                    for i, c in enumerate(node.contents):
+                        if c in translate_dict:
+                            c = translate_dict[c]
+                        contents += c
                 contents = contents.lower()
 
             parents = code_graph.get_in_neighbors(node.id)

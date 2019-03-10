@@ -3,6 +3,7 @@ import os
 import argparse
 import time
 import numpy as np
+import subprocess
 
 from parser import Parser
 from model import Model
@@ -150,6 +151,8 @@ def main():
         if not os.path.exists(out_folder):
             os.mkdir(out_folder)
 
+        formatter = 'formatter/google-java-format-1.7-all-deps.jar'
+
         times = []
         for query in search_queries:
             start = time.time()
@@ -158,8 +161,19 @@ def main():
             end = time.time()
             times.append(end - start)
 
-            output_file = out_folder + '/' + query.replace(' ', '_') + '.txt'
-            write_methods_to_file(output_file, results)
+            out_path_base = out_folder + '/' + query.replace(' ', '_')
+
+            # We put the unformatted methods into a temp file before feeding
+            # them through the Google JAVA formatter
+            out_path_temp = out_path_base + '-temp.java'
+            out_path = out_path_base + '.java'
+
+            write_methods_to_file(out_path_temp, results)
+
+            with open(out_path, 'w') as out_file:
+                subprocess.call(['java', '-jar', formatter, out_path_temp], stdout=out_file)
+
+            os.remove(out_path_temp)
 
         print('Average Query Time: {0}s'.format(np.average(times)))
     elif args.overlap:
@@ -186,7 +200,7 @@ def main():
         for i in range(len(overlaps)):
             frac = overlaps[i] / totals[i]
             print(OVERLAP_FORMAT.format(labels[i], overlaps[i], totals[i], round(frac, 4)))
-            # We only support hit rank calculations when indexing a directory
+
     elif args.hit_rank:
         if len(args.model) == 0:
             print('Must specify a model to use.')

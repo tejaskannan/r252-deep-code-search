@@ -63,9 +63,10 @@ def log_record(file_name, record):
 
 def write_methods_to_file(file_name, method_arr):
     with open(file_name, 'w') as file:
+        file.write('public class Results {\n\n')
         for method in method_arr:
-            file.write(method + '\n')
-            file.write(LINE + '\n')
+            file.write(method + '\n\n')
+        file.write('}\n')
 
 
 def add_slash_to_end(dir_path):

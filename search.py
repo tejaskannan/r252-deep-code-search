@@ -27,15 +27,15 @@ class DeepCodeSearchDB:
         self.index_path = INDEX_PATH.format(table)
         self.model = model
         self.embedding_size = embedding_size
-        self.index = AnnoyIndex(embedding_size, metric='euclidean')
+        self.index = AnnoyIndex(embedding_size, metric='dot')
         self.num_trees = num_trees
         self.parser = Parser('filters/tags.txt', 'filters/stopwords.txt')
 
         self.k1 = 1.2
         self.b = 0.75
-        self.name_weight = 1.5
-        self.api_weight = 1
-        self.token_weight = 0.5
+        self.name_weight = 1.0
+        self.api_weight = 0.5
+        self.token_weight = 0.25
 
     def index_dir(self, dir_name, should_subtokenize=False):
         method_id = 0
@@ -171,7 +171,6 @@ class DeepCodeSearchDB:
     def search(self, description, field, k=10, should_rerank=False):
         description = self.parser.text_filter.apply_to_javadoc(description)
         embedded_descr = self.model.embed_description(description)
-        top_results = []
 
         num_docs, avg_lengths, freqs = self._fetch_frequencies(description)
 
@@ -208,11 +207,10 @@ class DeepCodeSearchDB:
                                                doc_freqs=freqs)
             bm25_scores.append(bm25_score)
 
-        transformed_distances = list(map(lambda d: (1.0 / (d + SMALL_NUMBER)) + 1.0, distances))
+        exp_distances = np.exp(distances)
+        bm25_scores = np.log(np.array(bm25_scores) + 1.0) + 1.0
 
-        bm25_scores = np.array(bm25_scores) + 1.0
-        bm25_scores = bm25_scores / np.sum(bm25_scores)
-        scores = np.add(transformed_distances, bm25_scores)
+        scores = np.multiply(exp_distances, bm25_scores)
 
         return [res for _,res in reversed(sorted(zip(scores, results)))][:k]
 
