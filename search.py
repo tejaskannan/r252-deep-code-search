@@ -243,21 +243,24 @@ class DeepCodeSearchDB:
         return total, overlap
 
     def _fetch_frequencies(self, description):
-        avg_field_lengths = self.redis_db.hgetall(self.avg_length_table)
-        avg_field_lengths = {name.decode('utf-8'): float(a.decode('utf-8')) for name, a in \
-                             avg_field_lengths.items()}
+        pipeline = self.redis_db.pipeline()
 
-        num_docs = self.redis_db.get(self.num_docs_table)
-        num_docs = int(num_docs.decode('utf-8'))
+        pipeline.hgetall(self.avg_length_table)
+        pipeline.get(self.num_docs_table)
 
-        freq_pipeline = self.redis_db.pipeline()
         for token in description:
             redis_key = REDIS_KEY_FORMAT.format(self.freq_table, token)
-            freq_pipeline.get(redis_key)
-        freq_results = freq_pipeline.execute()
-        freq_results = [(int(f.decode('utf-8')) if f is not None else 0) for f in freq_results]
+            pipeline.get(redis_key)
+        results = pipeline.execute()
 
+        avg_field_lengths = {name.decode('utf-8'): float(a.decode('utf-8')) for name, a in \
+                             results[0].items()}
+
+        num_docs = int(results[1].decode('utf-8'))
+
+        freq_results = [(int(f.decode('utf-8')) if f is not None else 0) for f in results[2:]]
         freqs = {description[i]: freq_results[i] for i in range(len(description))}
+
         return num_docs, avg_field_lengths, freqs
 
     def _calculate_bm25f(self, description, tokens, apis, name, num_docs, avg_field_lengths, doc_freqs):

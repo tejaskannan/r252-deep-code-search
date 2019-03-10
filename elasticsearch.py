@@ -1,6 +1,9 @@
 import os
 import json
 import requests
+import subprocess
+import time
+import numpy as np
 from parser import Parser
 from utils import write_methods_to_file, get_ranking_in_array
 
@@ -20,11 +23,11 @@ def create_data_files():
         for file_name in files:
             file_path = root + '/' + file_name
 
-            _t, _a, names, _j, method_body = parser.parse_file(file_path, only_javadoc=True)
+            _t, _a, names, _j, method_body = parser.parse_file(file_path, only_javadoc=False)
 
             for i in range(len(method_body)):
                 name = names[i]
-                body = method_body[i].strip().replace('\n', '').replace('\"', '\'')
+                body = method_body[i].strip().replace('\"', '\\\"').replace('\'', '\\\'')
                 data_entries.append(INDEX_FORMAT.format(index_name, count))
                 data_entries.append(DATA_FORMAT.format(body, name))
                 count += 1
@@ -68,14 +71,30 @@ def execute_javadoc_queries():
 
 
 def execute_queries():
-    query_file_path = 'queries/queries.txt'
+    query_file_path = 'queries/jsoup_queries.txt'
     output_folder = 'searches/elasticsearch/'
+    formatter = 'formatter/google-java-format-1.7-all-deps.jar'
 
     with open(query_file_path, 'r') as query_file:
+        times = []
         for query in query_file:
             query_str = query.strip()
+
+            start = time.time()
             method_bodies = execute_query(query_str)[0]
-            write_methods_to_file(output_folder + query_str.replace(' ', '_') + '.txt', method_bodies)
+            elapsed = time.time() - start
+            times.append(elapsed)
+
+            out_base = output_folder + query_str.replace(' ', '_')
+            out_path_temp = out_base + '-temp.java'
+            write_methods_to_file(out_path_temp, method_bodies)
+
+            out_path = out_base + '.java'
+            with open(out_path, 'w') as out_file:
+                subprocess.call(['java', '-jar', formatter, out_path_temp], stdout=out_file)
+        times.pop(0)
+        print('Average Query Time: {0}s'.format(np.average(times)))
+        print('Std Query Time: {0}'.format(np.std(times)))
 
 def execute_query(query_str):
     headers = {'Content-Type': 'application/json'}
@@ -89,8 +108,7 @@ def execute_query(query_str):
                 'query': query_str,
                 'analyzer': 'method_analyzer',
                 'type': 'cross_fields',
-                'fields': ['method_body', 'method_name^3'],
-                'minimum_should_match': int(min_should_match)
+                'fields': ['method_body', 'method_name^2'],
             }
         }
     }

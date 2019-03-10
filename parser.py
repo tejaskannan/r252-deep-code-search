@@ -16,6 +16,7 @@ class Parser:
     def __init__(self, tags_file, stopwords_file, line_threshold=2):
         self.text_filter = TextFilter(tags_file, stopwords_file)
         self.line_threshold = line_threshold
+        self.hex_regex = re.compile(r'[a-f]+')
 
     def generate_data_from_dir(self, base, output_folder, should_subtokenize=False):
         num_methods_written = 0
@@ -341,6 +342,14 @@ class Parser:
             if is_char_literal:
                 contents = CHAR_FORMAT.format(contents)
 
+            # Addresses the issue of displaying hexidecimal numbers
+            is_int_literal = len(list(filter(lambda n: n.contents == INT_LITERAL, parents))) > 0
+            if is_int_literal:
+                contents = contents.lower()
+                is_hex = self.hex_regex.search(contents)
+                if is_hex:
+                    contents = '0x' + contents
+
             method_str += TOKEN_FORMAT.format(contents)
             node = code_graph.get_out_neighbors_with_edge_type(node.id, FeatureEdge.NEXT_TOKEN)
             if node is None or len(node) == 0:
@@ -358,8 +367,6 @@ class Parser:
         while (node.id != end.id):
             if node.contents == NEW:
                 obj_type_node = code_graph.get_out_neighbors_with_edge_type(node.id, FeatureEdge.NEXT_TOKEN)[0]
-                #node_contents = ' '.join([t.lower() for t in self._split_camel_case(obj_type_node.contents)])
-                #tokens.append(node_contents + ' ' + NEW_LOWER)
                 tokens.append(API_FORMAT.format(obj_type_node.contents, NEW_LOWER))
                 node = obj_type_node
             node = code_graph.get_out_neighbors_with_edge_type(node.id, FeatureEdge.NEXT_TOKEN)[0]

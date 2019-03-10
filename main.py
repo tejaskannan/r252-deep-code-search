@@ -175,7 +175,9 @@ def main():
 
             os.remove(out_path_temp)
 
+        times.pop(0)
         print('Average Query Time: {0}s'.format(np.average(times)))
+        print('Std Query Time: {0}'.format(np.std(times)))
     elif args.overlap:
         if len(args.model) == 0:
             print('Must specify a model to use.')
