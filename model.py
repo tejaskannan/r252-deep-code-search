@@ -178,7 +178,7 @@ class Model:
     def embed_method(self, method_name, method_api, method_tokens):
         """
         Returns an embedding vector for a method with the given name,
-        API calls, and method tokens. 
+        API calls, and method tokens.
         """
 
         # Tensorize inputs
@@ -186,7 +186,7 @@ class Model:
         api_vec, api_len = self.dataset.create_tensor(method_api)
         token_vec, token_len = self.dataset.create_tensor(method_tokens)
 
-        # Reshape the inputs to match the dimensions expected by the Tensorflow model 
+        # Reshape the inputs to match the dimensions expected by the Tensorflow model
         name_tensor = np.array([name_vec])
         name_len_tensor = np.array([name_len])
         api_tensor = np.array([api_vec])
