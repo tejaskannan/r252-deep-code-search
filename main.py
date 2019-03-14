@@ -13,6 +13,7 @@ from utils import value_if_non_empty, write_methods_to_file
 from utils import load_parameters, add_slash_to_end
 from constants import OVERLAP_FORMAT, METHOD_BODY
 
+# Hard-coded default parameters in case no parameters are provided
 default_params = {
     'step_size': 0.001,
     'gradient_clip': 1,
@@ -32,7 +33,10 @@ default_params = {
     'loss_func': 'cosine'
 }
 
+
 def parse_args():
+    """Return command line arguments as a dictionary."""
+
     arg_parser = argparse.ArgumentParser(description='Deep Code Search')
 
     # Action arguments
@@ -58,18 +62,26 @@ def parse_args():
 
     return arg_parser.parse_args()
 
+
 def main():
+    """Driver function for the entire project."""
+
     args = parse_args()
-    
-    # Restore parameters from the given checkpoint
+
     params = default_params
     if len(args.model) > 0:
+        # If a model is provided, we restore the parameters used
+        # to train the model.
         params = load_parameters(args.model)
     elif len(args.params) > 0:
+        # If a parameters file is given, we use the JSON file
+        # to set the model parameters.
         params = params_dict_from_json(args.params, params)
     params = params_from_dict(params)
 
     if args.generate:
+        # Handler for generating a new dataset.
+
         if len(args.input) == 0:
             print('Must specify an input folder or file.')
             return
@@ -78,6 +90,9 @@ def main():
         args.output = add_slash_to_end(args.output)
 
         parser = Parser('filters/tags.txt', 'filters/stopwords.txt', args.threshold)
+
+        # If the input's last character is a slash, it is interpreted as a directory.
+        # Otherwise, it is interpreted as a single file.
         if args.input[-1] == '/':
             written = parser.generate_data_from_dir(args.input, args.output,
                                                     should_subtokenize=args.subtokenize)
@@ -85,10 +100,13 @@ def main():
             written = parser.generate_data_from_file(args.input, args.output,
                                                      should_subtokenize=args.subtokenize)
     elif args.train:
+        # Handler for model training.
         args.output = value_if_non_empty(args.output, 'trained_models/')
         model = Model(params, args.train_dir, args.valid_dir, args.output)
         model.train()
     elif args.index:
+        # Handler for indexing a search corpus.
+
         if len(args.input) == 0:
             print('Must specify a corpus to index.')
             return
@@ -107,6 +125,8 @@ def main():
         db = DeepCodeSearchDB(table=args.table, model=model,
                               embedding_size=params.embedding_size)
 
+        # If the input's last character is a slash, it is interpreted as a directory.
+        # Otherwise, it is interpreted as a single file.
         written = 0
         if args.input[-1] == '/':
             written = db.index_dir(args.input, should_subtokenize=args.subtokenize)
@@ -114,6 +134,7 @@ def main():
             written = db.index_file(args.input, should_subtokenize=args.subtokenize)
         print('Indexed {0} methods into table: {1}'.format(written, args.table))
     elif args.search:
+        # Handler for executing searches.
         if len(args.input) == 0:
             print('Must specify a query or query file.')
             return
@@ -132,8 +153,10 @@ def main():
         db = DeepCodeSearchDB(table=args.table, model=model,
                               embedding_size=params.embedding_size)
 
+        # We interpret inputs which end in '.txt' as a file of queries.
+        # Otherwise, we interpret the input as a single query string.
         search_queries = []
-        if '.txt' in args.input:
+        if args.input.endswith('.txt'):
             with open(args.input, 'r') as query_file:
                 for query in query_file:
                     search_queries.append(query.strip())
@@ -151,6 +174,7 @@ def main():
         if not os.path.exists(out_folder):
             os.mkdir(out_folder)
 
+        # Path name of the JAR used to format the output methods.
         formatter = 'formatter/google-java-format-1.7-all-deps.jar'
 
         times = []
@@ -164,7 +188,7 @@ def main():
             out_path_base = out_folder + '/' + query.replace(' ', '_')
 
             # We put the unformatted methods into a temp file before feeding
-            # them through the Google JAVA formatter
+            # them through the Google JAVA formatter.
             out_path_temp = out_path_base + '-temp.java'
             out_path = out_path_base + '.java'
 
@@ -179,6 +203,8 @@ def main():
         print('Average Query Time: {0}s'.format(np.average(times)))
         print('Std Query Time: {0}'.format(np.std(times)))
     elif args.overlap:
+        # Handler for vocabulary overlap computation.
+
         if len(args.model) == 0:
             print('Must specify a model to use.')
             return
@@ -204,6 +230,8 @@ def main():
             print(OVERLAP_FORMAT.format(labels[i], overlaps[i], totals[i], round(frac, 4)))
 
     elif args.hit_rank:
+        # Handler for hit rank calculation.
+
         if len(args.model) == 0:
             print('Must specify a model to use.')
             return
