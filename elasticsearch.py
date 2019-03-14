@@ -11,7 +11,10 @@ INDEX_FORMAT = '{{\"index\": {{ \"_index\": \"{0}\", \"_type\": \"_doc\", \"_id\
 DATA_FORMAT = '{{\"method_body\": \"{0}\", \"method_name\": \"{1}\" }}\n'
 THRESHOLD = 500
 
+
 def create_data_files():
+    """Writes methods to a JSON file which can be bulk uploaded to Elasticsearch."""
+
     dir_name = '../r252-corpus/r252-corpus-features/validation/'
     output_file = 'elasticsearch/data.json'
     index_name = 'code'
@@ -27,7 +30,10 @@ def create_data_files():
 
             for i in range(len(method_body)):
                 name = names[i]
+
+                # Escape JSON Characters
                 body = method_body[i].strip().replace('\"', '\\\"').replace('\'', '\\\'')
+
                 data_entries.append(INDEX_FORMAT.format(index_name, count))
                 data_entries.append(DATA_FORMAT.format(body, name))
                 count += 1
@@ -40,6 +46,8 @@ def create_data_files():
 
 
 def execute_javadoc_queries():
+    """Compute the hit rankings over the validation dataset."""
+
     dir_name = '../r252-corpus/r252-corpus-features/validation/'
     output_file = 'elasticsearch/data.json'
     index_name = 'code'
@@ -67,10 +75,12 @@ def execute_javadoc_queries():
                 total_queries += 1
 
     print('Success Rate: {0}'.format(total_hits / total_queries))
-    print('MRR: {0}'.format(total_hit_rank / total_queries))            
+    print('MRR: {0}'.format(total_hit_rank / total_queries))
 
 
 def execute_queries():
+    """Executes queries from the jsoup_queries file and saves results to searches directory."""
+
     query_file_path = 'queries/jsoup_queries.txt'
     output_folder = 'searches/elasticsearch/'
     formatter = 'formatter/google-java-format-1.7-all-deps.jar'
@@ -85,6 +95,7 @@ def execute_queries():
             elapsed = time.time() - start
             times.append(elapsed)
 
+            # Write to temporary file first before using the JAR to format the outputs.
             out_base = output_folder + query_str.replace(' ', '_')
             out_path_temp = out_base + '-temp.java'
             write_methods_to_file(out_path_temp, method_bodies)
@@ -96,11 +107,10 @@ def execute_queries():
         print('Average Query Time: {0}s'.format(np.average(times)))
         print('Std Query Time: {0}'.format(np.std(times)))
 
-def execute_query(query_str):
-    headers = {'Content-Type': 'application/json'}
 
-    num_tokens = len(query_str.split())
-    min_should_match = num_tokens if num_tokens < 2 else min(num_tokens / 2, 2)
+def execute_query(query_str):
+    """Returns the results of a single query executed over the Elasticsearch Index."""
+    headers = {'Content-Type': 'application/json'}
 
     query_obj = {
         'query': {
@@ -113,6 +123,7 @@ def execute_query(query_str):
         }
     }
 
+    # Execute search via an HTTP request
     data = json.dumps(query_obj)
     search = requests.get('http://localhost:9200/code/_search', headers=headers, data=data)
     resp_json = search.json()
@@ -121,6 +132,7 @@ def execute_query(query_str):
     if total == 0:
         return [], []
 
+    # Parse Elasticsearch outputs
     hits = resp_json['hits']['hits']
     method_bodies = []
     method_names = []
@@ -130,6 +142,3 @@ def execute_query(query_str):
         method_bodies.append(method_body)
         method_names.append(method_name)
     return method_bodies, method_names
-
-
-execute_queries()
