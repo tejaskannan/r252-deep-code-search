@@ -3,7 +3,7 @@ import redis
 import os
 import heapq
 from parser import Parser
-from utils import cosine_similarity, get_index, get_ranking_in_array, get_ranking_in_heap
+from utils import get_index, get_ranking_in_array
 from annoy import AnnoyIndex
 from constants import *
 

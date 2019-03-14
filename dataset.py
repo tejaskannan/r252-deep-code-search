@@ -2,7 +2,6 @@ import numpy as np
 from dpu_utils.mlutils import Vocabulary
 from constants import *
 from utils import flatten, load_data_file
-from frequency import TokenFrequency
 
 
 class Dataset:

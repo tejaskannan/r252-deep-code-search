@@ -199,7 +199,10 @@ def main():
 
             os.remove(out_path_temp)
 
-        times.pop(0)
+        # Remove the first time if possible to avoid outliers due to caching.
+        if len(times) > 1:
+            times.pop(0)
+
         print('Average Query Time: {0}s'.format(np.average(times)))
         print('Std Query Time: {0}'.format(np.std(times)))
     elif args.overlap:
