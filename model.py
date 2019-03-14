@@ -4,12 +4,8 @@ import gzip
 import pickle
 from os import mkdir
 from os.path import exists
-
 from datetime import datetime
 from dpu_utils.mlutils import Vocabulary
-
-from parser import JAVADOC_FILE_NAME, METHOD_NAME_FILE_NAME
-from parser import METHOD_API_FILE_NAME, METHOD_TOKENS_FILE_NAME
 from parameters import Parameters, params_from_dict
 from dataset import Dataset, Batch
 from utils import lst_equal, log_record, add_slash_to_end
@@ -17,6 +13,7 @@ from constants import *
 
 
 class Model:
+    """Class which implements the Deep Code Search model."""
 
     def __init__(self, params, train_dir, valid_dir, save_dir):
         self.params = params
@@ -34,9 +31,7 @@ class Model:
 
         self._sess = tf.Session(graph=tf.Graph())
 
-        # We this variable after a possible restore because the parameters dict may be overwritten
         max_seq_len = self.params.max_seq_length
-
         with self._sess.graph.as_default():
             # Placeholders for Token Sequences
             self.method_names = tf.placeholder(dtype=tf.int32, shape=[None, max_seq_len], name='names')
@@ -58,6 +53,7 @@ class Model:
             self._make_training_step()
 
     def train(self):
+        """Trains a model using the class's parameters."""
 
         with self._sess.graph.as_default():
 
@@ -77,9 +73,8 @@ class Model:
             csv_name = LOG_FORMAT.format(self.save_dir, train_name)
             log_record(csv_name, ['Epoch', 'Avg Train Loss', 'Avg Validation Loss'])
 
-            # Initialize best loss to a large value
+            # Initialize best validation loss to a large value
             best_valid_loss = BIG_NUMBER
-            best_train_loss = BIG_NUMBER
 
             for epoch in range(self.params.num_epochs):
                 train_losses = []
@@ -95,6 +90,7 @@ class Model:
                 num_train_batches = train_batches.num_batches
                 num_valid_batches = valid_batches.num_batches
 
+                # Execute training batches
                 for i in range(num_train_batches):
                     feed_dict = self._create_feed_dict_from_batch(train_batches, i)
                     ops = [self.loss_op, self.optimizer_op]
@@ -107,37 +103,36 @@ class Model:
 
                 print(LINE)
 
+                # Execute validation batches
                 for i in range(num_valid_batches):
                     feed_dict = self._create_feed_dict_from_batch(valid_batches, i)
                     valid_result = self._sess.run(self.loss_op, feed_dict=feed_dict)
                     avg_valid_loss = valid_result / self.params.batch_size
                     valid_losses.append(avg_valid_loss)
 
-
                     print('Validation batch {0}/{1}: {2}'.format(i, num_valid_batches-1, avg_valid_loss))
 
                 avg_valid_loss = np.average(valid_losses)
                 avg_train_loss = np.average(train_losses)
 
+                # Log average training and validation losses for this epoch.
                 log_record(csv_name, [str(epoch), str(avg_train_loss), str(avg_valid_loss)])
 
                 print(LINE)
                 print('Average training loss in epoch {0}: {1}'.format(epoch, avg_train_loss))
                 print('Average validation loss in epoch {0}: {1}'.format(epoch, avg_valid_loss))
 
+                # Save model if it displays the best validation loss.
                 if (avg_valid_loss < best_valid_loss):
                     best_valid_loss = avg_valid_loss
                     print('Saving model: ' + train_name)
                     self.save(self.save_dir, train_name)
 
-                if (avg_train_loss < best_train_loss):
-                    best_train_loss = avg_train_loss
-                    print('Saving model: ' + overfit_train_name)
-                    self.save(self.save_dir, overfit_train_name)
-
                 print(LINE)
 
     def save(self, base_folder, name):
+        """Saves this model and all associated parameters to the given folder"""
+
         meta_data = {
             'model_type': type(self).__name__,
             'parameters': self.params.as_dict(),
@@ -149,16 +144,23 @@ class Model:
         if not exists(save_folder):
             mkdir(save_folder)
 
+        # Save metadata
         meta_path = save_folder + '/' + META_NAME
         with gzip.GzipFile(meta_path, 'wb') as out_file:
             pickle.dump(meta_data, out_file)
 
+        # Save Tensorflow model
         model_path = save_folder + '/' + MODEL_NAME
         saver = tf.train.Saver()
         saver.save(self._sess, model_path)
 
-    # We assume that save_folder ends in a slash
     def restore(self, save_folder):
+        """
+        Restores the model saved in the given folder. The parameter
+        string is assumed to end in a slash.
+        """
+
+        # Restore metadata
         meta_data = {}
         meta_path = save_folder + META_NAME
         with gzip.GzipFile(meta_path, 'rb') as in_file:
@@ -167,17 +169,24 @@ class Model:
         self.params = params_from_dict(meta_data['parameters'])
         self.dataset.vocabulary = meta_data['vocabulary']
 
+        # Restore Tensorflow model parameters
         with self._sess.graph.as_default():
             model_path = save_folder + MODEL_NAME
             saver = tf.train.Saver()
             saver.restore(self._sess, model_path)
 
     def embed_method(self, method_name, method_api, method_tokens):
+        """
+        Returns an embedding vector for a method with the given name,
+        API calls, and method tokens. 
+        """
 
+        # Tensorize inputs
         name_vec, name_len = self.dataset.create_tensor(method_name)
         api_vec, api_len = self.dataset.create_tensor(method_api)
         token_vec, token_len = self.dataset.create_tensor(method_tokens)
-        
+
+        # Reshape the inputs to match the dimensions expected by the Tensorflow model 
         name_tensor = np.array([name_vec])
         name_len_tensor = np.array([name_len])
         api_tensor = np.array([api_vec])
@@ -201,6 +210,8 @@ class Model:
         return embedding[0]
 
     def embed_description(self, description):
+        """Returns the embedding for the given description."""
+
         descr_vec, descr_len = self.dataset.create_tensor(description)
 
         with self._sess.graph.as_default():
@@ -214,6 +225,11 @@ class Model:
         return embedding[0]
 
     def _make_model(self):
+        """
+        Creates the computational graph which implementes the Deep Code Search model.
+        The created model variation is dictated by the parameters provided to this class.
+
+        """
 
         vocab_size = self.params.max_vocab_size
         embed_size = self.params.embedding_size
@@ -281,7 +297,7 @@ class Model:
                 descr_context = tf.reduce_max(descr_embedding + descr_mask, axis=1, name='descr-pooling')
                 descr_neg_context = tf.reduce_max(descr_neg_embedding + descr_neg_mask, axis=1, name='descr-pooling')
 
-            # Description embedding
+            # Description embeddings
             self.description_embedding = descr_context
             self.neg_descr_embedding = descr_neg_context
 
@@ -323,6 +339,8 @@ class Model:
                 )
 
     def _make_training_step(self):
+        """Implements a step of gradient descent to optimize the model's weights."""
+
         trainable_vars = self._sess.graph.get_collection(tf.GraphKeys.TRAINABLE_VARIABLES)
         gradients = tf.gradients(self.loss_op, trainable_vars)
         clipped_grad, _ = tf.clip_by_global_norm(gradients, self.params.gradient_clip)
@@ -334,6 +352,11 @@ class Model:
         self.optimizer_op = self.optimizer.apply_gradients(pruned_gradients)
 
     def _rnn_embedding(self, placeholder, name):
+        """
+        Implements the BiRNN token embedding layer.
+        The outputs are not clipped based on sequence length.
+        """
+
         cell_fw = tf.nn.rnn_cell.LSTMCell(num_units=self.params.rnn_units, activation=tf.nn.tanh,
                                           name=name + '-fw')
         cell_bw = tf.nn.rnn_cell.LSTMCell(num_units=self.params.rnn_units, activation=tf.nn.tanh,
@@ -352,6 +375,11 @@ class Model:
         return emb, state
 
     def _conv_1d_embedding(self, placeholder, name):
+        """
+        Implements the 1D convolution used for token embeddings.
+        The outputs are not clipped based on sequence length.
+        """
+
         embedding = tf.layers.conv1d(inputs=placeholder,
                                      filters=self.params.embedding_size,
                                      kernel_size=self.params.kernel_size,
@@ -361,12 +389,17 @@ class Model:
         return embedding
 
     def _attention_layer(self, inputs, input_mask, name):
+        """Implements the self-attention layer."""
         weights = tf.layers.dense(inputs=inputs, units=1, activation=tf.nn.tanh,
                                   name=name + '-attn-weights')
         alphas = tf.nn.softmax(weights + input_mask, axis=1, name=name + '-attn')
         return tf.reduce_sum(inputs * alphas, axis=1, name=name + '-attn-reduce')
 
     def _reduction_layer(self, rnn_embedding, output_size, name):
+        """
+        Implements a single dense layer which is used to combine the forward and
+        backward outputs from a BiRNN.
+        """
         concat_tensor = tf.concat([rnn_embedding[0], rnn_embedding[1]], axis=2,
                                   name=name + '-concat')
         reduction = tf.layers.dense(inputs=concat_tensor,
@@ -376,7 +409,12 @@ class Model:
         return reduction
 
     def _create_mask(self, placeholder, len_placeholder):
-        # We mask out elements which are padded before feeding tokens into an aggregation layer
+        """
+        Returns a mask which can be used to adjust for the length
+        of input token sequences. An element of this mask is 0 for indices
+        less than the sequence lenth and -BIG_NUMBER for indices beyond the sequence
+        length.
+        """
         index_list = tf.range(self.params.max_seq_length)
         index_tensor = tf.tile(tf.expand_dims(index_list, axis=0),
                                multiples=(tf.shape(placeholder)[0], 1))
@@ -387,14 +425,24 @@ class Model:
         return (1 - tf.cast(mask, dtype=tf.float32)) * -BIG_NUMBER
 
     def _generate_neg_javadoc(self, javadoc, javadoc_len):
+        """
+        Returns arrays of the same dimension as javadoc and javadoc_len which
+        contain negative javadoc examples used during training.
+        """
         neg_javadoc = []
         neg_javadoc_len = []
         neg_javadoc_freq = []
 
         for i in range(len(javadoc)):
             rand_index = np.random.randint(0, len(javadoc))
+
+            # We compare the randomly selected example to ensure
+            # that it is indeed a negative example. This element-by-element comparison
+            # is carried out because there are examples of different methods
+            # which have the same Javadoc comments.
             while lst_equal(javadoc[i], javadoc[rand_index]):
                 rand_index = np.random.randint(0, len(javadoc))
+
             neg_javadoc.append(javadoc[rand_index])
             neg_javadoc_len.append(javadoc_len[rand_index])
 
@@ -403,6 +451,7 @@ class Model:
         return neg_javadoc, neg_javadoc_len
 
     def _create_feed_dict_from_batch(self, batches, i):
+        """Returns the feed dictionary for the given batch."""
         jd_neg_batch, jd_neg_len_batch = \
             self._generate_neg_javadoc(batches.javadoc_batches[i],
                                        batches.javadoc_len_batches[i])
