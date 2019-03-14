@@ -1,21 +1,16 @@
-
 import numpy as np
-
 from dpu_utils.mlutils import Vocabulary
 from constants import *
 from utils import flatten, load_data_file
 from frequency import TokenFrequency
 
-METHOD_NAMES = "method_names"
-METHOD_APIS = "method_apis"
-METHOD_TOKENS = "method_tokens"
-JAVADOC = "javadoc"
-
 
 class Dataset:
+    """Class for managing training and validation datasets."""
 
     def __init__(self, train_dir, valid_dir, max_seq_length, max_vocab_size):
 
+        # Dictionary which stores raw training data
         self.train_data = {
             METHOD_NAMES: load_data_file(train_dir + METHOD_NAME_FILE_NAME),
             METHOD_APIS: load_data_file(train_dir + METHOD_API_FILE_NAME),
@@ -23,6 +18,7 @@ class Dataset:
             JAVADOC: load_data_file(train_dir + JAVADOC_FILE_NAME)
         }
 
+        # Dictionary which stores raw validation data
         self.valid_data = {
             METHOD_NAMES: load_data_file(valid_dir + METHOD_NAME_FILE_NAME),
             METHOD_APIS: load_data_file(valid_dir + METHOD_API_FILE_NAME),
@@ -30,34 +26,38 @@ class Dataset:
             JAVADOC: load_data_file(valid_dir + JAVADOC_FILE_NAME)
         }
 
+        # Tokens lists are flattened to prepare for vocabulary creation
         methods_list = [self.train_data[METHOD_NAMES], self.train_data[METHOD_APIS],
                         self.train_data[METHOD_TOKENS]]
         javadoc_list = [self.train_data[JAVADOC]]
-
         all_tokens = flatten(methods_list + javadoc_list)
-
-        self.max_seq_length = max_seq_length
-        self.max_vocab_size = max_vocab_size
 
         self.vocabulary = Vocabulary.create_vocabulary(all_tokens,
                                                        max_vocab_size,
                                                        count_threshold=1,
                                                        add_pad=True)
 
+        self.max_seq_length = max_seq_length
+        self.max_vocab_size = max_vocab_size
+
+        # Create Training and Validation tensors
         self.train_tensors = self._tensorize_data(self.train_data)
         self.valid_tensors = self._tensorize_data(self.valid_data)
 
-    # train = False means we are using validation data
     def make_mini_batches(self, batch_size, train=True):
-        combined = []
+        """
+        Creates mini-batches of the current dataset where each batch is of the given
+        batch size. If train is True, then the training tensors are used. Otherwise
+        validation batches are created.
+        """
 
         tensor_dict = self.train_tensors if train else self.valid_tensors
 
+        # Randomly shuffle the samples
         combined = list(zip(tensor_dict[METHOD_NAMES], tensor_dict[METHOD_APIS],
                             tensor_dict[METHOD_TOKENS], tensor_dict[JAVADOC],
                             tensor_dict[METHOD_NAME_LENGTHS], tensor_dict[METHOD_API_LENGTHS],
                             tensor_dict[METHOD_TOKEN_LENGTHS], tensor_dict[JAVADOC_LENGTHS]))
-
         np.random.shuffle(combined)
 
         names, apis, tokens, javadocs, name_lengths, \
@@ -99,7 +99,10 @@ class Dataset:
                      javadoc_len_batches=javadoc_length_batches)
 
     def create_tensor(self, sequence):
-        # We ensure that we are using the tokens within the given sequence
+        """
+        Returns a tuple of the content and length tensors for the given sequence of tokens.
+        Each token is translated into an index using the given vocabulary.
+        """
         if type(sequence) is str:
             sequence = sequence.split(' ')
 
@@ -108,6 +111,10 @@ class Dataset:
         return seq_tensor, seq_length
 
     def _tensorize_data(self, data_dict):
+        """
+        Returns a dictionary of tensors for the given dictionary of raw inputs.
+        These tensors can be used during model training or testing.
+        """
 
         name_tensors = []
         api_tensors = []
@@ -154,6 +161,7 @@ class Dataset:
 
 
 class Batch:
+    """Wrapper class for a batch of training or validation data"""
 
     def __init__(self, name_batches, api_batches, token_batches, javadoc_batches,
                  name_len_batches, api_len_batches, token_len_batches, javadoc_len_batches):
