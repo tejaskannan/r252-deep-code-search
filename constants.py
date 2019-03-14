@@ -69,12 +69,19 @@ METHOD_API_FREQ = 'method_api_freq'
 METHOD_TOKEN_FREQ = 'method_token_freq'
 JAVADOC_FREQ = 'javadoc_freq'
 
+# Dataset constants
 INDEX_PATH = 'index/{0}_index.ann'
 UTF8 = 'utf-8'
 REPORT_THRESHOLD = 100
+METHOD_NAMES = 'method_names'
+METHOD_APIS = 'method_apis'
+METHOD_TOKENS = 'method_tokens'
+JAVADOC = 'javadoc'
 
+# Output format for vocabulary overlap
 OVERLAP_FORMAT = "{0}: {1}/{2} ({3})"
 
+# Dictionary used for translating tokens when constructing method bodies
 translate_dict = {
     'UNDERSCORE': '_',
     'ARROW': '->',
