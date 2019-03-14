@@ -1,0 +1,10 @@
+{
+    "query": {
+        "multi_match": {
+           "query": "<query_str>",
+            "analyzer": "method_analyzer",
+            "type": "cross_fields",
+            "fields": ["method_body", "method_name^2"],
+        }
+    }
+}
