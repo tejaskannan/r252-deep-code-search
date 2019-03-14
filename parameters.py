@@ -2,6 +2,7 @@ import json
 
 
 class Parameters:
+    """Wrapper class for model hyperparameters."""
 
     def __init__(self, step_size, gradient_clip,
                  max_vocab_size, max_seq_length, margin, rnn_units, hidden_dense_units,
@@ -25,6 +26,7 @@ class Parameters:
         self.loss_func = loss_func
 
     def as_dict(self):
+        """Returns the parameters object as a dictionary."""
         return {
             'step_size': self.step_size,
             'gradient_clip': self.gradient_clip,
@@ -49,6 +51,10 @@ class Parameters:
 
 
 def params_dict_from_json(params_file_path, default):
+    """
+    Parses the given parameters file into a dictionary. Uses the default
+    values when no values exist in the given file.
+    """
     params_dict = default.copy()
 
     with open(params_file_path, 'r') as params_file:
@@ -66,6 +72,7 @@ def params_dict_from_json(params_file_path, default):
 
 
 def params_from_dict(params_dict):
+    """Returns a parameters object created from the given dictionary."""
     return Parameters(
             step_size=params_dict['step_size'],
             gradient_clip=params_dict['gradient_clip'],
