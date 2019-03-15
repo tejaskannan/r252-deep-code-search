@@ -6,14 +6,14 @@ The project is driven by ```main.py``` and has four major components: generating
 
 The project uses [Redis](https://pypi.org/project/redis/), Spotify's [Annoy](https://github.com/spotify/annoy), Microsoft's [DPU Utilities](https://github.com/Microsoft/dpu-utils), and [Tensorflow](https://www.tensorflow.org/).
 
-# Generating Datasets
+## Generating Datasets
 A new dataset can be generated using the command below.
 ```sh
 python main.py --generate --input <input-dir> --output <output-dir>
 ```
 The input directory soecifies the source code repositories which will be used to generate the new dataset. This routine parses Java Abstract Syntax Trees (AST) which are serialized as [protocol buffers](https://developers.google.com/protocol-buffers/). This command creates four files: ```method-names.txt```, ```method-apis.txt```, ```method-tokens.txt```, and ```javadoc.txt```. These files are stored in the specified output directory. If no output directory is given, then files are stored in the ```data/``` folder. The folders ```train_data/```, ```train_data_smaller/``` and ```validation_data/``` contain pre-generated datasets.
 
-# Training Models
+## Training Models
 A new model can be trained using the command below.
 ```sh
 python main.py --train --params <params-file> --train-dir <train-dir> --valid-dir <validation-dir>
@@ -23,14 +23,14 @@ The parameters input specifies a JSON file which contains the hyperparameters us
 python main.py --train --params params/max_pool_rnn.json
 ```
 
-# Indexing a Search Corpus
+## Indexing a Search Corpus
 A corpus of Java code can be indexed into Redis using the command below.
 ```
 python main.py --index --input <input-file-dir> --model <model-dir> --table <table-name>
 ```
 The input is detected to be a directory if the string ends in a ```/```. Otherwise, the input is assumed to be the name of a single file. An input directory should contain protobuf files which encode the AST tree of Java classes.  The model directory specifies the trained model used to compute method embeddings. This command writes methods into the given table in a locally running Redis database. This command fails if a local Redis server is not running. If no table name is provided, methods are written into the table ```code```.
 
-# Executing Searches
+## Executing Searches
 A search can be executed against an indexed corpus using the command below.
 ```
 python main.py --search [--rerank] --input <query> --model <model-dir> --threshold <num-results> --table <table-name>
