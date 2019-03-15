@@ -1,8 +1,4 @@
 *.pyc
 *.rdb
 __pycache__/*
-data/*
-train_data/*
-validation_data/*
-index/*
 elasticsearch/data.json
