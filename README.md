@@ -11,7 +11,7 @@ A new dataset can be generated using the command below.
 ```sh
 python main.py --generate --input <input-dir> --output <output-dir>
 ```
-The input directory soecifies the source code repositories which will be used to generate the new dataset. This routine parses Java Abstract Syntax Trees (AST) which are serialized as [protocol buffers](https://developers.google.com/protocol-buffers/). This command creates four files: ```method-names.txt```, ```method-apis.txt```, ```method-tokens.txt```, and ```javadoc.txt```. These files are stored in the specified output directory. If no output directory is given, then files are stored in the ```data/``` folder. The folders ```train_data/```, ```train_data_smaller/```, ```validation_data/```, and ```validation_data_smaller/``` contain pre-generated datasets.
+The input directory soecifies the source code repositories which will be used to generate the new dataset. This routine parses Java Abstract Syntax Trees (AST) which are serialized as [protocol buffers](https://developers.google.com/protocol-buffers/). This command creates four files: ```method-names.txt```, ```method-apis.txt```, ```method-tokens.txt```, and ```javadoc.txt```. These files are stored in the specified output directory. If no output directory is given, then files are stored in the ```data/``` folder. The folders ```train_data/```, ```train_data_smaller/``` and ```validation_data/``` contain pre-generated datasets.
 
 # Training Models
 A new model can be trained using the command below.
