@@ -9,9 +9,9 @@ The project uses [Redis](https://pypi.org/project/redis/), Spotify's [Annoy](htt
 ## Generating Datasets
 A new dataset can be generated using the command below.
 ```sh
-python main.py --generate --input <input-dir> --output <output-dir>
+python main.py --generate --input <input-file-or-dir> --output <output-dir>
 ```
-The input directory soecifies the source code repositories which will be used to generate the new dataset. This routine parses Java Abstract Syntax Trees (AST) which are serialized as [protocol buffers](https://developers.google.com/protocol-buffers/). This command creates four files: ```method-names.txt```, ```method-apis.txt```, ```method-tokens.txt```, and ```javadoc.txt```. These files are stored in the specified output directory. If no output directory is given, then files are stored in the ```data/``` folder. The folders ```train_data/```, ```train_data_smaller/``` and ```validation_data/``` contain pre-generated datasets.
+The input specifies the source code repositories which will be used to generate the new dataset. If the specified input ends in a slash, it is interpreted as a directory; otherwise, it is consider to be a single file. This routine parses Java Abstract Syntax Trees (AST) which are serialized as [protocol buffers](https://developers.google.com/protocol-buffers/). This command creates four files: ```method-names.txt```, ```method-apis.txt```, ```method-tokens.txt```, and ```javadoc.txt```. These files are stored in the specified output directory. If no output directory is given, then files are stored in the ```data/``` folder. The folders ```train_data/```, ```train_data_smaller/``` and ```validation_data/``` contain pre-generated datasets.
 
 ## Training Models
 A new model can be trained using the command below.
